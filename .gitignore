@@ -1,4 +1,13 @@
 target/
+Client/.settings
+Client/.project
+Client/.classpath
+networking/.settings
+networking/.project
+networking/.classpath
+Server/.settings
+Server/.project
+Server/.classpath
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
