@@ -9,7 +9,7 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.hswhameln.typetogether.networking.api.User;
+import de.hswhameln.typetogether.networking.api.Document;
 
 //TODO: Logging
 public class DocumentServerProxy implements Runnable {
@@ -18,33 +18,33 @@ public class DocumentServerProxy implements Runnable {
     //private IChatProvider chatProvider;
     private BufferedReader reader;
     private PrintWriter writer;
-    private Map<Integer, User> users = new HashMap<>();
+    private Map<Integer, DocumentClientProxy> documents = new HashMap<>();
     
     public DocumentServerProxy(Socket socket/*, provider*/) {
         this.socket = socket;
         //this.chatProvider = chatProvider;
     }
 
-    private User resolveUser () throws Exception {
+    private Document resolveDocument () throws Exception {
 
-        this.writer.println("Please provide User-Com-ID");
+        this.writer.println("Please provide Document-Com-ID");
         String sCommunicationId = this.reader.readLine();
         int communicationId = Integer.valueOf (sCommunicationId);
 
-        if (this.users.containsKey(communicationId) == false) {
+        if (this.documents.containsKey(communicationId) == false) {
 
-            this.writer.println("Please provide User-Port");
+            this.writer.println("Please provide Document-Port");
 
             String sPort = this.reader.readLine();
 
             int port = Integer.valueOf(sPort);
-            // TODO: Implement UserClientProxy User user = new UserClientProxy(this.socket.getInetAddress().getHostAddress(), port);
+            DocumentClientProxy clientProxy = new DocumentClientProxy(this.socket.getInetAddress().getHostAddress(), port);
 
-            // this.users.put(communicationId, user);
+            this.documents.put(communicationId, clientProxy);
         } else {
-            this.writer.println("Could not resolve User: User-Com-ID already in use");
+            this.writer.println("Could not resolve Document: Document-Com-ID already in use");
         }
-        return this.users.get(communicationId);
+        return this.documents.get(communicationId);
     }
 
     private boolean openInputStream () {
@@ -87,30 +87,49 @@ public class DocumentServerProxy implements Runnable {
             // this.writer.println("3 - sendMessage");
             // this.writer.println("----");
 
-            // String line;
-            // while ((line = this.reader.readLine()) != null) {
-            //     System.out.println("[INFORMATION]: client sent: " + line);
-            //     switch (line) {
-            //         case "0":
-            //             this.pleaseKill ();
-            //             System.out.println("[INFORMATION]: client closed connection");
-            //             return;
-            //         case "1":
-            //             this.pleaseJoin ();
-            //             break;
-            //         case "2":
-            //             this.pleaseLeave ();
-            //             break;
-            //         case "3":
-            //             this.pleaseSend ();
-            //             break;
-            //         default:
-            //             throw new Exception("Unsupported operation");
-            //     }
-            // }
+            String line;
+            while ((line = this.reader.readLine()) != null) {
+                System.out.println("[INFORMATION]: Client sent: " + line);
+                switch (line) {
+                    case "0":
+                        System.out.println("[INFORMATION]: Client is adding a char");
+                        this.addChar();
+                        return;
+                    case "1":
+                        System.out.println("[INFORMATION]: Client is removing a char");
+                        this.removeChar();
+                        break;
+                    default:
+                        throw new Exception("[PROTOCOL ERROR]: Unsupported document operation");
+                }
+            }
         } catch (Exception e) {
             System.err.println("[ERROR]: Could not read InputStream:");
             e.printStackTrace();
+        }
+    }
+
+    private void addChar() throws Exception {
+        Document document = this.resolveDocument();
+
+        try {
+            // TODO: Provider this.documentProvider.addChar(document);
+            this.writer.println("200");
+        } catch (Exception e) {
+            this.writer.println("500");
+            this.writer.println("[ERROR]: Could not add char: " + e.getMessage());
+        }
+    }
+
+    private void removeChar() throws Exception {
+        Document document = this.resolveDocument();
+
+        try {
+            // TODO: Provider this.documentProvider.removeChar(document);
+            this.writer.println("200");
+        } catch (Exception e) {
+            this.writer.println("500");
+            this.writer.println("[ERROR]: Could not remove char: " + e.getMessage());
         }
     }
     

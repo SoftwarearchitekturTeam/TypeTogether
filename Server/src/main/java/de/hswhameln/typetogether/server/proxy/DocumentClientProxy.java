@@ -54,13 +54,13 @@ public class DocumentClientProxy implements Document {
     }
 
     @Override
-    public void writeChar(User author, DocumentCharacter character) {
+    public void addChar(User author, DocumentCharacter character) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void deleteChar(User author, DocumentCharacter character) {
+    public void removeChar(User author, DocumentCharacter character) {
         // TODO Auto-generated method stub
         
     }
