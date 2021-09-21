@@ -1,4 +1,4 @@
-package com.mycompany.myproject.dependingproject;
+package de.hswhameln.typetogether.client;
 
 import com.mycompany.myproject.library.MyLibrary;
 

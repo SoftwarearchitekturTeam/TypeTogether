@@ -1,6 +1,8 @@
-package com.mycompany.myproject.dependingproject;
+package de.hswhameln.typetogether.client;
 
 import org.junit.jupiter.api.Test;
+
+import de.hswhameln.typetogether.client.Main;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

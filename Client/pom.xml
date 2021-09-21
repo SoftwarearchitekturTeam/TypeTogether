@@ -53,7 +53,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.mycompany.myproject.dependingproject.Main</mainClass>
+                            <mainClass>de.hswhameln.typetogether.client.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
