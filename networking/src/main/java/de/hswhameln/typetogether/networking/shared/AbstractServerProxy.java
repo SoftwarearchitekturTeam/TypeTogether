@@ -9,10 +9,9 @@ import java.util.logging.Logger;
 
 public abstract class AbstractServerProxy extends AbstractProxy implements Runnable {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
     private Map<String, ServerProxyAction> availableActions;
 
-    public AbstractServerProxy(Socket socket) {
+    protected AbstractServerProxy(Socket socket) {
         super(socket);
     }
 

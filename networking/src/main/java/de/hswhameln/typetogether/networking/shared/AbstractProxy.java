@@ -2,9 +2,10 @@ package de.hswhameln.typetogether.networking.shared;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.logging.Logger;
 
 public class AbstractProxy {
-
+    protected Logger logger = Logger.getLogger(this.getClass().getName());
     protected Socket socket;
 
     protected BufferedReader in;
