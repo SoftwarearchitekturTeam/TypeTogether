@@ -1,10 +1,10 @@
 package de.hswhameln.typetogether.networking.shared;
 
 public class ServerProxyAction {
-    private final Action action;
     private final String name;
+    private final Action action;
 
-    public ServerProxyAction(Action action, String name) {
+    public ServerProxyAction(String name, Action action) {
         this.action = action;
         this.name = name;
     }
@@ -15,5 +15,9 @@ public class ServerProxyAction {
 
     public String getName() {
         return name;
+    }
+
+    public static ServerProxyAction of(String name, Action action) {
+        return new ServerProxyAction(name, action);
     }
 }

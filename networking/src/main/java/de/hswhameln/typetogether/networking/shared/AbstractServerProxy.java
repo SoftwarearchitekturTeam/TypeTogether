@@ -1,20 +1,19 @@
 package de.hswhameln.typetogether.networking.shared;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.Socket;
+import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class AbstractServerProxy extends AbstractProxy implements Runnable {
-
-    private final Map<String, ServerProxyAction> availableActions;
+public abstract class AbstractServerProxy extends AbstractProxy implements Runnable {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private Map<String, ServerProxyAction> availableActions;
 
-    public AbstractServerProxy(Socket socket, Map<String, ServerProxyAction> availableActions) {
+    public AbstractServerProxy(Socket socket) {
         super(socket);
-        this.availableActions = availableActions;
     }
 
     @Override
@@ -32,6 +31,8 @@ public class AbstractServerProxy extends AbstractProxy implements Runnable {
 
     }
 
+    protected abstract Map<String, ServerProxyAction> createAvailableActions();
+
     /**
      * Listen to requests coming from {@link #in} and perform the relevant action.
      */
@@ -41,13 +42,13 @@ public class AbstractServerProxy extends AbstractProxy implements Runnable {
                 String line = this.in.readLine();
                 this.logger.info("Client sent: " + line);
 
-                if (!this.availableActions.containsKey(line)) {
+                if (!this.getAvailableActions().containsKey(line)) {
                     this.out.println("Unknown command: " + line);
                     this.logger.log(Level.WARNING, "Unknown command from client: " + line);
                     continue;
                 }
 
-                this.availableActions.get(line).getAction().perform();
+                this.getAvailableActions().get(line).getAction().perform();
 
             } catch (Exception e) {
                 this.logger.log(Level.WARNING, "Exception when handling command. Continuing...", e);
@@ -60,9 +61,17 @@ public class AbstractServerProxy extends AbstractProxy implements Runnable {
      */
     private void sendInitializationMessage() {
         this.out.println("Connection established. Available commands:");
-        this.out.println(this.availableActions.size());
-        this.availableActions.forEach((id, action) -> {
+        this.out.println(this.getAvailableActions().size());
+        this.getAvailableActions().forEach((id, action) -> {
             this.out.println(id + " - " + action.getName());
         });
+    }
+
+    private Map<String, ServerProxyAction> getAvailableActions() {
+        if (this.availableActions == null) {
+            Map<String, ServerProxyAction> availableActions = this.createAvailableActions();
+            this.availableActions = availableActions != null ? availableActions : Collections.emptyMap();
+        }
+        return this.availableActions;
     }
 }
