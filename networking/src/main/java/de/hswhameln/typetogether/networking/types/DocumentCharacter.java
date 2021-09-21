@@ -1,6 +1,7 @@
 package de.hswhameln.typetogether.networking.types;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.hswhameln.typetogether.networking.util.Decimal;
@@ -87,18 +88,9 @@ public class DocumentCharacter implements Comparable<DocumentCharacter> {
             return Decimal.toIdentifierList(next, p1, p2, userId);
         } else {
             if(head1.getUserId() < head2.getUserId()) {
-                List<Identifier> returnIn = new ArrayList<>();
-                returnIn.add(head1);
-                p1.remove(0);
-                returnIn.addAll(generatePositionBetween(p1, new ArrayList<Identifier>(), userId));
-                return returnIn;
+                return Decimal.cons(head1, generatePositionBetween(p1, Collections.emptyList(), userId));
             } else if(head1.getUserId() == head2.getUserId()) {
-                List<Identifier> returnIn = new ArrayList<>();
-                returnIn.add(head1);
-                p1.remove(0);
-                p2.remove(0);
-                returnIn.addAll(generatePositionBetween(p1, p2, userId));
-                return returnIn;
+                return Decimal.cons(head1, generatePositionBetween(p1, p2, userId));
             } else {
                 throw new IllegalArgumentException("Invalid UserId ordering");
             }

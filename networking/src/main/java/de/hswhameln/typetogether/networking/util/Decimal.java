@@ -12,6 +12,13 @@ public class Decimal {
         return identifiers.stream().map(ident -> ident.getDigit()).collect(Collectors.toList());
     }
 
+    public static List<Identifier> cons(Identifier identifier, List<Identifier> position) {
+        List<Identifier> returnIn = new ArrayList<>();
+        returnIn.add(identifier);
+        returnIn.addAll(position);
+        return returnIn;
+    }
+
     public static List<Integer> increment(List<Integer> n1, List<Integer> delta) {
         int firstNonzeroDigit = -1;
         List<Integer> inc = new ArrayList<>();
