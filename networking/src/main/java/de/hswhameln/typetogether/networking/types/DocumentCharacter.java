@@ -84,7 +84,7 @@ public class DocumentCharacter implements Comparable<DocumentCharacter> {
             List<Integer> n2 = Decimal.fromIdentifierList(p2);
             List<Integer> delta = Decimal.subtractGreaterThan(n1, n2);
             List<Integer> next = Decimal.increment(n1, delta);
-            return Decimal.toIdentifierList(next, p1, p2, userId)
+            return Decimal.toIdentifierList(next, p1, p2, userId);
         } else {
             if(head1.getUserId() < head2.getUserId()) {
                 List<Identifier> returnIn = new ArrayList<>();

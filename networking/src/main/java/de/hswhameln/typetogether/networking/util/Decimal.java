@@ -1,9 +1,7 @@
 package de.hswhameln.typetogether.networking.util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import de.hswhameln.typetogether.networking.types.Identifier;
@@ -63,7 +61,7 @@ public class Decimal {
 
     public static List<Integer> subtractGreaterThan(List<Integer> n1, List<Integer> n2) {
         List<Integer> returnIn = new ArrayList<>();
-        for(int i = 0; i < Math.max(n1.size(), n2.size()), i++) {
+        for(int i = 0; i < Math.max(n1.size(), n2.size()); i++) {
             if(n1.get(i) == n2.get(i)) {
                 returnIn.add(0);
             } else if(n1.get(i) > n2.get(i)) {
