@@ -2,12 +2,15 @@ target/
 Client/.settings
 Client/.project
 Client/.classpath
+Client/bin/
 networking/.settings
 networking/.project
 networking/.classpath
+networking/bin/
 Server/.settings
 Server/.project
 Server/.classpath
+Server/bin/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
@@ -19,3 +22,4 @@ buildNumber.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
 .idea/
+.vscode/
