@@ -82,16 +82,9 @@ public class DocumentCharacter implements Comparable<DocumentCharacter> {
         if(head1.getDigit() != head2.getDigit()) {
             List<Integer> n1 = Decimal.fromIdentifierList(p1);
             List<Integer> n2 = Decimal.fromIdentifierList(p2);
-            
-            
-            int delta;
-            if(head1.getDigit() > head2.getDigit()) {
-                delta = head1.getDigit() - head2.getDigit();
-            } else {
-                delta = head2.getDigit() - head1.getDigit();
-            }
-            int next = head1.getDigit() + (int)(Math.random() * delta) + 1;
-            return this.generateIdentifierList(next, userId, p1, p2);
+            List<Integer> delta = Decimal.subtractGreaterThan(n1, n2);
+            List<Integer> next = Decimal.increment(n1, delta);
+            return Decimal.toIdentifierList(next, p1, p2, userId)
         } else {
             if(head1.getUserId() < head2.getUserId()) {
                 List<Identifier> returnIn = new ArrayList<>();
