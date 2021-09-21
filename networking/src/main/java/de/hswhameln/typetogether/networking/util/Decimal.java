@@ -60,4 +60,18 @@ public class Decimal {
         }
         return returnIn;
     }
+
+    public static List<Integer> subtractGreaterThan(List<Integer> n1, List<Integer> n2) {
+        List<Integer> returnIn = new ArrayList<>();
+        for(int i = 0; i < Math.max(n1.size(), n2.size()), i++) {
+            if(n1.get(i) == n2.get(i)) {
+                returnIn.add(0);
+            } else if(n1.get(i) > n2.get(i)) {
+                returnIn.add(n1.get(i) - n2.get(i));
+            } else {
+                returnIn.add(n2.get(i) - n1.get(i));
+            }
+        }
+        return returnIn;
+    }
 }
