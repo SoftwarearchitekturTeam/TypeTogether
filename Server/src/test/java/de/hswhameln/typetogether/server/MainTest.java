@@ -1,4 +1,4 @@
-package com.mycompany.myproject.dependingproject;
+package de.hswhameln.typetogether.server;
 
 import org.junit.jupiter.api.Test;
 
