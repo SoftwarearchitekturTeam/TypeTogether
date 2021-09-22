@@ -5,6 +5,7 @@ import de.hswhameln.typetogether.networking.api.User;
 import de.hswhameln.typetogether.networking.shared.AbstractClientProxy;
 import de.hswhameln.typetogether.networking.shared.DocumentClientProxy;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,21 +49,54 @@ public class UserClientProxy extends AbstractClientProxy implements User {
 
     @Override
     public int getId() {
-        // TODO Auto-generated method stub
-        return 0;
+        this.out.println("1");
+        try {
+            int status = Integer.parseInt(this.in.readLine());
+            if (status != 200) {
+                String errMsg = this.in.readLine();
+                logger.warning("[ClIENT ERROR]: " + errMsg);
+                throw new RuntimeException(errMsg);
+            }
+            return Integer.parseInt(this.in.readLine()); 
+        } catch (NumberFormatException | IOException e) {
+            logger.severe("[SERVER ERROR]: Could not get user-Id from client: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public String getName() {
-        // TODO Auto-generated method stub
-        return null;
+        this.out.println("2");
+        try {
+            int status = Integer.parseInt(this.in.readLine());
+            if (status != 200) {
+                String errMsg = this.in.readLine();
+                logger.warning("[ClIENT ERROR]: " + errMsg);
+                throw new RuntimeException(errMsg);
+            }
+            return this.in.readLine(); 
+        } catch (NumberFormatException | IOException e) {
+            logger.severe("[SERVER ERROR]: Could not get user-name from client: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public Document getDocument() {
-        // TODO Auto-generated method stub
-        return null;
+        this.out.println("3");
+        try {
+            int status = Integer.parseInt(this.in.readLine());
+            if (status != 200) {
+                String errMsg = this.in.readLine();
+                logger.warning("[ClIENT ERROR]: " + errMsg);
+                throw new RuntimeException(errMsg);
+            }
+            return this.resolveDocument();
+        } catch (NumberFormatException | IOException e) {
+            logger.severe("[SERVER ERROR]: Could not get user-document from client: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 
-    // TODO
+    // TODO Close Connection, but how?
 }
