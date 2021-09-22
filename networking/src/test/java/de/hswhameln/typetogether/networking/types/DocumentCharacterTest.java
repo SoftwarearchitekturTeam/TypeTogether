@@ -3,15 +3,12 @@ package de.hswhameln.typetogether.networking.types;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-@Disabled
 public class DocumentCharacterTest {
    
     @Test
@@ -20,7 +17,7 @@ public class DocumentCharacterTest {
     }
 
     @Test
-    public void doCharectertestfirstposition(){
+    public void doCharectertestfUseCase1() {
         List<DocumentCharacter> list = new ArrayList<>();
         list.add(new DocumentCharacter('s', new Identifier(1, 1)));
         list.add(new DocumentCharacter('e', new Identifier(3, 1)));
@@ -35,9 +32,9 @@ public class DocumentCharacterTest {
         }
         assertEquals("saegn", erg);
     }
-
+    @Disabled
     @Test
-    public void doCharectertest(){
+    public void doCharectertestUseCase2(){
         
         List<DocumentCharacter> list = new ArrayList<>();
         List<Identifier> befor = new ArrayList<>();
@@ -52,9 +49,9 @@ public class DocumentCharacterTest {
         System.out.print(character.getValue());
         System.out.println("Erwartet: saeg");
     }
-
+    @Disabled
     @Test
-    public void doCharectertestcomplex(){
+    public void doCharectertestcomplexUseCase3(){
         
         List<DocumentCharacter> list = new ArrayList<>();
         List<Identifier> befor = new ArrayList<>();
