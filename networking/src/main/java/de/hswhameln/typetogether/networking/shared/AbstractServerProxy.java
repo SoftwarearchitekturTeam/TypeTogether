@@ -50,15 +50,16 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
     protected <T> void safelySendResult(String name, FunctionalFunction<T> functionalTask) {
         try {
             T t = functionalTask.apply();
-            this.out.println(0);
+            this.out.println(200);
             this.out.println(t);
         } catch (Exception e) {
-            this.out.println(1);
-            this.out.println("Error when executing joinDocument: " + e.getMessage());
+            //TODO: Error Codes festlegen
+            this.out.println(500);
+            this.out.println("Error when executing " + name + ": " + e.getMessage());
         }
     }
 
-    protected void closeConnection() throws IOException {
+    private void closeConnection() throws IOException {
         this.socket.close();
     }
 

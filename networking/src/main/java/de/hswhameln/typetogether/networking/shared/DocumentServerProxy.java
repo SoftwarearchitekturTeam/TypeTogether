@@ -1,4 +1,4 @@
-package de.hswhameln.typetogether.server.proxy;
+package de.hswhameln.typetogether.networking.shared;
 
 import java.net.Socket;
 import java.util.HashMap;
@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import de.hswhameln.typetogether.networking.api.Document;
-import de.hswhameln.typetogether.networking.shared.AbstractServerProxy;
-import de.hswhameln.typetogether.networking.shared.ServerProxyAction;
 
 public class DocumentServerProxy extends AbstractServerProxy {
 
@@ -29,7 +27,7 @@ public class DocumentServerProxy extends AbstractServerProxy {
     
             if (this.documents.containsKey(communicationId) == false) {
     
-                this.out.println("Please provide Document-Port");
+                this.out.println("1");
     
                 String sPort = this.in.readLine();
     
@@ -39,7 +37,7 @@ public class DocumentServerProxy extends AbstractServerProxy {
                 this.documents.put(communicationId, clientProxy);
             } else {
                 this.logger.warning("Could not resolve document for Com-ID: " + communicationId + " already in use");
-                this.out.println("Could not resolve Document: Document-Com-ID already in use");
+                this.out.println("0");
             }
             return this.documents.get(communicationId);
         } catch (Exception e) {

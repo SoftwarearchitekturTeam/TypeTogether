@@ -1,15 +1,9 @@
-package de.hswhameln.typetogether.server.proxy;
+package de.hswhameln.typetogether.networking.shared;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.Socket;
 
 import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.User;
-import de.hswhameln.typetogether.networking.shared.AbstractClientProxy;
 import de.hswhameln.typetogether.networking.types.DocumentCharacter;
 
 public class DocumentClientProxy extends AbstractClientProxy implements Document {
