@@ -1,7 +1,9 @@
 package de.hswhameln.typetogether.networking.shared;
 
+import de.hswhameln.typetogether.networking.proxy.ResponseCodes;
 import de.hswhameln.typetogether.networking.shared.helperinterfaces.FunctionalFunction;
 import de.hswhameln.typetogether.networking.shared.helperinterfaces.FunctionalTask;
+import de.hswhameln.typetogether.networking.util.IOUtils;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -9,7 +11,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public abstract class AbstractServerProxy extends AbstractProxy implements Runnable {
 
@@ -40,7 +41,7 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
     protected void safelyExecute(String name, FunctionalTask functionalTask) {
         try {
             functionalTask.run();
-            this.out.println(0);
+            this.success();
         } catch (Exception e) {
             this.out.println(1);
             this.out.println("Error when executing joinDocument: " + e.getMessage());
@@ -50,12 +51,11 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
     protected <T> void safelySendResult(String name, FunctionalFunction<T> functionalTask) {
         try {
             T t = functionalTask.apply();
-            this.out.println(200);
+            this.success();
             this.out.println(t);
         } catch (Exception e) {
             //TODO: Error Codes festlegen
-            this.out.println(500);
-            this.out.println("Error when executing " + name + ": " + e.getMessage());
+            this.error(ResponseCodes.FUNCTIONAL_ERROR, "Error when executing " + name + ": " + e.getMessage());
         }
     }
 
@@ -74,7 +74,7 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
      * @throws IOException When there was a communication error
      */
     protected <T> T resolveInputObject(String objectName, Map<Integer, T> inputObjectsByCommunicationId, Function<Socket, T> inputObjectSupplier) throws IOException {
-        int communicationId = this.getIntArgument(objectName + "communicationId");
+        int communicationId = IOUtils.getIntArgument(objectName + "communicationId", this.in, this.out);
         if (inputObjectsByCommunicationId.containsKey(communicationId)) {
             this.out.println(0);
             logger.finer(objectName + " with communicationId " + communicationId + " is already known. Continuing.");
@@ -91,49 +91,38 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
         return inputObject;
     }
 
-    protected String getStringArgument(String argumentName) throws IOException {
-        return this.getUntypedArgument(argumentName, String.class);
-    }
-
-    protected int getIntArgument(String argumentName) throws IOException {
-        String untypedInput = this.getUntypedArgument(argumentName, Integer.class);
-        return Integer.parseInt(untypedInput);
-    }
-
-    /**
-     * Ask the client to provide an argument of the given type without parsing the result.
-     *
-     * @param argumentName Name of the argument
-     * @param type         Type of the argument - only used to display the correct message.
-     * @return A string representation of the given argument
-     * @throws IOException On communication errors
-     */
-    private String getUntypedArgument(String argumentName, Class<?> type) throws IOException {
-        this.out.println("Provide a " + argumentName + " (" + type + ")");
-        return this.in.readLine();
-    }
-
     /**
      * Listen to requests coming from {@link #in} and perform the relevant action.
      */
     private void waitForCommands() {
         while (!this.socket.isClosed()) {
             try {
-                String line = this.in.readLine();
-                this.logger.info("Client sent: " + line);
-
-                if (!this.getAvailableActions().containsKey(line)) {
-                    this.out.println("Unknown command: " + line);
-                    this.logger.log(Level.WARNING, "Unknown command from client: " + line);
-                    continue;
-                }
-
-                this.getAvailableActions().get(line).getAction().perform();
+                handleCommand();
 
             } catch (Exception e) {
                 this.logger.log(Level.WARNING, "Exception when handling command. Continuing...", e);
             }
         }
+    }
+
+    /**
+     * @see AbstractClientProxy#chooseOption(String)
+     * @throws IOException
+     */
+    private void handleCommand() throws IOException {
+        String line = this.in.readLine();
+        this.logger.info("Client sent: " + line);
+
+        if (!this.getAvailableActions().containsKey(line)) {
+            this.error(ResponseCodes.NOT_FOUND, "Unknown command: " + line);
+            this.logger.log(Level.WARNING, "Unknown command from client: " + line);
+            return;
+        }
+
+        ServerProxyAction serverProxyAction = this.getAvailableActions().get(line);
+        this.success();
+        this.out.println("Executing commmand " + serverProxyAction.getName());
+        serverProxyAction.getAction().perform();
     }
 
     /**

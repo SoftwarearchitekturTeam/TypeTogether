@@ -4,6 +4,7 @@ import de.hswhameln.typetogether.networking.api.Lobby;
 import de.hswhameln.typetogether.networking.api.User;
 import de.hswhameln.typetogether.networking.shared.AbstractServerProxy;
 import de.hswhameln.typetogether.networking.shared.ServerProxyAction;
+import de.hswhameln.typetogether.networking.util.IOUtils;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -35,7 +36,7 @@ public class LobbyServerProxy extends AbstractServerProxy {
 
     public void doJoinDocument() throws IOException {
         User user = this.resolveUser();
-        String documentId = this.getStringArgument("documentId");
+        String documentId = IOUtils.getStringArgument("documentId", this.in, this.out);
         this.safelyExecute("joinDocument", () -> this.lobby.joinDocument(user, documentId));
     }
 
