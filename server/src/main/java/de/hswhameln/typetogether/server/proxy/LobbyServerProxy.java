@@ -8,6 +8,7 @@ import de.hswhameln.typetogether.networking.util.IOUtils;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.logging.Logger;
@@ -17,7 +18,7 @@ public class LobbyServerProxy extends AbstractServerProxy {
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     // TODO maybe UserClientProxy instead
-    private Map<Integer, User> usersByCommunicationId;
+    private Map<Integer, User> usersByCommunicationId = new HashMap<>();
 
     private Lobby lobby;
 

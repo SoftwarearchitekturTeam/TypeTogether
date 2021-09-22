@@ -74,7 +74,7 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
      * @throws IOException When there was a communication error
      */
     protected <T> T resolveInputObject(String objectName, Map<Integer, T> inputObjectsByCommunicationId, Function<Socket, T> inputObjectSupplier) throws IOException {
-        int communicationId = IOUtils.getIntArgument(objectName + "communicationId", this.in, this.out);
+        int communicationId = IOUtils.getIntArgument("communicationId", this.in, this.out);
         if (inputObjectsByCommunicationId.containsKey(communicationId)) {
             this.out.println(0);
             logger.finer(objectName + " with communicationId " + communicationId + " is already known. Continuing.");

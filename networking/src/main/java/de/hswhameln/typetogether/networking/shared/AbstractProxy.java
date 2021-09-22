@@ -21,7 +21,7 @@ public class AbstractProxy {
 
     protected void openStreams() throws IOException {
         this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-        this.out = new PrintWriter(new OutputStreamWriter(this.socket.getOutputStream()));
+        this.out = new PrintWriter(new OutputStreamWriter(this.socket.getOutputStream()), true);
     }
 
     protected void success() {
