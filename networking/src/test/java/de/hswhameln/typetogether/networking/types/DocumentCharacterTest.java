@@ -34,7 +34,7 @@ public class DocumentCharacterTest {
     }
 
     @Test
-    public void doCharectertestUseCase2(){
+    public void doCharectertestUseCase1InsertCharacter(){
         
         List<DocumentCharacter> list = new ArrayList<>();
         List<Identifier> befor = new ArrayList<>();
@@ -54,6 +54,49 @@ public class DocumentCharacterTest {
         assertEquals("saeg", erg);
     }
 
+    @Test
+    public void doCharectertestUseCase2(){
+        
+        List<DocumentCharacter> list = new ArrayList<>();
+        List<Identifier> befor = new ArrayList<>();
+        List<Identifier> after = new ArrayList<>();
+        befor.add(new Identifier(2, 1));
+        after.add(new Identifier(2, 3));
+        list.add(new DocumentCharacter('s', new Identifier(1, 1)));
+        list.add(new DocumentCharacter('a', new Identifier(2, 1)));
+        list.add(new DocumentCharacter('g', new Identifier(2, 3)));
+        list.add(new DocumentCharacter('e', befor, after, 4));
+        Collections.sort(list);
+        String erg = "";
+
+        for(DocumentCharacter character : list) {
+            erg = erg + character.getValue();
+        }
+        assertEquals("saeg", erg);
+    }
+
+    @Test
+    public void doCharectertestUseCase2SmalerUserId(){
+        
+        List<DocumentCharacter> list = new ArrayList<>();
+        List<Identifier> befor = new ArrayList<>();
+        List<Identifier> after = new ArrayList<>();
+        befor.add(new Identifier(2, 1));
+        after.add(new Identifier(2, 3));
+        list.add(new DocumentCharacter('s', new Identifier(1, 1)));
+        list.add(new DocumentCharacter('a', new Identifier(2, 1)));
+        list.add(new DocumentCharacter('g', new Identifier(2, 3)));
+        list.add(new DocumentCharacter('e', befor, after, 2));
+        Collections.sort(list);
+        String erg = "";
+
+        for(DocumentCharacter character : list) {
+            erg = erg + character.getValue();
+        }
+        assertEquals("saeg", erg);
+    }
+
+    @Disabled
     @Test
     public void doCharectertestcomplexUseCase3(){
         

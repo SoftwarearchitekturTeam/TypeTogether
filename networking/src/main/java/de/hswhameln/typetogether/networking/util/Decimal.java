@@ -35,9 +35,9 @@ public class Decimal {
         List<Integer> inc = new ArrayList<>();
         inc = delta.subList(0, firstNonzeroDigit);
         
-        //TODO Delete when not needed in near future
-        //inc.add(0);
-        //inc.add(1);
+        //TODO critical lines. Needed for Usecase2 but not Usecase 1
+        inc.add(0);
+        inc.add(1);
 
         List<Integer> v1 = new ArrayList<>();
         for(int i = 0; i < n1.size(); i++) {

@@ -68,13 +68,13 @@ public class DocumentCharacter implements Comparable<DocumentCharacter> {
 
     private List<Identifier> generatePositionBetween(List<Identifier> p1, List<Identifier> p2, int userId) {
         Identifier head1;
-        if(p1.get(0) != null) {
+        if(p1.size() > 0 && p2.get(0) != null) {
             head1 = p1.get(0);
         } else {
             head1 = new Identifier(0, userId);
         }
         Identifier head2;
-        if(p2.get(0) != null) {
+        if(p2.size() > 0 && p2.get(0) != null) {
             head2 = p2.get(0);
         } else {
             head2 = new Identifier(10, userId);
