@@ -88,9 +88,9 @@ public class DocumentCharacter implements Comparable<DocumentCharacter> {
             return Decimal.toIdentifierList(next, p1, p2, userId);
         } else {
             if(head1.getUserId() < head2.getUserId()) {
-                return Decimal.cons(head1, generatePositionBetween(p1, Collections.emptyList(), userId));
+                return Decimal.cons(head1, generatePositionBetween(Decimal.rest(p1), Collections.emptyList(), userId));
             } else if(head1.getUserId() == head2.getUserId()) {
-                return Decimal.cons(head1, generatePositionBetween(p1, p2, userId));
+                return Decimal.cons(head1, generatePositionBetween(Decimal.rest(p1), Decimal.rest(p2), userId));
             } else {
                 throw new IllegalArgumentException("Invalid UserId ordering");
             }

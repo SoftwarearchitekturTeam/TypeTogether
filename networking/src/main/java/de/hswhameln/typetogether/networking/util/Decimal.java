@@ -19,6 +19,14 @@ public class Decimal {
         return returnIn;
     }
 
+    public static List<Identifier> rest(List<Identifier> position) {
+        List<Identifier> returnIn = new ArrayList<>();
+        for(int i = 1; i < position.size(); i++) {
+            returnIn.add(position.get(i));
+        }
+        return returnIn;
+    }
+
     public static List<Integer> increment(List<Integer> n1, List<Integer> delta) {
         int firstNonzeroDigit = -1;
         List<Integer> inc = new ArrayList<>();
