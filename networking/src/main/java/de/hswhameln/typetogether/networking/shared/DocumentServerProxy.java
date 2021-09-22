@@ -53,7 +53,7 @@ public class DocumentServerProxy extends AbstractServerProxy {
         Document document = this.resolveDocument();
 
         try {
-            // TODO: Provider this.documentProvider.addChar(document);
+            // TODO: this.document.addChar(author, character);
             this.out.println("200");
         } catch (Exception e) {
             this.out.println("500");
@@ -65,7 +65,7 @@ public class DocumentServerProxy extends AbstractServerProxy {
         Document document = this.resolveDocument();
 
         try {
-            // TODO: Provider this.documentProvider.removeChar(document);
+            // TODO: Provider this.document.removeChar(author, character);
             this.out.println("200");
         } catch (Exception e) {
             this.out.println("500");
@@ -76,8 +76,9 @@ public class DocumentServerProxy extends AbstractServerProxy {
     @Override
     protected Map<String, ServerProxyAction> createAvailableActions() {
         return Map.ofEntries(
-                Map.entry("0", ServerProxyAction.of("addChar", this::addChar)),
-                Map.entry("1", ServerProxyAction.of("removeChar", this::removeChar))
+                Map.entry("0", this.closeConnectionAction),
+                Map.entry("1", ServerProxyAction.of("addChar", this::addChar)),
+                Map.entry("2", ServerProxyAction.of("removeChar", this::removeChar))
         );
     }
 

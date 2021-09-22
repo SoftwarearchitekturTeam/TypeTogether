@@ -50,4 +50,5 @@ public class UserClientProxy extends AbstractClientProxy implements User {
         });
     }
 
+    // TODO Close Connection, but how?
 }
