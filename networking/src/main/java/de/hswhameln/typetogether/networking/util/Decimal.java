@@ -28,20 +28,20 @@ public class Decimal {
     }
 
     public static List<Integer> increment(List<Integer> n1, List<Integer> delta) {
-        int firstNonzeroDigit = -1;
-        List<Integer> inc = new ArrayList<>();
-        for(int i = 0; i < delta.size(); i++) {
-            if(delta.get(i) != 0 && firstNonzeroDigit != -1) {
-                firstNonzeroDigit = i;
-            }
+        int firstNonzeroDigit = delta.indexOf(0) - 1;
+        if(firstNonzeroDigit < 0) {
+            firstNonzeroDigit = delta.size();
         }
+        List<Integer> inc = new ArrayList<>();
         inc = delta.subList(0, firstNonzeroDigit);
-        inc.add(0);
-        inc.add(1);
+        
+        //TODO Delete when not needed in near future
+        //inc.add(0);
+        //inc.add(1);
 
         List<Integer> v1 = new ArrayList<>();
         for(int i = 0; i < n1.size(); i++) {
-            v1.set(i, n1.get(i));
+            v1.add(n1.get(i));
         }
         for(Integer i : inc) {
             v1.add(i);

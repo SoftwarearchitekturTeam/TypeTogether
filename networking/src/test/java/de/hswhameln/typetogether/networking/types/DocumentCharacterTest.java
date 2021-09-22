@@ -32,7 +32,7 @@ public class DocumentCharacterTest {
         }
         assertEquals("saegn", erg);
     }
-    @Disabled
+
     @Test
     public void doCharectertestUseCase2(){
         
@@ -45,11 +45,15 @@ public class DocumentCharacterTest {
         list.add(new DocumentCharacter('a', new Identifier(2, 1)));
         list.add(new DocumentCharacter('g', new Identifier(3, 1)));
         list.add(new DocumentCharacter('e', befor, after, 2));
-        for(DocumentCharacter character : list)
-        System.out.print(character.getValue());
-        System.out.println("Erwartet: saeg");
+        Collections.sort(list);
+        String erg = "";
+
+        for(DocumentCharacter character : list) {
+            erg = erg + character.getValue();
+        }
+        assertEquals("saeg", erg);
     }
-    @Disabled
+
     @Test
     public void doCharectertestcomplexUseCase3(){
         
@@ -70,8 +74,12 @@ public class DocumentCharacterTest {
         after.add(new Identifier(2, 1));
         after.add(new Identifier(2,2));
         list.add(new DocumentCharacter('e', befor, after, 3));
-        for(DocumentCharacter character : list)
-        System.out.print(character.getValue());
-        System.out.println("Erwartet: sarekg");
+        Collections.sort(list);
+
+        String erg = "";
+        for(DocumentCharacter character : list) {
+            erg = erg + character.getValue();
+        }
+        assertEquals("sarekg", erg);
     }
 }
