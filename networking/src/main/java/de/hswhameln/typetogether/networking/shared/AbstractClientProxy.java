@@ -2,8 +2,6 @@ package de.hswhameln.typetogether.networking.shared;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.logging.Logger;
 
 public abstract class AbstractClientProxy extends AbstractProxy{
 

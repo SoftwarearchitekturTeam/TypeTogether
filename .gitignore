@@ -23,3 +23,5 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 .idea/
 .vscode/
+.settings/
+.project

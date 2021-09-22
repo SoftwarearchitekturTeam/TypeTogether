@@ -34,7 +34,7 @@ public class DocumentServerProxy extends AbstractServerProxy {
                 String sPort = this.in.readLine();
     
                 int port = Integer.parseInt(sPort);
-                DocumentClientProxy clientProxy = new DocumentClientProxy(this.socket.getInetAddress().getHostAddress(), port);
+                DocumentClientProxy clientProxy = new DocumentClientProxy(new Socket(this.socket.getInetAddress(), port));
     
                 this.documents.put(communicationId, clientProxy);
             } else {

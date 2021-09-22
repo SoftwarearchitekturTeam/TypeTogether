@@ -14,8 +14,8 @@ import de.hswhameln.typetogether.networking.types.DocumentCharacter;
 
 public class DocumentClientProxy extends AbstractClientProxy implements Document {
 
-    public DocumentClientProxy(String hostname, int port) throws IOException {
-        super(hostname, port);
+    public DocumentClientProxy(Socket socket) {
+        super(socket);
     }
 
     @Override
