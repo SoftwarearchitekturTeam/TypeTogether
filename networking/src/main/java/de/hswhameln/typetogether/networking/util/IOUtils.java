@@ -1,10 +1,15 @@
 package de.hswhameln.typetogether.networking.util;
 
+import de.hswhameln.typetogether.networking.proxy.ResponseCodes;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Logger;
 
 public final class IOUtils {
+    private static Logger logger = Logger.getLogger(IOUtils.class.getName());
+
     public static String getStringArgument(String argumentName, BufferedReader in, PrintWriter out) throws IOException {
         return getUntypedArgument(argumentName, String.class, in, out);
     }
@@ -12,6 +17,15 @@ public final class IOUtils {
     public static int getIntArgument(String argumentName, BufferedReader in, PrintWriter out) throws IOException {
         String untypedInput = getUntypedArgument(argumentName, Integer.class, in, out);
         return Integer.parseInt(untypedInput);
+    }
+
+    public static void success(PrintWriter out) {
+        out.println(ResponseCodes.SUCCESS);
+    }
+
+    public static void error(String responseCode, String message, PrintWriter out) {
+        out.println(responseCode);
+        out.println(message);
     }
 
     /**
@@ -27,6 +41,26 @@ public final class IOUtils {
     private static String getUntypedArgument(String argumentName, Class<?> type, BufferedReader in, PrintWriter out) throws IOException {
         out.println("Provide a " + argumentName + " (" + type + ")");
         return in.readLine();
+    }
+
+
+    /**
+     * Read the response code - do nothing if it is SUCCESS, otherwise read the error message and throw a RuntimeException which includes said message.
+     *
+     * <p>
+     * This is a simple method for when there are only two possible results - success or error. Don't use this method if there are some states which need special treatment.
+     * </p>
+     *
+     * @throws IOException On communication errors
+     */
+    public static void expectResponseCodeSuccess(BufferedReader in) throws IOException {
+        String responseCode = in.readLine();
+        if (ResponseCodes.SUCCESS.equals(responseCode)) {
+            return;
+        }
+        logger.warning("Action unsuccessful, response code: " + responseCode);
+        String message = in.readLine();
+        throw new RuntimeException("Error (" + responseCode + "): " + message);
     }
 
 }

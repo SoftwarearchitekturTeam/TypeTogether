@@ -1,6 +1,9 @@
 package de.hswhameln.typetogether.networking.shared;
 
 import de.hswhameln.typetogether.networking.proxy.ResponseCodes;
+import de.hswhameln.typetogether.networking.shared.helperinterfaces.Action;
+import de.hswhameln.typetogether.networking.shared.helperinterfaces.UnsafeSupplier;
+import de.hswhameln.typetogether.networking.util.IOUtils;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -35,42 +38,42 @@ public abstract class AbstractClientProxy extends AbstractProxy {
     }
 
     /**
-     * see AbstractServerProxy#handleCommand()
+     * Method complementing AbstractServerProxy#handleCommand() on client side. Han
      *
-     * @param code
+     * @param code The command code to send to the server
      */
-    protected void chooseOption(String code) {
+    protected void chooseOption(String code) throws IOException {
         this.logger.info("Requesting execution of code " + code);
         this.out.println(code);
+        IOUtils.expectResponseCodeSuccess(this.in);
+        logger.info("[Server]" + this.in.readLine());
+    }
+
+    /**
+     * Executes a chunk of code, wrapping all IOExceptions in RuntimeExceptions, and returning the produced result
+     * <p>
+     * Note: I hope you know what you are doing when you use this method!
+     * </p>
+     */
+    protected <T> T safelyExecute(UnsafeSupplier<T> supplierWithIOExceptions) {
         try {
-            String responseCode = this.in.readLine();
-            if (!ResponseCodes.SUCCESS.equals(responseCode)) {
-                logger.warning("Action unsuccessful, response code: " + responseCode);
-                String message = this.in.readLine();
-                throw new RuntimeException("Error (" + responseCode + ") when choosing option : " + message);
-            }
-            logger.info("[Server]" + this.in.readLine());
+            return supplierWithIOExceptions.supply();
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Unexpected Error in chooseOption", e);
+            throw new RuntimeException("Unexpected communication exception", e);
         }
     }
 
     /**
-     * Read the response code - do nothing if it is SUCCESS, otherwise read the error message and throw a RuntimeException which includes said message.
-     *
+     * Executes a chunk of code, wrapping all IOExceptions in RuntimeExceptions
      * <p>
-     * This is a simple method for when there are only two possible results - success or error. Don't use this method if there are some states which need special treatment.
+     * Note: I hope you know what you are doing when you use this method!
      * </p>
-     *
-     * @throws IOException On communication errors
      */
-    protected void expectResponseCodeSuccess() throws IOException {
-        String responseCode = this.in.readLine();
-        if (ResponseCodes.SUCCESS.equals(responseCode)) {
-            return;
+    protected void safelyExecute(Action runnableWithIOException) {
+        try {
+            runnableWithIOException.perform();
+        } catch (IOException e) {
+            throw new RuntimeException("Unexpected communication exception", e);
         }
-        logger.warning("Action unsuccessful, response code: " + responseCode);
-        String message = this.in.readLine();
-        throw new RuntimeException("Error (" + responseCode + ") when choosing option : " + message);
     }
 }

@@ -1,6 +1,7 @@
 package de.hswhameln.typetogether.networking.proxy;
 
 import de.hswhameln.typetogether.networking.shared.AbstractServerProxy;
+import de.hswhameln.typetogether.networking.util.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,7 +33,6 @@ public class MarshallHandler <T> {
     /**
      * Marshall an object by sending its communication id to the server, creating a new ServerProxy for that object if the opposing system asks for it.
      * @param t The Object to be marshalled
-     * @param <T> The Type of said object
      * @throws IOException If the connection is closed or otherwise obstructed
      */
     public void marshall(T t) throws IOException {
@@ -42,12 +42,19 @@ public class MarshallHandler <T> {
         }
         int communicationId = this.communicationIdsByObjects.get(t);
         this.out.println(communicationId);
-        String status = this.in.readLine();
-        if (status.equals("0")) {
+        String responseCode = this.in.readLine();
+        if (ResponseCodes.SUCCESS.equals(responseCode)) {
             logger.info("Server already got port for communicationId " + communicationId);
             return;
         }
+        if (!ResponseCodes.ADDITIONAL_INFO_REQUIRED.equals(responseCode)) {
+            throw new RuntimeException("Unexpected response code: " + responseCode);
+        }
         ServerSocket serverSocket = createServerSocket();
+        logger.info(this.in.readLine());
+        this.out.println(serverSocket.getLocalPort());
+
+        IOUtils.expectResponseCodeSuccess(this.in);
 
         while(!serverSocket.isClosed()) {
             Socket clientSocket = serverSocket.accept();

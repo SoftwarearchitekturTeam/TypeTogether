@@ -1,6 +1,7 @@
 package de.hswhameln.typetogether.networking.shared;
 
 import de.hswhameln.typetogether.networking.proxy.ResponseCodes;
+import de.hswhameln.typetogether.networking.util.IOUtils;
 
 import java.io.*;
 import java.net.Socket;
@@ -24,12 +25,11 @@ public class AbstractProxy {
     }
 
     protected void success() {
-        this.out.println(ResponseCodes.SUCCESS);
+        IOUtils.success(this.out);
     }
 
     protected void error(String responseCode, String message) {
-        this.out.println(responseCode);
-        this.out.println(message);
+        IOUtils.error(responseCode, message, this.out);
     }
 
 }
