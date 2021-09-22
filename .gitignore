@@ -23,3 +23,6 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 .idea/
 .vscode/
+.project
+.settings/org.eclipse.core.resources.prefs
+.settings/org.eclipse.m2e.core.prefs
