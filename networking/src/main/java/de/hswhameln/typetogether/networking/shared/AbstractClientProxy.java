@@ -7,8 +7,12 @@ import java.util.logging.Logger;
 
 public abstract class AbstractClientProxy extends AbstractProxy{
 
+    public AbstractClientProxy(Socket socket) {
+        super(socket);
+    }
+
     public AbstractClientProxy(String host, int port) throws IOException {
-        super(new Socket(host, port));
+        this(new Socket(host, port));
     }
 
     public void start() throws Exception {
