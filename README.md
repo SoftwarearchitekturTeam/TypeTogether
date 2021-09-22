@@ -4,3 +4,4 @@ _______   _____ ___ _____ __   __ ___ _____ _  _ ___ ___
   | |  `. .'| v_/ _|  | || \/ | [/\ _|  | | | >< | _|| v / 
   |_|   !_! |_| |___| |_| \__/ \__/___| |_| |_||_|___|_|_\ 
 ```
+![CI](https://github.com/SoftwarearchitekturTeam/TypeTogether/actions/workflows/ci.yml/badge.svg)
