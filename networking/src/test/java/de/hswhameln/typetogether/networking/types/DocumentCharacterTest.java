@@ -96,6 +96,7 @@ public class DocumentCharacterTest {
         assertEquals("isag", erg);
     }
 
+    @Disabled
     @Test
     public void doCharectertestUseCase2SmalerUserId(){
         
