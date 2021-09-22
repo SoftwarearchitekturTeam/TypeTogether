@@ -1,39 +1,40 @@
 package de.hswhameln.typetogether.networking.shared;
 
+import de.hswhameln.typetogether.networking.api.Document;
+
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
-import de.hswhameln.typetogether.networking.api.Document;
-
 public class DocumentServerProxy extends AbstractServerProxy {
 
     //private IChatProvider chatProvider;
     private Map<Integer, DocumentClientProxy> documents = new HashMap<>();
-    
-    public DocumentServerProxy(Socket socket/*, provider*/) {
+    private final Document document;
+
+    public DocumentServerProxy(Socket socket, Document document) {
         super(socket);
-        //this.chatProvider = chatProvider;
+        this.document = document;
     }
 
-    private Document resolveDocument () {
+    private Document resolveDocument() {
 
         this.out.println("Please provide Document-Com-ID");
         try {
             String sCommunicationId = this.in.readLine();
             int communicationId = Integer.parseInt(sCommunicationId);
             this.logger.info("Resolving document for Com-ID: " + communicationId);
-    
+
             if (this.documents.containsKey(communicationId) == false) {
-    
+
                 this.out.println("1");
-    
+
                 String sPort = this.in.readLine();
-    
+
                 int port = Integer.parseInt(sPort);
                 DocumentClientProxy clientProxy = new DocumentClientProxy(new Socket(this.socket.getInetAddress(), port));
-    
+
                 this.documents.put(communicationId, clientProxy);
             } else {
                 this.logger.warning("Could not resolve document for Com-ID: " + communicationId + " already in use");
@@ -45,7 +46,7 @@ public class DocumentServerProxy extends AbstractServerProxy {
             this.logger.log(Level.SEVERE, "Could not read input", e);
             return null;
         }
-        
+
     }
 
     private void addChar() {
@@ -75,9 +76,9 @@ public class DocumentServerProxy extends AbstractServerProxy {
     @Override
     protected Map<String, ServerProxyAction> createAvailableActions() {
         return Map.ofEntries(
-            Map.entry("0", ServerProxyAction.of("addChar", this::addChar)),
-            Map.entry("1", ServerProxyAction.of("removeChar", this::removeChar))
+                Map.entry("0", ServerProxyAction.of("addChar", this::addChar)),
+                Map.entry("1", ServerProxyAction.of("removeChar", this::removeChar))
         );
     }
-    
+
 }
