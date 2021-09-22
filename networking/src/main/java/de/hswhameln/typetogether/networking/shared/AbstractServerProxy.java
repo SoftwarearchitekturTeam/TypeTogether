@@ -1,5 +1,8 @@
 package de.hswhameln.typetogether.networking.shared;
 
+import de.hswhameln.typetogether.networking.shared.helperinterfaces.FunctionalFunction;
+import de.hswhameln.typetogether.networking.shared.helperinterfaces.FunctionalTask;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Collections;
@@ -32,48 +35,6 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
     }
 
     protected abstract Map<String, ServerProxyAction> createAvailableActions();
-
-    /**
-     * Listen to requests coming from {@link #in} and perform the relevant action.
-     */
-    private void waitForCommands() {
-        while (!this.socket.isClosed()) {
-            try {
-                String line = this.in.readLine();
-                this.logger.info("Client sent: " + line);
-
-                if (!this.getAvailableActions().containsKey(line)) {
-                    this.out.println("Unknown command: " + line);
-                    this.logger.log(Level.WARNING, "Unknown command from client: " + line);
-                    continue;
-                }
-
-                this.getAvailableActions().get(line).getAction().perform();
-
-            } catch (Exception e) {
-                this.logger.log(Level.WARNING, "Exception when handling command. Continuing...", e);
-            }
-        }
-    }
-
-    /**
-     * Sends an initialization message, which includes all available commands and the key with which they can be accessed.
-     */
-    private void sendInitializationMessage() {
-        this.out.println("Connection established. Available commands:");
-        this.out.println(this.getAvailableActions().size());
-        this.getAvailableActions().forEach((id, action) -> {
-            this.out.println(id + " - " + action.getName());
-        });
-    }
-
-    private Map<String, ServerProxyAction> getAvailableActions() {
-        if (this.availableActions == null) {
-            Map<String, ServerProxyAction> availableActions = this.createAvailableActions();
-            this.availableActions = availableActions != null ? availableActions : Collections.emptyMap();
-        }
-        return this.availableActions;
-    }
 
     /**
      * Resolve an input object by asking the client for a communicationId. If the input object with the provided communicationId is already known, return it. Otherwise, ask the client for a port and establish a new connection.
@@ -124,4 +85,69 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
         this.out.println("Provide a " + argumentName + " (" + type + ")");
         return this.in.readLine();
     }
+
+    /**
+     * Listen to requests coming from {@link #in} and perform the relevant action.
+     */
+    private void waitForCommands() {
+        while (!this.socket.isClosed()) {
+            try {
+                String line = this.in.readLine();
+                this.logger.info("Client sent: " + line);
+
+                if (!this.getAvailableActions().containsKey(line)) {
+                    this.out.println("Unknown command: " + line);
+                    this.logger.log(Level.WARNING, "Unknown command from client: " + line);
+                    continue;
+                }
+
+                this.getAvailableActions().get(line).getAction().perform();
+
+            } catch (Exception e) {
+                this.logger.log(Level.WARNING, "Exception when handling command. Continuing...", e);
+            }
+        }
+    }
+
+    protected void safelyExecute(String name, FunctionalTask functionalTask) {
+        try {
+            functionalTask.run();
+            this.out.println(0);
+        } catch (Exception e) {
+            this.out.println(1);
+            this.out.println("Error when executing joinDocument: " + e.getMessage());
+        }
+    }
+
+    protected <T> void safelySendResult(String name, FunctionalFunction<T> functionalTask) {
+        try {
+            T t = functionalTask.apply();
+            this.out.println(0);
+            this.out.println(t);
+        } catch (Exception e) {
+            this.out.println(1);
+            this.out.println("Error when executing joinDocument: " + e.getMessage());
+        }
+    }
+
+
+    /**
+     * Sends an initialization message, which includes all available commands and the key with which they can be accessed.
+     */
+    private void sendInitializationMessage() {
+        this.out.println("Connection established. Available commands:");
+        this.out.println(this.getAvailableActions().size());
+        this.getAvailableActions().forEach((id, action) -> {
+            this.out.println(id + " - " + action.getName());
+        });
+    }
+
+    private Map<String, ServerProxyAction> getAvailableActions() {
+        if (this.availableActions == null) {
+            Map<String, ServerProxyAction> availableActions = this.createAvailableActions();
+            this.availableActions = availableActions != null ? availableActions : Collections.emptyMap();
+        }
+        return this.availableActions;
+    }
+
 }

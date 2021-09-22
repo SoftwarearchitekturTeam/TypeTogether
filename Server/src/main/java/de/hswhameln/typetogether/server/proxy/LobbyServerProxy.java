@@ -35,13 +35,7 @@ public class LobbyServerProxy extends AbstractServerProxy {
     public void doJoinDocument() throws IOException {
         User user = this.resolveUser();
         String documentId = this.getStringArgument("documentId");
-        try {
-            this.lobby.joinDocument(user, documentId);
-            this.out.println(0);
-        } catch (Exception e) {
-            this.out.println(1);
-            this.out.println("Error when executing joinDocument: " + e.getMessage());
-        }
+        this.safelyExecute("joinDocument", () -> this.lobby.joinDocument(user, documentId));
     }
 
     public void doLeaveDocument() {

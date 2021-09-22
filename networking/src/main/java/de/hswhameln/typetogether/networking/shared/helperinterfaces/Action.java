@@ -1,4 +1,4 @@
-package de.hswhameln.typetogether.networking.shared;
+package de.hswhameln.typetogether.networking.shared.helperinterfaces;
 
 import java.io.IOException;
 

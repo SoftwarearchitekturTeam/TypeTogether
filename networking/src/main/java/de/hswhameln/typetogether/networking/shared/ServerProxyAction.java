@@ -1,5 +1,7 @@
 package de.hswhameln.typetogether.networking.shared;
 
+import de.hswhameln.typetogether.networking.shared.helperinterfaces.Action;
+
 public class ServerProxyAction {
     private final String name;
     private final Action action;
