@@ -28,6 +28,7 @@ public class LobbyServerProxy extends AbstractServerProxy {
     @Override
     protected Map<String, ServerProxyAction> createAvailableActions() {
         return Map.ofEntries(
+                Map.entry("0", this.closeConnectionAction),
                 Map.entry("1", ServerProxyAction.of("joinDocument", this::doJoinDocument)),
                 Map.entry("2", ServerProxyAction.of("leaveDocument", this::doLeaveDocument)));
     }

@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 public abstract class AbstractServerProxy extends AbstractProxy implements Runnable {
 
     private Map<String, ServerProxyAction> availableActions;
+    protected ServerProxyAction closeConnectionAction = ServerProxyAction.of("closeConnection", this::closeConnection);
 
     protected AbstractServerProxy(Socket socket) {
         super(socket);
@@ -35,6 +36,31 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
     }
 
     protected abstract Map<String, ServerProxyAction> createAvailableActions();
+
+    protected void safelyExecute(String name, FunctionalTask functionalTask) {
+        try {
+            functionalTask.run();
+            this.out.println(0);
+        } catch (Exception e) {
+            this.out.println(1);
+            this.out.println("Error when executing joinDocument: " + e.getMessage());
+        }
+    }
+
+    protected <T> void safelySendResult(String name, FunctionalFunction<T> functionalTask) {
+        try {
+            T t = functionalTask.apply();
+            this.out.println(0);
+            this.out.println(t);
+        } catch (Exception e) {
+            this.out.println(1);
+            this.out.println("Error when executing joinDocument: " + e.getMessage());
+        }
+    }
+
+    protected void closeConnection() throws IOException {
+        this.socket.close();
+    }
 
     /**
      * Resolve an input object by asking the client for a communicationId. If the input object with the provided communicationId is already known, return it. Otherwise, ask the client for a port and establish a new connection.
@@ -108,28 +134,6 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
             }
         }
     }
-
-    protected void safelyExecute(String name, FunctionalTask functionalTask) {
-        try {
-            functionalTask.run();
-            this.out.println(0);
-        } catch (Exception e) {
-            this.out.println(1);
-            this.out.println("Error when executing joinDocument: " + e.getMessage());
-        }
-    }
-
-    protected <T> void safelySendResult(String name, FunctionalFunction<T> functionalTask) {
-        try {
-            T t = functionalTask.apply();
-            this.out.println(0);
-            this.out.println(t);
-        } catch (Exception e) {
-            this.out.println(1);
-            this.out.println("Error when executing joinDocument: " + e.getMessage());
-        }
-    }
-
 
     /**
      * Sends an initialization message, which includes all available commands and the key with which they can be accessed.
