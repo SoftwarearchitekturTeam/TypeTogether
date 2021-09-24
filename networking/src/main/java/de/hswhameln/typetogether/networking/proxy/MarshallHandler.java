@@ -36,6 +36,7 @@ public class MarshallHandler <T> {
      * @throws IOException If the connection is closed or otherwise obstructed
      */
     public void marshall(T t) throws IOException {
+        logger.fine("[Server]: " + this.in.readLine());
         if (!this.communicationIdsByObjects.containsKey(t)) {
             int communicationId = this.createCommunicationId();
             this.communicationIdsByObjects.put(t, communicationId);
@@ -51,7 +52,7 @@ public class MarshallHandler <T> {
             throw new RuntimeException("Unexpected response code: " + responseCode);
         }
         ServerSocket serverSocket = createServerSocket();
-        logger.info(this.in.readLine());
+        logger.info("[Server]" + this.in.readLine());
         this.out.println(serverSocket.getLocalPort());
 
         IOUtils.expectResponseCodeSuccess(this.in);

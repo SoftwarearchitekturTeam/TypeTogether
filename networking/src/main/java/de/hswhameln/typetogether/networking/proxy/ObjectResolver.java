@@ -33,16 +33,22 @@ public class ObjectResolver<T> {
         this.targetInetAddress = targetInetAddress;
     }
 
+    /**
+     * Resolve an input object by asking the client for a communicationId. If the input object with the provided communicationId is already known, return it. Otherwise, ask the client for a port and establish a new connection.
+     *
+     * @return A client proxy object with the correct type
+     * @throws IOException When there was a communication error
+     */
     public T resolveObject() throws IOException {
-        int communicationId = Integer.parseInt(this.in.readLine());
+        int communicationId = IOUtils.getIntArgument("communicationId", this.in, this.out);
         this.logger.info("Resolving object for communicationId " + communicationId);
 
         if (this.objectsByCommunicationIds.containsKey(communicationId)) {
-            this.out.println(ResponseCodes.SUCCESS);
+            IOUtils.success(this.out);
             return this.objectsByCommunicationIds.get(communicationId);
         }
 
-        this.out.print(ResponseCodes.ADDITIONAL_INFO_REQUIRED);
+        this.out.println(ResponseCodes.ADDITIONAL_INFO_REQUIRED);
         int port = IOUtils.getIntArgument("port", this.in, this.out);
 
         Socket socket = new Socket(this.targetInetAddress, port);
@@ -53,7 +59,6 @@ public class ObjectResolver<T> {
         logger.info("Correctly resolved Object of type " + clientProxy.getClass().getName());
         return clientProxy;
     }
-
 
 
 }
