@@ -1,85 +1,51 @@
 package de.hswhameln.typetogether.networking.shared;
 
 import de.hswhameln.typetogether.networking.api.Document;
+import de.hswhameln.typetogether.networking.api.User;
+import de.hswhameln.typetogether.networking.proxy.ObjectResolver;
+import de.hswhameln.typetogether.networking.types.DocumentCharacter;
+import de.hswhameln.typetogether.networking.util.IOUtils;
 
+import java.io.IOException;
 import java.net.Socket;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 
 public class DocumentServerProxy extends AbstractServerProxy {
 
     //private IChatProvider chatProvider;
-    private Map<Integer, DocumentClientProxy> documents = new HashMap<>();
-    private final Document document;
+    private ObjectResolver<User> objectResolver;
+    private final Document underlyingDocument;
 
-    public DocumentServerProxy(Socket socket, Document document) {
+    public DocumentServerProxy(Socket socket, Document underlyingDocument) {
         super(socket);
-        this.document = document;
-    }
-
-    private Document resolveDocument() {
-
-        this.out.println("Please provide Document-Com-ID");
-        try {
-            String sCommunicationId = this.in.readLine();
-            int communicationId = Integer.parseInt(sCommunicationId);
-            this.logger.info("Resolving document for Com-ID: " + communicationId);
-
-            if (this.documents.containsKey(communicationId) == false) {
-
-                this.out.println("1");
-
-                String sPort = this.in.readLine();
-
-                int port = Integer.parseInt(sPort);
-                DocumentClientProxy clientProxy = new DocumentClientProxy(new Socket(this.socket.getInetAddress(), port));
-
-                this.documents.put(communicationId, clientProxy);
-            } else {
-                this.logger.warning("Could not resolve document for Com-ID: " + communicationId + " already in use");
-                this.out.println("0");
-            }
-            return this.documents.get(communicationId);
-        } catch (Exception e) {
-            this.out.println("[ERROR]: Could not read input: " + e.getMessage());
-            this.logger.log(Level.SEVERE, "Could not read input", e);
-            return null;
-        }
-
-    }
-
-    private void addChar() {
-        Document document = this.resolveDocument();
-
-        try {
-            // TODO: this.document.addChar(author, character);
-            this.out.println("200");
-        } catch (Exception e) {
-            this.out.println("500");
-            this.out.println("[ERROR]: Could not add char: " + e.getMessage());
-        }
-    }
-
-    private void removeChar() {
-        Document document = this.resolveDocument();
-
-        try {
-            // TODO: Provider this.document.removeChar(author, character);
-            this.out.println("200");
-        } catch (Exception e) {
-            this.out.println("500");
-            this.out.println("[ERROR]: Could not remove char: " + e.getMessage());
-        }
+        this.underlyingDocument = underlyingDocument;
+        this.objectResolver = new ObjectResolver<>(UserClientProxy::new, this.in, this.out, this.socket.getInetAddress());
     }
 
     @Override
     protected Map<String, ServerProxyAction> createAvailableActions() {
         return Map.ofEntries(
                 Map.entry("0", this.closeConnectionAction),
-                Map.entry("1", ServerProxyAction.of("addChar", this::addChar)),
-                Map.entry("2", ServerProxyAction.of("removeChar", this::removeChar))
+                Map.entry("1", ServerProxyAction.of("addChar", this::doAddChar)),
+                Map.entry("2", ServerProxyAction.of("removeChar", this::doRemoveChar))
         );
     }
+
+    private void doAddChar() throws IOException {
+        this.safelyExecute("addChar", () -> {
+            User author = this.objectResolver.resolveObject();
+            DocumentCharacter character = IOUtils.getDocumentCharacterArgument("char to add", this.in, this.out);
+            this.underlyingDocument.addChar(author, character);
+        });
+    }
+
+    private void doRemoveChar() {
+        this.safelyExecute("removeChar", () -> {
+            User author = this.objectResolver.resolveObject();
+            DocumentCharacter character = IOUtils.getDocumentCharacterArgument("char to remove", this.in, this.out);
+            this.underlyingDocument.removeChar(author, character);
+        });
+    }
+
 
 }
