@@ -17,21 +17,13 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
 
     protected AbstractServerProxy(Socket socket) {
         super(socket);
+
     }
 
     @Override
     public void run() {
-        try {
-            this.openStreams();
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Could not open input stream.", e);
-            return;
-        }
-
         this.sendInitializationMessage();
-
         this.waitForCommands();
-
     }
 
     protected abstract Map<String, ServerProxyAction> createAvailableActions();
@@ -41,8 +33,7 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
             functionalTask.run();
             this.success();
         } catch (Exception e) {
-            this.out.println(1);
-            this.out.println("Error when executing " + name + ": " + e.getMessage());
+            this.error(ResponseCodes.FUNCTIONAL_ERROR, "Error when executing " + name + ": " + e.getMessage());
         }
     }
 
@@ -52,7 +43,6 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
             this.success();
             this.out.println(t);
         } catch (Exception e) {
-            //TODO: Error Codes festlegen
             this.error(ResponseCodes.FUNCTIONAL_ERROR, "Error when executing " + name + ": " + e.getMessage());
         }
     }
@@ -80,6 +70,7 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
      * @see AbstractClientProxy#chooseOption(String)
      */
     private void handleCommand() throws IOException {
+        this.out.println("Waiting for you to pass the id of a command that should be executed.");
         String line = this.in.readLine();
         this.logger.info("Client sent: " + line);
 
@@ -99,6 +90,7 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
      * Sends an initialization message, which includes all available commands and the key with which they can be accessed.
      */
     private void sendInitializationMessage() {
+        this.logger.fine("Sending initialization message");
         this.out.println("Connection established. Available commands:");
         this.out.println(this.getAvailableActions().size());
         this.getAvailableActions().forEach((id, action) -> {

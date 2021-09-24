@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -51,6 +52,7 @@ public class ObjectResolver<T> {
         this.out.println(ResponseCodes.ADDITIONAL_INFO_REQUIRED);
         int port = IOUtils.getIntArgument("port", this.in, this.out);
 
+        logger.finer("Starting new ClientSocket (" + this.targetInetAddress + ":" + port + ")");
         Socket socket = new Socket(this.targetInetAddress, port);
 
         T clientProxy = this.clientProxySupplier.apply(socket);

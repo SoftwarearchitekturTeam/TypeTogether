@@ -2,6 +2,7 @@ package de.hswhameln.typetogether.server.proxy;
 
 import de.hswhameln.typetogether.networking.api.Lobby;
 import de.hswhameln.typetogether.networking.api.User;
+import de.hswhameln.typetogether.networking.proxy.ObjectResolver;
 import de.hswhameln.typetogether.networking.shared.AbstractServerProxy;
 import de.hswhameln.typetogether.networking.shared.ServerProxyAction;
 import de.hswhameln.typetogether.networking.util.IOUtils;
@@ -18,13 +19,14 @@ public class LobbyServerProxy extends AbstractServerProxy {
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     // TODO maybe UserClientProxy instead
-    private Map<Integer, User> usersByCommunicationId = new HashMap<>();
+    private ObjectResolver<User> userObjectResolver;
 
     private Lobby lobby;
 
     public LobbyServerProxy(Socket socket, Lobby lobby) {
         super(socket);
         this.lobby = lobby;
+        this.userObjectResolver = new ObjectResolver<>(UserClientProxy::new, this.in, this.out, this.socket.getInetAddress());
     }
 
     @Override
@@ -46,6 +48,6 @@ public class LobbyServerProxy extends AbstractServerProxy {
     }
 
     private User resolveUser() throws IOException {
-        return this.resolveInputObject("User", this.usersByCommunicationId, UserClientProxy::new);
+        return this.userObjectResolver.resolveObject();
     }
 }

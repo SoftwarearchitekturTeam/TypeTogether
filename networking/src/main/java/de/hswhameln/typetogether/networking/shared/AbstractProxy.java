@@ -16,10 +16,14 @@ public class AbstractProxy {
 
     public AbstractProxy(Socket socket) {
         this.socket = socket;
+        try {
+            this.openStreams();
+        } catch (IOException e) {
+            throw new RuntimeException("Unexpected initialization error", e);
+        }
     }
 
-
-    protected void openStreams() throws IOException {
+    private void openStreams() throws IOException {
         this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
         this.out = new PrintWriter(new OutputStreamWriter(this.socket.getOutputStream()), true);
     }
