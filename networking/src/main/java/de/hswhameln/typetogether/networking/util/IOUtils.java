@@ -1,6 +1,7 @@
 package de.hswhameln.typetogether.networking.util;
 
 import de.hswhameln.typetogether.networking.proxy.ResponseCodes;
+import de.hswhameln.typetogether.networking.types.DocumentCharacter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,6 +18,11 @@ public final class IOUtils {
     public static int getIntArgument(String argumentName, BufferedReader in, PrintWriter out) throws IOException {
         String untypedInput = getUntypedArgument(argumentName, Integer.class, in, out);
         return Integer.parseInt(untypedInput);
+    }
+
+    public static DocumentCharacter getDocumentCharacterArgument(String argumentName, BufferedReader in, PrintWriter out) throws IOException {
+        String untypedInput = getUntypedArgument(argumentName, DocumentCharacter.class, in, out);
+        return DocumentCharacter.parse(untypedInput);
     }
 
     public static void success(PrintWriter out) {

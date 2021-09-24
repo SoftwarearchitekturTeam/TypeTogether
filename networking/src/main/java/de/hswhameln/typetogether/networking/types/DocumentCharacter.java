@@ -1,14 +1,26 @@
 package de.hswhameln.typetogether.networking.types;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import de.hswhameln.typetogether.networking.util.Decimal;
+import de.hswhameln.typetogether.networking.util.StringRepresentationSchema;
 
 public class DocumentCharacter implements Comparable<DocumentCharacter> {
     private List<Identifier> position;
     private char value;
+
+    private static final StringRepresentationSchema<DocumentCharacter> stringRepresentationSchema = new StringRepresentationSchema<>(
+            DocumentCharacter.class,
+            "<",
+            ">",
+            "-",
+            2
+    );
+    private static final String POSTION_DELIMITER = ",";
 
     public DocumentCharacter(char value, Identifier firstPosition) {
         this.position = new ArrayList<>();
@@ -19,6 +31,11 @@ public class DocumentCharacter implements Comparable<DocumentCharacter> {
     public DocumentCharacter(char value, List<Identifier> positionBefore, List<Identifier> positionAfter, int userId) {
         this.position = this.generatePositionBetween(positionBefore, positionAfter, userId);
         this.value = value;
+    }
+
+    public DocumentCharacter(char value, List<Identifier> position) {
+        this.value = value;
+        this.position = position;
     }
 
     public char getValue() {
@@ -110,5 +127,29 @@ public class DocumentCharacter implements Comparable<DocumentCharacter> {
         }
         returnIn.add(new Identifier(digit, userId));
         return returnIn;
+    }
+
+    public String getStringRepresentation() {
+        return stringRepresentationSchema.getStringRepresentation(
+                Character.toString(this.value),
+                this.position.stream()
+                        .map(Identifier::getStringRepresentation)
+                        .collect(Collectors.joining(POSTION_DELIMITER))
+               );
+    }
+
+    public static DocumentCharacter parse(String stringRepresentation) {
+        return stringRepresentationSchema.parse(stringRepresentation, (elements) -> fromStringArray(stringRepresentation, elements));
+    }
+
+    private static DocumentCharacter fromStringArray(String stringRepresentation, String[] elements) {
+        if (elements[0].length() != 1) {
+            throw new ParseException(DocumentCharacter.class, stringRepresentation, "First element must be a single character.");
+        }
+        char value = elements[0].charAt(0);
+        List<Identifier> position = Arrays.stream(elements[1].split(POSTION_DELIMITER))
+                .map(Identifier::parse)
+                .collect(Collectors.toList());
+        return new DocumentCharacter(value, position);
     }
 }
