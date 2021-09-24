@@ -1,9 +1,12 @@
 package de.hswhameln.typetogether.server.proxy;
 
+import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.Lobby;
 import de.hswhameln.typetogether.networking.api.User;
+import de.hswhameln.typetogether.networking.proxy.MarshallHandler;
 import de.hswhameln.typetogether.networking.proxy.ObjectResolver;
 import de.hswhameln.typetogether.networking.shared.AbstractServerProxy;
+import de.hswhameln.typetogether.networking.shared.DocumentServerProxy;
 import de.hswhameln.typetogether.networking.shared.ServerProxyAction;
 import de.hswhameln.typetogether.networking.shared.UserClientProxy;
 import de.hswhameln.typetogether.networking.util.IOUtils;
@@ -17,8 +20,8 @@ public class LobbyServerProxy extends AbstractServerProxy {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
-    // TODO maybe UserClientProxy instead
-    private ObjectResolver<User> userObjectResolver;
+    private final ObjectResolver<User> userObjectResolver;
+    private final MarshallHandler<Document> documentMarshallHandler;
 
     private Lobby lobby;
 
@@ -26,6 +29,7 @@ public class LobbyServerProxy extends AbstractServerProxy {
         super(socket);
         this.lobby = lobby;
         this.userObjectResolver = new ObjectResolver<>(UserClientProxy::new, this.in, this.out, this.socket.getInetAddress());
+        this.documentMarshallHandler = new MarshallHandler<>(DocumentServerProxy::new, this.in, this.out);
     }
 
     @Override
@@ -39,7 +43,7 @@ public class LobbyServerProxy extends AbstractServerProxy {
     public void doJoinDocument() throws IOException {
         User user = this.resolveUser();
         String documentId = IOUtils.getStringArgument("documentId", this.in, this.out);
-        this.safelyExecute("joinDocument", () -> this.lobby.joinDocument(user, documentId));
+        this.safelySendResult("joinDocument", () -> this.lobby.joinDocument(user, documentId), this.documentMarshallHandler::marshall);
     }
 
     public void doLeaveDocument() {

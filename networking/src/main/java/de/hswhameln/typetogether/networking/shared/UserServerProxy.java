@@ -16,7 +16,7 @@ public class UserServerProxy extends AbstractServerProxy {
     private final User user;
     private final MarshallHandler<Document> documentMarshallHandler;
 
-    protected UserServerProxy(Socket socket, User user) {
+    public UserServerProxy(Socket socket, User user) {
         super(socket);
         this.user = user;
         this.documentMarshallHandler = new MarshallHandler<>(DocumentServerProxy::new, this.in, this.out);

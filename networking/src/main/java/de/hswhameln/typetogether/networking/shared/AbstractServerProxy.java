@@ -3,6 +3,7 @@ package de.hswhameln.typetogether.networking.shared;
 import de.hswhameln.typetogether.networking.proxy.ResponseCodes;
 import de.hswhameln.typetogether.networking.shared.helperinterfaces.FunctionalFunction;
 import de.hswhameln.typetogether.networking.shared.helperinterfaces.FunctionalTask;
+import de.hswhameln.typetogether.networking.shared.helperinterfaces.UnsafeConsumer;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -40,10 +41,14 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
     }
 
     protected <T> void safelySendResult(String name, FunctionalFunction<T> functionalTask) {
+       this.safelySendResult(name, functionalTask, this.out::println);
+    }
+
+    protected <T> void safelySendResult(String name, FunctionalFunction<T> functionalTask, UnsafeConsumer<T> sender) {
         try {
             T t = functionalTask.apply();
             this.success();
-            this.out.println(t);
+            sender.accept(t);
         } catch (Exception e) {
             this.error(ResponseCodes.FUNCTIONAL_ERROR, "Error when executing " + name + ": " + e.getMessage());
         }
