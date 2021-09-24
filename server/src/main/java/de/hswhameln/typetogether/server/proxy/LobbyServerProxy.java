@@ -23,7 +23,7 @@ public class LobbyServerProxy extends AbstractServerProxy {
     private final ObjectResolver<User> userObjectResolver;
     private final MarshallHandler<Document> documentMarshallHandler;
 
-    private Lobby lobby;
+    private final Lobby lobby;
 
     public LobbyServerProxy(Socket socket, Lobby lobby) {
         super(socket);
@@ -46,8 +46,10 @@ public class LobbyServerProxy extends AbstractServerProxy {
         this.safelySendResult("joinDocument", () -> this.lobby.joinDocument(user, documentId), this.documentMarshallHandler::marshall);
     }
 
-    public void doLeaveDocument() {
-        // TODO
+    public void doLeaveDocument() throws IOException {
+        User user = this.resolveUser();
+        String documentId = IOUtils.getStringArgument("documentId", this.in, this.out);
+        this.safelyExecute("joinDocument", () -> this.lobby.leaveDocument(user, documentId));
     }
 
     private User resolveUser() throws IOException {

@@ -19,7 +19,6 @@ public class LobbyClientProxy extends AbstractClientProxy implements Lobby {
     private final ObjectResolver<Document> documentObjectResolver;
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
-
     public LobbyClientProxy(Socket socket) {
         super(socket);
         this.userMarshallHandler = new MarshallHandler<>(UserServerProxy::new, this.in, this.out);
@@ -34,8 +33,8 @@ public class LobbyClientProxy extends AbstractClientProxy implements Lobby {
 
             // "Provide documentId"
             logger.fine(this.in.readLine());
+            this.out.println(documentId);
 
-            this.out.println("documentId");
             IOUtils.expectResponseCodeSuccess(this.in);
             return this.documentObjectResolver.resolveObject();
         });
@@ -43,8 +42,15 @@ public class LobbyClientProxy extends AbstractClientProxy implements Lobby {
 
     @Override
     public void leaveDocument(User user, String documentId) {
-        logger.finer("leaveDocument called");
-        this.out.println("2");
+        this.safelyExecute(() -> {
+            this.chooseOption("2");
+            this.userMarshallHandler.marshall(user);
 
+            // "Provide documentId"
+            logger.fine(this.in.readLine());
+            this.out.println(documentId);
+
+            IOUtils.expectResponseCodeSuccess(this.in);
+        });
     }
 }
