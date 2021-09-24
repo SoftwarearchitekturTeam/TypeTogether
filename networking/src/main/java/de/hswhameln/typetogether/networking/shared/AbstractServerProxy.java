@@ -33,7 +33,7 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
             functionalTask.run();
             this.success();
         } catch (IOException e) {
-          throw new RuntimeException(e);
+            throw new RuntimeException(e);
         } catch (Exception e) {
             this.error(ResponseCodes.FUNCTIONAL_ERROR, "Error when executing " + name + ": " + e.getMessage());
         }

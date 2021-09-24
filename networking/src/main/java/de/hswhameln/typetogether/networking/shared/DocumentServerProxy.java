@@ -47,5 +47,9 @@ public class DocumentServerProxy extends AbstractServerProxy {
         });
     }
 
+    private void doGetFuncId() {
+        this.safelySendResult("getFuncId", this.underlyingDocument::getFuncId);
+    }
+
 
 }

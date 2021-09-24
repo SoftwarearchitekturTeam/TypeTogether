@@ -5,6 +5,7 @@ import java.net.Socket;
 import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.User;
 import de.hswhameln.typetogether.networking.types.DocumentCharacter;
+import de.hswhameln.typetogether.networking.util.IOUtils;
 
 public class DocumentClientProxy extends AbstractClientProxy implements Document {
 
@@ -14,22 +15,29 @@ public class DocumentClientProxy extends AbstractClientProxy implements Document
 
     @Override
     public void addChar(User author, DocumentCharacter character) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not yet implemented");
-
+        this.safelyExecute(() -> {
+            this.chooseOption("1");
+            IOUtils.expectResponseCodeSuccess(this.in);
+        });
     }
 
     @Override
     public void removeChar(User author, DocumentCharacter character) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not yet implemented");
-
+        this.safelyExecute(() -> {
+            this.chooseOption("2");
+            IOUtils.expectResponseCodeSuccess(this.in);
+        });
     }
 
     @Override
     public String getFuncId() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not yet implemented");
+        return this.safelyExecute(() -> {
+            this.chooseOption("1");
+            IOUtils.expectResponseCodeSuccess(this.in);
+            String funcId = this.in.readLine();
+            logger.fine("getFuncId returned " + funcId);
+            return funcId;
+        });
     }
 
 }
