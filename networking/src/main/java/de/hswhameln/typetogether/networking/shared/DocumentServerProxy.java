@@ -12,8 +12,7 @@ import java.util.Map;
 
 public class DocumentServerProxy extends AbstractServerProxy {
 
-    //private IChatProvider chatProvider;
-    private ObjectResolver<User> objectResolver;
+    private final ObjectResolver<User> objectResolver;
     private final Document underlyingDocument;
 
     public DocumentServerProxy(Socket socket, Document underlyingDocument) {
@@ -27,7 +26,8 @@ public class DocumentServerProxy extends AbstractServerProxy {
         return Map.ofEntries(
                 Map.entry("0", this.closeConnectionAction),
                 Map.entry("1", ServerProxyAction.of("addChar", this::doAddChar)),
-                Map.entry("2", ServerProxyAction.of("removeChar", this::doRemoveChar))
+                Map.entry("2", ServerProxyAction.of("removeChar", this::doRemoveChar)),
+                Map.entry("3", ServerProxyAction.of("getFuncId", this::doGetFuncId))
         );
     }
 

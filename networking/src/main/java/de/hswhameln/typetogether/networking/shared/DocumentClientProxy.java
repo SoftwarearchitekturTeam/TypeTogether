@@ -32,12 +32,11 @@ public class DocumentClientProxy extends AbstractClientProxy implements Document
     @Override
     public String getFuncId() {
         return this.safelyExecute(() -> {
-            this.chooseOption("1");
+            this.chooseOption("3");
             IOUtils.expectResponseCodeSuccess(this.in);
             String funcId = this.in.readLine();
             logger.fine("getFuncId returned " + funcId);
             return funcId;
         });
     }
-
 }
