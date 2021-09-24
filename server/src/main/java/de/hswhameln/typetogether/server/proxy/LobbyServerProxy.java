@@ -5,13 +5,12 @@ import de.hswhameln.typetogether.networking.api.User;
 import de.hswhameln.typetogether.networking.proxy.ObjectResolver;
 import de.hswhameln.typetogether.networking.shared.AbstractServerProxy;
 import de.hswhameln.typetogether.networking.shared.ServerProxyAction;
+import de.hswhameln.typetogether.networking.shared.UserClientProxy;
 import de.hswhameln.typetogether.networking.util.IOUtils;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.logging.Logger;
 
 public class LobbyServerProxy extends AbstractServerProxy {

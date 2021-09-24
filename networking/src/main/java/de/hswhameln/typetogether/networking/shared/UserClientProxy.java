@@ -1,4 +1,4 @@
-package de.hswhameln.typetogether.server.proxy;
+package de.hswhameln.typetogether.networking.shared;
 
 import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.User;
