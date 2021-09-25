@@ -22,6 +22,7 @@ public final class IOUtils {
 
     public static DocumentCharacter getDocumentCharacterArgument(String argumentName, BufferedReader in, PrintWriter out) throws IOException {
         String untypedInput = getUntypedArgument(argumentName, DocumentCharacter.class, in, out);
+        logger.finer("Input received for argument " + argumentName + ": " + untypedInput);
         return DocumentCharacter.parse(untypedInput);
     }
 
@@ -62,6 +63,7 @@ public final class IOUtils {
     public static void expectResponseCodeSuccess(BufferedReader in) throws IOException {
         String responseCode = in.readLine();
         if (ResponseCodes.SUCCESS.equals(responseCode)) {
+            logger.fine("ResponseCode success returned");
             return;
         }
         logger.warning("Action unsuccessful, response code: " + responseCode);

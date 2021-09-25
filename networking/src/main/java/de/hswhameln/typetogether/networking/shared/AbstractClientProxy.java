@@ -23,6 +23,7 @@ public abstract class AbstractClientProxy extends AbstractProxy {
      */
     public void readInitializationMessage() throws IOException {
         logger.info("Reading initialization message...");
+        logger.finer(this.in.readLine());
         int commandCount = Integer.parseInt(this.in.readLine());
         logger.finer(() -> "Found " + commandCount + " commands:");
         for (int i = 0; i < commandCount; i++) {
@@ -36,10 +37,11 @@ public abstract class AbstractClientProxy extends AbstractProxy {
      * @param code The command code to send to the server
      */
     protected void chooseOption(String code) throws IOException {
+        this.logger.fine("[Server]" + this.in.readLine());
         this.logger.info("Requesting execution of code " + code);
         this.out.println(code);
         IOUtils.expectResponseCodeSuccess(this.in);
-        logger.info("[Server]" + this.in.readLine());
+        this.logger.info("[Server] " + this.in.readLine());
     }
 
     /**

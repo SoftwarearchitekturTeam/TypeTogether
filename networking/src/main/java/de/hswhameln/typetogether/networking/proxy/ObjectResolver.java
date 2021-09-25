@@ -45,17 +45,20 @@ public class ObjectResolver<T> {
         this.logger.info("Resolving object for communicationId " + communicationId);
 
         if (this.objectsByCommunicationIds.containsKey(communicationId)) {
+            this.logger.info("Already knew object with communicationId " + communicationId + ". Continuing.");
             IOUtils.success(this.out);
             return this.objectsByCommunicationIds.get(communicationId);
         }
 
         this.out.println(ResponseCodes.ADDITIONAL_INFO_REQUIRED);
+        this.logger.info("Requiring additional info for object resolution");
         int port = IOUtils.getIntArgument("port", this.in, this.out);
 
-        logger.finer("Starting new ClientSocket (" + this.targetInetAddress + ":" + port + ")");
+        logger.info("Starting new ClientSocket (" + this.targetInetAddress + ":" + port + ")");
         Socket socket = new Socket(this.targetInetAddress, port);
-
+        logger.fine("Successfully connected to Socket.");
         T clientProxy = this.clientProxySupplier.apply(socket);
+        logger.fine("ClientProxy of type " + clientProxy.getClass().getSimpleName() + " was successfully created.");
         this.objectsByCommunicationIds.put(communicationId, clientProxy);
         IOUtils.success(this.out);
         logger.info("Correctly resolved Object of type " + clientProxy.getClass().getName());

@@ -18,11 +18,11 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
 
     protected AbstractServerProxy(Socket socket) {
         super(socket);
-
     }
 
     @Override
     public void run() {
+        logger.info("Started new " + this.getClass().getSimpleName() + ". Sending InitializationMessage and waiting for commands.");
         this.sendInitializationMessage();
         this.waitForCommands();
     }
@@ -32,10 +32,12 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
     protected void safelyExecute(String name, FunctionalTask functionalTask) {
         try {
             functionalTask.run();
+            logger.info("Successfully completed " + name + ". Sending success message.");
             this.success();
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (Exception e) {
+            this.logger.log(Level.INFO, "Functional error", e);
             this.error(ResponseCodes.FUNCTIONAL_ERROR, "Error when executing " + name + ": " + e.getMessage());
         }
     }
@@ -47,9 +49,13 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
     protected <T> void safelySendResult(String name, FunctionalFunction<T> functionalTask, UnsafeConsumer<T> sender) {
         try {
             T t = functionalTask.apply();
+            logger.info("Successfully completed " + name + ". Sending success message and returning output.");
             this.success();
             sender.accept(t);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         } catch (Exception e) {
+            this.logger.log(Level.INFO, "Functional error", e);
             this.error(ResponseCodes.FUNCTIONAL_ERROR, "Error when executing " + name + ": " + e.getMessage());
         }
     }
@@ -65,7 +71,8 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
         while (!this.socket.isClosed()) {
             try {
                 handleCommand();
-
+            } catch(IOException e) {
+                throw new RuntimeException(e);
             } catch (Exception e) {
                 this.logger.log(Level.WARNING, "Exception when handling command. Continuing...", e);
             }
@@ -79,7 +86,7 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
     private void handleCommand() throws IOException {
         this.out.println("Waiting for you to pass the id of a command that should be executed.");
         String line = this.in.readLine();
-        this.logger.info("Client sent: " + line);
+        this.logger.fine("Client sent: " + line);
 
         if (!this.getAvailableActions().containsKey(line)) {
             this.error(ResponseCodes.NOT_FOUND, "Unknown command: " + line);
@@ -89,6 +96,7 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
 
         ServerProxyAction serverProxyAction = this.getAvailableActions().get(line);
         this.success();
+        this.logger.info("Executing commmand " + serverProxyAction.getName());
         this.out.println("Executing commmand " + serverProxyAction.getName());
         serverProxyAction.getAction().perform();
     }

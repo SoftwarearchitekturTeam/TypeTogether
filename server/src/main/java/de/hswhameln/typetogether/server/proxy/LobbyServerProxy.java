@@ -49,10 +49,11 @@ public class LobbyServerProxy extends AbstractServerProxy {
     public void doLeaveDocument() throws IOException {
         User user = this.resolveUser();
         String documentId = IOUtils.getStringArgument("documentId", this.in, this.out);
-        this.safelyExecute("joinDocument", () -> this.lobby.leaveDocument(user, documentId));
+        this.safelyExecute("leaveDocument", () -> this.lobby.leaveDocument(user, documentId));
     }
 
     private User resolveUser() throws IOException {
+        this.logger.fine("Trying to resolve user...");
         return this.userObjectResolver.resolveObject();
     }
 }
