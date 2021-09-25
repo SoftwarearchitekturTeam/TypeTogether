@@ -14,14 +14,15 @@ import java.util.Random;
 import java.util.function.BiFunction;
 import java.util.logging.Logger;
 
-public class MarshallHandler <T> {
+public class MarshallHandler<T> {
     private final Map<T, Integer> communicationIdsByObjects = new HashMap<>();
     private final BiFunction<Socket, T, AbstractServerProxy> serverProxySupplier;
     private final PrintWriter out;
     private final BufferedReader in;
 
     private int knownObjectCount = 0;
-    private final Random random = new Random();;
+    private final Random random = new Random();
+
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     public MarshallHandler(BiFunction<Socket, T, AbstractServerProxy> serverProxySupplier, BufferedReader in, PrintWriter out) {
@@ -32,6 +33,7 @@ public class MarshallHandler <T> {
 
     /**
      * Marshall an object by sending its communication id to the server, creating a new ServerProxy for that object if the opposing system asks for it.
+     *
      * @param t The Object to be marshalled
      * @throws IOException If the connection is closed or otherwise obstructed
      */
@@ -43,6 +45,7 @@ public class MarshallHandler <T> {
         }
         int communicationId = this.communicationIdsByObjects.get(t);
         this.out.println(communicationId);
+        logger.fine("Sent communicationId: " + communicationId);
         String responseCode = this.in.readLine();
         if (ResponseCodes.SUCCESS.equals(responseCode)) {
             logger.info("Server already got port for communicationId " + communicationId);
@@ -52,15 +55,17 @@ public class MarshallHandler <T> {
             throw new RuntimeException("Unexpected response code: " + responseCode);
         }
         ServerSocket serverSocket = createServerSocket();
-        logger.info("[Server]" + this.in.readLine());
+        logger.info("Started server socket at port " + serverSocket.getLocalPort() + ".");
+
+        // "Provide a port"
+        logger.info("[Server] " + this.in.readLine());
         this.out.println(serverSocket.getLocalPort());
+        Socket clientSocket = serverSocket.accept();
+        logger.info("New Client connected who wants to access " + t);
+        new Thread(this.serverProxySupplier.apply(clientSocket, t)).start();
 
         IOUtils.expectResponseCodeSuccess(this.in);
 
-        while(!serverSocket.isClosed()) {
-            Socket clientSocket = serverSocket.accept();
-            new Thread(serverProxySupplier.apply(clientSocket, t)).start();
-        }
     }
 
     private ServerSocket createServerSocket() {
