@@ -44,4 +44,8 @@ public class DocumentDistributor implements Document {
     public void removeLocalDocument(Document localDocument) {
         this.localDocuments.remove(localDocument);
     }
+
+    public boolean containsDocument(Document localDocument) {
+        return localDocuments.contains(localDocument);
+    }
 }
