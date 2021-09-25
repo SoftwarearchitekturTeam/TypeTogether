@@ -1,10 +1,19 @@
 package de.hswhameln.typetogether.testclient;
 
+import de.hswhameln.typetogether.networking.api.Document;
+import de.hswhameln.typetogether.networking.api.User;
+import de.hswhameln.typetogether.networking.shared.AbstractServerProxy;
+import de.hswhameln.typetogether.networking.shared.UserClientProxy;
+import de.hswhameln.typetogether.networking.shared.UserServerProxy;
+import de.hswhameln.typetogether.networking.types.DocumentCharacter;
+
 import java.awt.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class ConsoleClient {
 
@@ -13,31 +22,38 @@ public class ConsoleClient {
     private final BufferedReader in;
     private final PrintWriter out;
 
-    public ConsoleClient() throws IOException {
-        this.sc = new Scanner(System.in);
-        this.socket = createSocket();
+    private final User user;
+    private final Document document;
+    private final ConsoleClientHelper consoleClientHelper;
+
+    public ConsoleClient(Scanner sc) throws IOException {
+        this.sc = sc;
+        this.consoleClientHelper = new ConsoleClientHelper(this.sc);
+        this.socket = this.consoleClientHelper.createSocket();
 
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
+
+        this.document = this.consoleClientHelper.createDocument();
+        this.user = this.consoleClientHelper.createUser();
 
     }
 
     public void start() throws IOException {
         boolean running = true;
         System.out.println("Press any input to send to the server or /quit to stop.");
-        System.out.println("or /open <port> to start a client-side server.");
+        System.out.println("or /user <port> to start a client-side user server.");
         while (running && socket.isConnected()) {
             String input = sc.nextLine();
             if ("".equals(input)) {
                 System.out.println("Server sent: " + in.readLine());
             } else if ("/quit".equals(input)) {
                 running = false;
-            } else if (input.startsWith("/open")) {
+            } else if (input.startsWith("/user")) {
                 int port = Integer.parseInt(input.split(" ")[1]);
                 new Thread(() -> {
-                    startDummyServer(port);
+                    startServer(port, socket1 -> new UserServerProxy(socket1, user));
                 }).start();
-
             } else {
                 out.println(input);
                 System.out.println("Server replied: " + in.readLine());
@@ -47,35 +63,20 @@ public class ConsoleClient {
         this.cleanUp();
     }
 
-    private void startDummyServer(int port) {
+    private <T> void startServer(int port, Function<Socket, AbstractServerProxy> aNew) {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
             Socket clientSocket = serverSocket.accept();
-            PrintWriter out = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()), true);
-            out.println("0"); // 0 commands available
-            System.out.println("Socket connection established with client " + clientSocket.getInetAddress().getHostAddress() + ":" + clientSocket.getLocalPort());
+            System.out.println("new connection established");
+            new Thread(aNew.apply(clientSocket)).start();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
     public void cleanUp() throws IOException {
         sc.close();
         socket.close();
-    }
-
-    private Socket createSocket() throws IOException {
-        System.out.print("Enter network address (localhost):");
-        String target = sc.nextLine();
-        if (target == null || target.isBlank()) {
-            target = "localhost";
-        }
-        System.out.print("Enter port (12557):");
-        String port = sc.nextLine();
-        if (port == null || port.isBlank()) {
-            port = "12557";
-        }
-        return new Socket(target, Integer.parseInt(port));
     }
 
 }
