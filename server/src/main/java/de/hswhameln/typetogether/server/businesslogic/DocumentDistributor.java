@@ -11,7 +11,7 @@ public class DocumentDistributor implements Document {
 
     private final String id;
 
-    private final Set<Document> localDocuments = new HashSet<>();
+    private final Set<User> activeUsers = new HashSet<>();
 
     public DocumentDistributor(String id) {
         this.id = id;
@@ -19,17 +19,20 @@ public class DocumentDistributor implements Document {
 
     @Override
     public void addChar(User author, DocumentCharacter character) {
-        this.localDocuments.stream()
-                .filter(document -> document != author.getDocument())
+        int authorId = author.getId();
+        this.activeUsers.stream()
+                .filter(user -> user.getId() != authorId)
+                .map(User::getDocument)
                 .forEach(document -> document.addChar(author, character));
     }
 
     @Override
     public void removeChar(User author, DocumentCharacter character) {
-        this.localDocuments.stream()
-                .filter(document -> document != author.getDocument())
+        int authorId = author.getId();
+        this.activeUsers.stream()
+                .filter(user -> user.getId() != authorId)
+                .map(User::getDocument)
                 .forEach(document -> document.removeChar(author, character));
-
     }
 
     @Override
@@ -37,15 +40,15 @@ public class DocumentDistributor implements Document {
         return id;
     }
 
-    public void addLocalDocument(Document localDocument) {
-        this.localDocuments.add(localDocument);
+    public void addUser(User user) {
+        this.activeUsers.add(user);
     }
 
-    public void removeLocalDocument(Document localDocument) {
-        this.localDocuments.remove(localDocument);
+    public void removeUser(User user) {
+        this.activeUsers.remove(user);
     }
 
-    public boolean containsDocument(Document localDocument) {
-        return localDocuments.contains(localDocument);
+    public boolean isUserParticipant(User user) {
+        return activeUsers.contains(user);
     }
 }

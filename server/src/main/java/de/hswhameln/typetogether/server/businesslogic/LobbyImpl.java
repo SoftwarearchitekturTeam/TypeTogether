@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 public class LobbyImpl implements Lobby {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
-    private Map<String, DocumentDistributor> documentsById = new HashMap<>();
+    private final Map<String, DocumentDistributor> documentsById = new HashMap<>();
 
     @Override
     public Document joinDocument(User user, String documentId) {
@@ -21,7 +21,7 @@ public class LobbyImpl implements Lobby {
             createNewDocument(documentId);
         }
         DocumentDistributor documentToJoin = this.documentsById.get(documentId);
-        documentToJoin.addLocalDocument(user.getDocument());
+        documentToJoin.addUser(user);
         return documentToJoin;
     }
 
@@ -32,11 +32,10 @@ public class LobbyImpl implements Lobby {
             throw new RuntimeException("Document with id " + documentId + " does not exist."); // TODO sophisticated exception handling
         }
         DocumentDistributor documentToLeave = this.documentsById.get(documentId);
-        Document localDocument = user.getDocument();
-        if (!documentToLeave.containsDocument(localDocument)) {
+        if (!documentToLeave.isUserParticipant(user)) {
             throw new RuntimeException("Document does not know user " + user + ". Could not leave document.");
         }
-        documentToLeave.removeLocalDocument(localDocument);
+        documentToLeave.removeUser(user);
     }
 
     private void createNewDocument(String documentId) {

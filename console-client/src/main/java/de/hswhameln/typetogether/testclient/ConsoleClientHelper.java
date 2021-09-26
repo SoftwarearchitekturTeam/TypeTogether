@@ -35,7 +35,7 @@ public class ConsoleClientHelper {
 
             @Override
             public int getId() {
-                return 4711;
+                return (int)(Math.random() * 1000);
             }
 
             @Override
