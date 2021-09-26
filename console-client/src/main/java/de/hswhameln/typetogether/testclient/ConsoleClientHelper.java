@@ -54,12 +54,12 @@ public class ConsoleClientHelper {
         return new Document() {
             @Override
             public void addChar(User author, DocumentCharacter character) {
-                System.out.println("addChar: " + author.getName() + character.getStringRepresentation());
+                System.out.println("addChar: " + author.getName() + "/" + character.getStringRepresentation());
             }
 
             @Override
             public void removeChar(User author, DocumentCharacter character) {
-                System.out.println("removeChar: " + author.getName() + character.getStringRepresentation());
+                System.out.println("removeChar: " + author.getName() + "/" + character.getStringRepresentation());
             }
 
             @Override

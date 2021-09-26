@@ -36,8 +36,9 @@ public class UserClientProxy extends AbstractClientProxy implements User {
     public String getName() {
         return safelyExecute(() -> {
             this.chooseOption("2");
+            IOUtils.expectResponseCodeSuccess(this.in);
             String name = this.in.readLine();
-            logger.fine("getName returned " + name);
+            logger.fine("getName returned name " + name);
             return name;
         });
     }
