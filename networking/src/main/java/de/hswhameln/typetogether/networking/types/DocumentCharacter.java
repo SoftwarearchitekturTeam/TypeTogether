@@ -114,21 +114,6 @@ public class DocumentCharacter implements Comparable<DocumentCharacter> {
         }
     }
 
-    private List<Identifier> generateIdentifierList(int digit, int userId, List<Identifier> p1, List<Identifier> p2) {
-        List<Identifier> returnIn = new ArrayList<>();
-        for(int i = 0; i < Math.min(p1.size(), p2.size()); i++) {
-            if(p1.get(i).equals(p2.get(i))) {
-                returnIn.add(p1.get(i));
-            } else if(p1.get(i) == null) {
-                returnIn.add(p2.get(i));
-            } else {
-                returnIn.add(p1.get(i));
-            }
-        }
-        returnIn.add(new Identifier(digit, userId));
-        return returnIn;
-    }
-
     public String getStringRepresentation() {
         return stringRepresentationSchema.getStringRepresentation(
                 Character.toString(this.value),
