@@ -1,4 +1,4 @@
-package de.hswhameln.typetogether.client;
+package de.hswhameln.typetogether.networking.util;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -13,16 +13,16 @@ public class ArgumentParser {
 
     private static final String PREFIX = "--";
 
-    public Map<String, String> parse(String[] args) {
+    public static Map<String, String> parse(String[] args) {
 
         return Arrays.stream(args)
-                .map(this::parseArgument)
+                .map(ArgumentParser::parseArgument)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toMap(Argument::getKey, Argument::getValue));
 
     }
 
-    private Argument parseArgument(String s) {
+    private static Argument parseArgument(String s) {
         if (!s.startsWith(PREFIX)) {
             return null;
         }

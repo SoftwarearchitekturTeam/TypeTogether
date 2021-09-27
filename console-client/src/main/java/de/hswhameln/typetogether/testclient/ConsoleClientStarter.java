@@ -1,5 +1,7 @@
 package de.hswhameln.typetogether.testclient;
 
+import de.hswhameln.typetogether.networking.util.LoggerUtils;
+
 import java.util.Scanner;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -8,11 +10,8 @@ import java.util.logging.Logger;
 
 public class ConsoleClientStarter {
     public static void main(String[] args) throws Exception {
-        Logger rootLogger = LogManager.getLogManager().getLogger("");
-        rootLogger.setLevel(Level.FINEST);
-        for (Handler h : rootLogger.getHandlers()) {
-            h.setLevel(Level.FINEST);
-        }
+        LoggerUtils.setLogLevel(Level.FINEST);
+
         Scanner sc = new Scanner(System.in);
         System.out.println("Press 1 to start manual client or 2 to start LobbyClientProxy assisted client");
         String in = sc.nextLine();

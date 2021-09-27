@@ -1,22 +1,19 @@
 package de.hswhameln.typetogether.server.runtime;
 
 import de.hswhameln.typetogether.networking.api.Lobby;
+import de.hswhameln.typetogether.networking.util.ArgumentParser;
+import de.hswhameln.typetogether.networking.util.LoggerUtils;
 import de.hswhameln.typetogether.server.businesslogic.LobbyImpl;
 import de.hswhameln.typetogether.server.proxy.LobbyServerProxy;
 
-import java.util.logging.Handler;
+import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 public class ServerStarter {
 
     public static void main(String[] args) {
-        Logger rootLogger = LogManager.getLogManager().getLogger("");
-        rootLogger.setLevel(Level.FINEST);
-        for (Handler h : rootLogger.getHandlers()) {
-            h.setLevel(Level.FINEST);
-        }
+        Map<String, String> arguments = ArgumentParser.parse(args);
+        LoggerUtils.setLogLevel(Level.FINEST);
 
         Lobby lobby = new LobbyImpl();
         Server server = new Server(12557, socket -> new LobbyServerProxy(socket, lobby));
