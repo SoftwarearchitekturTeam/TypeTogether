@@ -78,18 +78,8 @@ public class Decimal {
 
     public static List<Integer> subtractGreaterThan(List<Integer> n1, List<Integer> n2) {
         List<Integer> returnIn = new ArrayList<>();
-
-        int maxSize = Math.max(n1.size(), n2.size());
-        int difference = 0;
-        boolean n2IsBigger = false;
-        if(n1.size() < maxSize) {
-            difference = maxSize - n1.size();
-            n2IsBigger = true;
-        } else if(n2.size() < maxSize) {
-            difference = maxSize - n2.size();
-        }
-
-        for(int i = 0; i < (maxSize - difference); i++) {
+        int j = 0;
+        for(int i = 0; i < Math.min(n1.size(), n2.size()); i++) {
             if(n1.get(i) == n2.get(i)) {
                 returnIn.add(0);
             } else if(n1.get(i) > n2.get(i)) {
@@ -97,14 +87,20 @@ public class Decimal {
             } else {
                 returnIn.add(n2.get(i) - n1.get(i));
             }
+            j = i;
         }
-        for(int i = 1; i < difference; i++) {
-            if(n2IsBigger) {
-                returnIn.add(n2.get(n1.size() + difference));
-            } else {
-                returnIn.add(n1.get(n2.size() + difference));
+
+        j++;
+        if(n1.size() > j) {
+            for(int i = j; i < n1.size(); i++) {
+                returnIn.add(n1.get(i));
+            }
+        } else if(n2.size() > j) {
+            for(int i = j; i < n2.size(); i++) {
+                returnIn.add(n2.get(i));
             }
         }
+
         return returnIn;
     }
 }
