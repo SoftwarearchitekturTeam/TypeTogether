@@ -9,14 +9,19 @@ import de.hswhameln.typetogether.server.proxy.LobbyServerProxy;
 import java.util.Map;
 import java.util.logging.Level;
 
+
 public class ServerStarter {
+
+    private static final int DEFAULT_PORT = 12557;
 
     public static void main(String[] args) {
         Map<String, String> arguments = ArgumentParser.parse(args);
         LoggerUtils.setLogLevel(Level.FINEST);
+        String portArgument = arguments.get("port");
+        int port = portArgument == null ? DEFAULT_PORT : Integer.parseInt(portArgument);
 
         Lobby lobby = new LobbyImpl();
-        Server server = new Server(12557, socket -> new LobbyServerProxy(socket, lobby));
+        Server server = new Server(port, socket -> new LobbyServerProxy(socket, lobby));
         server.start();
     }
 }
