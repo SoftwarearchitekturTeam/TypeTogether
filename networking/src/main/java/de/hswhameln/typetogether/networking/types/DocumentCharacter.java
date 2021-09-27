@@ -38,6 +38,11 @@ public class DocumentCharacter implements Comparable<DocumentCharacter> {
         this.position = position;
     }
 
+    public DocumentCharacter(char value, List<Identifier> positionBefore, int userId) {
+        this.value = value;
+        this.position = generatePositionAfter(positionBefore, userId);
+    }
+
     public char getValue() {
         return this.value;
     }
@@ -81,6 +86,17 @@ public class DocumentCharacter implements Comparable<DocumentCharacter> {
                 return 0;
             }
         }
+    }
+
+    private List<Identifier> generatePositionAfter(List<Identifier> positionBefore, int userId) {
+        List<Identifier> returnIn = new ArrayList<>();
+        positionBefore.forEach(i -> returnIn.add(i));
+        if(returnIn.get(returnIn.size() - 1).getUserId() == userId) {
+            returnIn.get(returnIn.size() - 1).incrementDigit();
+        } else {
+            returnIn.add(new Identifier(1, userId));
+        }
+        return returnIn;
     }
 
     private List<Identifier> generatePositionBetween(List<Identifier> p1, List<Identifier> p2, int userId) {

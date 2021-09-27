@@ -23,6 +23,10 @@ public class Identifier {
         return this.digit;
     }
 
+    public void incrementDigit() {
+        this.digit++;
+    }
+
     public int getUserId() {
         return this.userId;
     }

@@ -118,6 +118,7 @@ public class DocumentCharacterTest {
         assertEquals("saeg", erg);
     }
 
+    @Disabled
     @Test
     public void doCharectertestUseCase3(){
         
