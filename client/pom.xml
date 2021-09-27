@@ -59,7 +59,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>de.hswhameln.typetogether.client.Main</mainClass>
+                            <mainClass>de.hswhameln.typetogether.client.ClientStarter</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
