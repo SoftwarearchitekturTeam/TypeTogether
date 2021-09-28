@@ -109,6 +109,7 @@ public class MenuPanel extends AbstractPanel {
 
         Dimension buttonSize = new Dimension(150, 50);
         JButton createDocumentButton = new JButton("Erstellen");
+        createDocumentButton.setFont(ViewProperties.SUBHEADLINE_FONT);
         createDocumentButton.setForeground(ViewProperties.BACKGROUND_COLOR);
         createDocumentButton.setBackground(ViewProperties.GREY_BUTTON_COLOR);
         createDocumentButton.setMinimumSize(buttonSize);
@@ -122,6 +123,7 @@ public class MenuPanel extends AbstractPanel {
         buttons.add(Box.createHorizontalStrut(200));
 
         JButton joinDocumentButton = new JButton("Beitreten");
+        joinDocumentButton.setFont(ViewProperties.SUBHEADLINE_FONT);
         joinDocumentButton.setForeground(ViewProperties.BACKGROUND_COLOR);
         joinDocumentButton.setBackground(ViewProperties.CONTRAST_COLOR);
         joinDocumentButton.setMinimumSize(buttonSize);
