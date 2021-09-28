@@ -35,7 +35,7 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
             logger.info("Successfully completed " + name + ". Sending success message.");
             this.success();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            exceptionHandler.handle(e, "Could not execute task " + name, this.getClass());
         } catch (Exception e) {
             this.logger.log(Level.INFO, "Functional error", e);
             this.error(ResponseCodes.FUNCTIONAL_ERROR, "Error when executing " + name + ": " + e.getMessage());
@@ -53,7 +53,7 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
             this.success();
             sender.accept(t);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            exceptionHandler.handle(e, "Could not send result " + name, this.getClass());
         } catch (Exception e) {
             this.logger.log(Level.INFO, "Functional error", e);
             this.error(ResponseCodes.FUNCTIONAL_ERROR, "Error when executing " + name + ": " + e.getMessage());
@@ -72,7 +72,7 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
             try {
                 handleCommand();
             } catch(IOException e) {
-                throw new RuntimeException(e);
+                exceptionHandler.handle(e, "Could not handle comman properly", this.getClass());
             } catch (Exception e) {
                 this.logger.log(Level.WARNING, "Exception when handling command. Continuing...", e);
             }
