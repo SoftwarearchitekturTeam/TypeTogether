@@ -17,5 +17,9 @@ public interface ViewProperties {
 	public static final int DEFAULT_WIDTH = 1200;
 	public static final long NOTIFICATION_TIMER = 4;
 	public static final long RESIZING_TIMER = 100;
+
+	public static final String LOGIN = "login";
+	public static final String MENU = "menu";
+	public static final String EDITOR = "editor";
 	
 }
