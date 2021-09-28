@@ -1,12 +1,9 @@
 package de.hswhameln.typetogether.testclient;
 
-import de.hswhameln.typetogether.networking.util.LoggerUtils;
-
 import java.util.Scanner;
-import java.util.logging.Handler;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
+
+import de.hswhameln.typetogether.networking.util.LoggerUtils;
 
 public class ConsoleClientStarter {
     public static void main(String[] args) throws Exception {

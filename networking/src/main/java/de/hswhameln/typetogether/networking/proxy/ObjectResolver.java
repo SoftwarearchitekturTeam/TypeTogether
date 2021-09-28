@@ -1,7 +1,5 @@
 package de.hswhameln.typetogether.networking.proxy;
 
-import de.hswhameln.typetogether.networking.util.IOUtils;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,8 +8,9 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import de.hswhameln.typetogether.networking.util.IOUtils;
 
 /**
  * Complementary class to the {@link MarshallHandler}. Used to create and cache ClientProxies representing a given type T.

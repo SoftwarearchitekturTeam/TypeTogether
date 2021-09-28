@@ -1,19 +1,19 @@
 package de.hswhameln.typetogether.testclient;
 
-import de.hswhameln.typetogether.networking.api.Document;
-import de.hswhameln.typetogether.networking.api.User;
-import de.hswhameln.typetogether.networking.shared.AbstractServerProxy;
-import de.hswhameln.typetogether.networking.shared.UserClientProxy;
-import de.hswhameln.typetogether.networking.shared.UserServerProxy;
-import de.hswhameln.typetogether.networking.types.DocumentCharacter;
-
-import java.awt.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
-import java.util.function.BiFunction;
 import java.util.function.Function;
+
+import de.hswhameln.typetogether.networking.api.Document;
+import de.hswhameln.typetogether.networking.api.User;
+import de.hswhameln.typetogether.networking.shared.AbstractServerProxy;
+import de.hswhameln.typetogether.networking.shared.UserServerProxy;
 
 public class ConsoleClient {
 
