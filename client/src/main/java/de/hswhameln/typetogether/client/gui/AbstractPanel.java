@@ -1,19 +1,17 @@
 package de.hswhameln.typetogether.client.gui;
 
+import java.awt.Component;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import java.awt.Dimension;
-
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 public class AbstractPanel extends JPanel {
 
-    private List<JComponent> components = new ArrayList<>();
+    private List<Component> components = new ArrayList<>();
 	private TypeTogetherPanel headerPanel = new TypeTogetherPanel();
 
     protected AbstractPanel() {
@@ -23,7 +21,7 @@ public class AbstractPanel extends JPanel {
         this.setVisible(true);
     }
 
-    protected void addComponents(JComponent... components) {
+    protected void addComponents(Component... components) {
         this.components.addAll(Arrays.asList(components));
         this.add(headerPanel);
         this.components.forEach(this::add);

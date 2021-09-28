@@ -1,16 +1,11 @@
 package de.hswhameln.typetogether.networking.shared;
 
+import java.net.Socket;
+
 import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.User;
 import de.hswhameln.typetogether.networking.proxy.ObjectResolver;
-import de.hswhameln.typetogether.networking.shared.AbstractClientProxy;
-import de.hswhameln.typetogether.networking.shared.DocumentClientProxy;
-import de.hswhameln.typetogether.networking.shared.helperinterfaces.Action;
-import de.hswhameln.typetogether.networking.shared.helperinterfaces.UnsafeSupplier;
 import de.hswhameln.typetogether.networking.util.IOUtils;
-
-import java.io.IOException;
-import java.net.Socket;
 
 public class UserClientProxy extends AbstractClientProxy implements User {
 

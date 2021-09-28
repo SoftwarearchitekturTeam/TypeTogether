@@ -1,12 +1,15 @@
 package de.hswhameln.typetogether.networking.shared;
 
-import de.hswhameln.typetogether.networking.proxy.ResponseCodes;
-import de.hswhameln.typetogether.networking.util.ExceptionHandler;
-import de.hswhameln.typetogether.networking.util.IOUtils;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.logging.Logger;
+
+import de.hswhameln.typetogether.networking.util.ExceptionHandler;
+import de.hswhameln.typetogether.networking.util.IOUtils;
 
 public class AbstractProxy {
     protected Logger logger = Logger.getLogger(this.getClass().getName());

@@ -1,12 +1,9 @@
 package de.hswhameln.typetogether.client;
 
-import de.hswhameln.typetogether.client.gui.MainWindow;
-import de.hswhameln.typetogether.client.runtime.ClientRuntime;
-import de.hswhameln.typetogether.networking.util.ArgumentParser;
-import de.hswhameln.typetogether.networking.util.LoggerUtils;
-
 import java.util.Map;
-import java.util.logging.Level;
+
+import de.hswhameln.typetogether.client.gui.MainWindow;
+import de.hswhameln.typetogether.networking.util.ArgumentParser;
 
 public class ClientStarter {
 

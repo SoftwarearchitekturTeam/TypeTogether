@@ -1,15 +1,12 @@
 package de.hswhameln.typetogether.networking.shared;
 
-import de.hswhameln.typetogether.networking.api.Document;
-import de.hswhameln.typetogether.networking.api.User;
-import de.hswhameln.typetogether.networking.proxy.MarshallHandler;
-import de.hswhameln.typetogether.networking.shared.AbstractServerProxy;
-import de.hswhameln.typetogether.networking.shared.DocumentServerProxy;
-import de.hswhameln.typetogether.networking.shared.ServerProxyAction;
-
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Map;
+
+import de.hswhameln.typetogether.networking.api.Document;
+import de.hswhameln.typetogether.networking.api.User;
+import de.hswhameln.typetogether.networking.proxy.MarshallHandler;
 
 public class UserServerProxy extends AbstractServerProxy {
 

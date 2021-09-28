@@ -4,15 +4,10 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -20,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 import com.formdev.flatlaf.FlatLightLaf;
-
 
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 
@@ -74,7 +68,7 @@ public class MainWindow extends JFrame {
         // center
         this.setLocationRelativeTo(null);
         //this.setIconImage(getApplicationIcon());
-        this.cardLayout.show(mainContainer, ViewProperties.EDITOR); //TODO: Changed from LOGIN for debugging
+        this.cardLayout.show(mainContainer, ViewProperties.LOGIN); //TODO: Changed from LOGIN for debugging
     }
 
     //TODO Create Logo
