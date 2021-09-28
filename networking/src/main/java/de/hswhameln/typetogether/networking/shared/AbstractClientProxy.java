@@ -14,7 +14,7 @@ public abstract class AbstractClientProxy extends AbstractProxy {
         try {
             this.readInitializationMessage();
         } catch (IOException e) {
-            throw new RuntimeException("Error when initializing client proxy.", e);
+            exceptionHandler.handle(e, "Error during initialization", this.getClass());
         }
     }
 
@@ -68,7 +68,7 @@ public abstract class AbstractClientProxy extends AbstractProxy {
         try {
             runnableWithIOException.perform();
         } catch (IOException e) {
-            throw new RuntimeException("Unexpected communication exception", e);
+            exceptionHandler.handle(e, "Could not execute action", this.getClass());
         }
     }
 

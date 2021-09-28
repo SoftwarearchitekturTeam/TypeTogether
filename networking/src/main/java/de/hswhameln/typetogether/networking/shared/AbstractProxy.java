@@ -1,6 +1,7 @@
 package de.hswhameln.typetogether.networking.shared;
 
 import de.hswhameln.typetogether.networking.proxy.ResponseCodes;
+import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 import de.hswhameln.typetogether.networking.util.IOUtils;
 
 import java.io.*;
@@ -9,6 +10,7 @@ import java.util.logging.Logger;
 
 public class AbstractProxy {
     protected Logger logger = Logger.getLogger(this.getClass().getName());
+    protected ExceptionHandler exceptionHandler = ExceptionHandler.getExceptionHandler();
     protected Socket socket;
 
     protected BufferedReader in;
@@ -19,7 +21,7 @@ public class AbstractProxy {
         try {
             this.openStreams();
         } catch (IOException e) {
-            throw new RuntimeException("Unexpected initialization error", e);
+            exceptionHandler.handle(e, "Unexpected initialization error", this.getClass());
         }
     }
 

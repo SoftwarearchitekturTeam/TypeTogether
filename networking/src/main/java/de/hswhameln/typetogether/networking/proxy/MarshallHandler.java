@@ -1,6 +1,7 @@
 package de.hswhameln.typetogether.networking.proxy;
 
 import de.hswhameln.typetogether.networking.shared.AbstractServerProxy;
+import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 import de.hswhameln.typetogether.networking.util.IOUtils;
 
 import java.io.BufferedReader;
@@ -19,6 +20,8 @@ public class MarshallHandler<T> {
     private final BiFunction<Socket, T, AbstractServerProxy> serverProxySupplier;
     private final PrintWriter out;
     private final BufferedReader in;
+
+    private ExceptionHandler exceptionHandler = ExceptionHandler.getExceptionHandler();
 
     private int knownObjectCount = 0;
     private final Random random = new Random();
@@ -75,7 +78,7 @@ public class MarshallHandler<T> {
             try {
                 serverSocket = new ServerSocket(port);
             } catch (IOException e) {
-                // continue
+                exceptionHandler.handle(e, "Error while creating server socket", this.getClass());
             }
         } while (serverSocket == null);
         return serverSocket;
