@@ -74,7 +74,7 @@ public class MainWindow extends JFrame {
         // center
         this.setLocationRelativeTo(null);
         //this.setIconImage(getApplicationIcon());
-        this.cardLayout.show(mainContainer, ViewProperties.LOGIN);
+        this.cardLayout.show(mainContainer, ViewProperties.MENU);
     }
 
     //TODO Create Logo
@@ -95,10 +95,10 @@ public class MainWindow extends JFrame {
     }
 
     private void registerSingleView(JPanel panel, String viewId) {
-        this.add(panel);
+        this.mainContainer.add(panel);
+        panel.setVisible(true);
         availableViews.put(viewId, panel);
         cardLayout.addLayoutComponent(panel, viewId);
-    
     }
 
     /**
