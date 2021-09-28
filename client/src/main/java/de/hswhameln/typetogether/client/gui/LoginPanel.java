@@ -2,14 +2,14 @@ package de.hswhameln.typetogether.client.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
+
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.GroupLayout.Alignment;
+
 
 public class LoginPanel extends AbstractPanel {
 
@@ -67,7 +67,7 @@ public class LoginPanel extends AbstractPanel {
         text.setFont(ViewProperties.SUBHEADLINE_FONT);
         text.setForeground(ViewProperties.FONT_COLOR);
         text.setBackground(ViewProperties.BACKGROUND_COLOR);
-        getText(text.getText())
+        getText(text.getText());
         this.body.add(text);
         
 
