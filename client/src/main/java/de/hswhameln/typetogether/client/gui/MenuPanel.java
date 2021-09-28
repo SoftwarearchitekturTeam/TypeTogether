@@ -1,5 +1,10 @@
 package de.hswhameln.typetogether.client.gui;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -18,50 +23,69 @@ public class MenuPanel extends AbstractPanel {
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.setSize(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT);
         this.createGrid();
-        this.rightSide.setBackground(ViewProperties.BACKGROUND_COLOR);
-        this.leftSide.setBackground(ViewProperties.BACKGROUND_COLOR);
-
+        this.rightSide.setBackground(Color.CYAN);
+        this.leftSide.setBackground(Color.GREEN);
+        this.leftSide.setLayout(new BoxLayout(this.leftSide, BoxLayout.Y_AXIS));
+        this.createLeftSide();
     }
 
     private void createGrid() {
         this.headline = new TypeTogetherPanel();
         this.add(this.headline);
         headline.setVisible(true);
+        headline.setBorder(BorderFactory.createEmptyBorder());
         JPanel body = new JPanel();
-        body.setLayout(new java.awt.FlowLayout());
+        FlowLayout flowLayout = new FlowLayout();
+        flowLayout.setVgap(0);
+        flowLayout.setHgap(0);
+        flowLayout.setAlignment(FlowLayout.LEFT);
+        body.setLayout(flowLayout);
         body.setVisible(true);
+        body.setBorder(BorderFactory.createEmptyBorder());
         this.add(body);
         this.leftSide = new JPanel();
+
+        Dimension size = new Dimension(ViewProperties.DEFAULT_WIDTH / 2 - 6, ViewProperties.DEFAULT_HEIGHT - ViewProperties.HEADLINE_HEIGHT);
+        this.leftSide.setSize(size);
+        this.leftSide.setPreferredSize(size);
         this.leftSide.setVisible(true);
+        this.leftSide.setBorder(BorderFactory.createEmptyBorder());
         body.add(this.leftSide);
         this.rightSide = new JPanel();
+        this.rightSide.setSize(size);
+        this.rightSide.setPreferredSize(size);
         this.rightSide.setVisible(true);
+        this.rightSide.setBorder(BorderFactory.createEmptyBorder());
         body.add(this.rightSide);
     }
 
     private void createLeftSide() {
         JLabel documentTitle = new JLabel("Name des Dokuments");
+        Dimension sizeTitle = new Dimension(200, 70);
+        documentTitle.setMaximumSize(sizeTitle);
+        documentTitle.setVisible(true);
         documentTitle.setFont(ViewProperties.SUBHEADLINE_FONT);
         documentTitle.setForeground(ViewProperties.FONT_COLOR);
+        documentTitle.setBackground(ViewProperties.BACKGROUND_COLOR);
         this.leftSide.add(documentTitle);
 
         this.documentNameArea = new JTextArea();
         this.documentNameArea.setColumns(1);
         this.documentNameArea.setForeground(ViewProperties.FONT_COLOR);
-        this.documentNameArea.setSize(300, 70);
+        this.documentNameArea.setMaximumSize(new Dimension(300, 70));
         this.leftSide.add(this.documentNameArea);
 
         JButton createDocumentButton = new JButton("Erstellen");
         createDocumentButton.setForeground(ViewProperties.BACKGROUND_COLOR);
         createDocumentButton.setBackground(ViewProperties.GREY_BUTTON_COLOR);
-        createDocumentButton.setSize(120, 70);
+        createDocumentButton.setMaximumSize(new Dimension(120, 70));
         createDocumentButton.addActionListener(a -> this.createDocument());
         this.leftSide.add(createDocumentButton);
 
         JButton joinDocumentButton = new JButton("Beitreten");
         joinDocumentButton.setForeground(ViewProperties.BACKGROUND_COLOR);
         joinDocumentButton.setBackground(ViewProperties.CONTRAST_COLOR);
-        joinDocumentButton.setSize(120, 70);
+        joinDocumentButton.setMaximumSize(new Dimension(120, 70));
         joinDocumentButton.addActionListener(a -> this.joinDocument());
         this.leftSide.add(joinDocumentButton);
     }
