@@ -12,11 +12,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.text.View;
+import javax.swing.UIManager;
+
+import com.formdev.flatlaf.FlatLightLaf;
 
 
 
@@ -35,6 +38,11 @@ public class MainWindow extends JFrame {
         this.cardLayout = new CardLayout();
         this.availableViews = new HashMap<>();
         this.mainContainer.setLayout(cardLayout);
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch(Exception e) {
+            Logger.getLogger("gui").warning("Failed to initiate Look&Feel");
+        }
         this.add(mainContainer);
 
         this.setSize(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT);
