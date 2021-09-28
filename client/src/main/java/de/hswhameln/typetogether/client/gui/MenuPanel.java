@@ -3,7 +3,7 @@ package de.hswhameln.typetogether.client.gui;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-public class MenuPanel extends JPanel {
+public class MenuPanel extends AbstractPanel {
     
     private JPanel headlin;
 
