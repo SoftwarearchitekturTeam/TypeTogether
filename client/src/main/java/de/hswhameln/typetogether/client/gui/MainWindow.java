@@ -22,12 +22,16 @@ import javax.swing.UIManager;
 import com.formdev.flatlaf.FlatLightLaf;
 
 
+import de.hswhameln.typetogether.networking.util.ExceptionHandler;
+
 
 /**
  * {@link JFrame} that displays an, swapping between ViewPanels by using a {@link CardLayout}.
  */
 public class MainWindow extends JFrame {
     private static final long serialVersionUID = 1L;
+
+    private ExceptionHandler exceptionHandler = ExceptionHandler.getExceptionHandler();
 
     private JPanel mainContainer;
     private Map<String, JPanel> availableViews;
@@ -79,7 +83,7 @@ public class MainWindow extends JFrame {
             URL resource = this.getClass().getResource("resource/images/diploma-icon.png");
             return ImageIO.read(resource);
         } catch (IOException e) {
-            e.printStackTrace();
+            exceptionHandler.handle(e, "Could not load application icon", this.getClass());
             return null;
         }
     }

@@ -5,7 +5,7 @@ import javax.swing.JTextArea;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-public class EditorPanel extends JPanel {
+public class EditorPanel extends AbstractPanel {
     
     private JTextArea editor;
 

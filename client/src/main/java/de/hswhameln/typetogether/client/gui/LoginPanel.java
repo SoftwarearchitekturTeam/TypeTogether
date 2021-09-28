@@ -6,7 +6,7 @@ import java.awt.Dimension;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class LoginPanel extends JPanel {
+public class LoginPanel extends AbstractPanel {
 
     private JTextField text;
     
