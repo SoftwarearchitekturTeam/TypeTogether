@@ -42,7 +42,7 @@ public class MainWindow extends JFrame {
             exceptionHandler.handle(e, "Failed to initialize look&feel", this.getClass());
         }
         this.add(mainContainer);
-
+        this.setResizable(false);
         this.setSize(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT);
         this.setMinimumSize(new Dimension(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT));
         /*
