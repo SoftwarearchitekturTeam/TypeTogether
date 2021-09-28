@@ -2,6 +2,7 @@ package de.hswhameln.typetogether.client.gui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Dimension;
 
 public interface ViewProperties {
 	// Color palette
@@ -10,6 +11,7 @@ public interface ViewProperties {
 	public static final Color FONT_COLOR = new Color(52, 73, 94);
 	public static final Color CONTRAST_COLOR = new Color(154, 198, 197);
 	public static final Font SUBHEADLINE_FONT = new Font("Arial", Font.PLAIN, 9);
+	public static final Font HEADLINE_FONT = new Font("Calibri", Font.BOLD, 40);
 	public static final float BUTTON_FONT_SIZE = 16f;
 	public static final float MENU_BUTTON_FONT_SIZE = 12f;
 	public static final int DEFAULT_HEIGHT = 950;
@@ -23,4 +25,6 @@ public interface ViewProperties {
 	public static final String EDITOR = "editor";
 	public static final String HEADLINE = "TypeTogether";
 	
+	public static final Dimension EDITOR_SIZE = new Dimension(1000, 650);
+	public static final Font EDITOR_FONT = new Font("Calibri", Font.PLAIN, 20);
 }
