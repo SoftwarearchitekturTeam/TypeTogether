@@ -25,6 +25,6 @@ public interface ViewProperties {
 	public static final String EDITOR = "editor";
 	public static final String HEADLINE = "TypeTogether";
 	
-	public static final Dimension EDITOR_SIZE = new Dimension(1000, 650);
+	public static final Dimension EDITOR_SIZE = new Dimension(1000, 550);
 	public static final Font EDITOR_FONT = new Font("Calibri", Font.PLAIN, 20);
 }

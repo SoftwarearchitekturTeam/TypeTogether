@@ -20,7 +20,7 @@ public class TypeTogetherPanel extends JPanel {
         this.setSize(size);
         this.setMinimumSize(size);
         this.setPreferredSize(size);
-        this.add(headline);
+                this.add(headline);
         this.setVisible(true);
     }
 }

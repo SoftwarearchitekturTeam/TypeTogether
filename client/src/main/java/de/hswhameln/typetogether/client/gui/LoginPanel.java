@@ -9,13 +9,16 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+
 
 
 public class LoginPanel extends AbstractPanel {
 
    private MainWindow window;
    private JPanel headline;
-   private JPanel body;
+  
    
     
 
@@ -24,15 +27,10 @@ public class LoginPanel extends AbstractPanel {
         this.setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
         this.setSize(ViewProperties.DEFAULT_WIDTH,ViewProperties.DEFAULT_HEIGHT);
         this.createGrid();
-        
-        
-        
-        
-        this.setSize(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT);
         this.setPreferredSize(new Dimension(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT));
         this.setVisible(true);
-        this.body.setBackground(Color.WHITE);
-        this.body.setLayout(new BoxLayout(this.body, BoxLayout.Y_AXIS));
+        this.setBackground(Color.WHITE);
+       
         this.createBody();
         
         
@@ -42,14 +40,7 @@ public class LoginPanel extends AbstractPanel {
         this.add(this.headline);
         headline.setVisible(true);
         headline.setBorder(BorderFactory.createEmptyBorder());
-        this.body = new JPanel();
-
-        Dimension size = new Dimension(ViewProperties.DEFAULT_WIDTH / 2 - 6, ViewProperties.DEFAULT_HEIGHT - ViewProperties.HEADLINE_HEIGHT);
-        this.body.setSize(size);
-        this.body.setPreferredSize(size);
-        body.setVisible(true);
-        body.setBorder(BorderFactory.createEmptyBorder());
-        this.add(body);
+       
         
     }
     private void createBody(){
@@ -60,17 +51,22 @@ public class LoginPanel extends AbstractPanel {
         lable.setFont(ViewProperties.SUBHEADLINE_FONT);
         lable.setForeground(ViewProperties.FONT_COLOR);
         lable.setBackground(ViewProperties.BACKGROUND_COLOR);
-       this.body.add(lable);
+        
+       
+        lable.setHorizontalAlignment(SwingConstants.CENTER);
+
+       this.add(lable);
         
         JTextField text = new JTextField();
-        Dimension sizeText = new Dimension(200, 70);
+        Dimension sizeText = new Dimension(200, 30);
         text.setMaximumSize(sizeText);
         text.setVisible(true);
         text.setFont(ViewProperties.SUBHEADLINE_FONT);
         text.setForeground(ViewProperties.FONT_COLOR);
         text.setBackground(ViewProperties.BACKGROUND_COLOR);
-        getText(text.getText());
-        this.body.add(text);
+        text.setHorizontalAlignment(SwingConstants.CENTER);
+                getText(text.getText());
+        this.add(text);
         
 
 
@@ -80,7 +76,7 @@ public class LoginPanel extends AbstractPanel {
          button.setMaximumSize(new Dimension(120, 70));
          button.addActionListener(a -> this.anmelden());
          button.setAlignmentX(CENTER_ALIGNMENT);
-         this.body.add(button);
+         this.add(button);
     }
     private void anmelden(){
         System.out.println("Anmelden");
