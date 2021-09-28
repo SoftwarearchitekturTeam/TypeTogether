@@ -74,7 +74,7 @@ public class LoginPanel extends AbstractPanel {
 
          JButton button = new JButton("Anmelden");
          button.setForeground(ViewProperties.BACKGROUND_COLOR);
-         button.setBackground(ViewProperties.GREY_BUTTON_COLOR);
+         button.setBackground(ViewProperties.CONTRAST_COLOR);
          button.setMaximumSize(new Dimension(120, 70));
          button.addActionListener(a -> this.anmelden());
          button.setAlignmentX(CENTER_ALIGNMENT);
