@@ -74,7 +74,7 @@ public class MainWindow extends JFrame {
         // center
         this.setLocationRelativeTo(null);
         //this.setIconImage(getApplicationIcon());
-        this.cardLayout.show(mainContainer, ViewProperties.EDITOR); //TODO: Changed from LOGIN for debugging
+        this.cardLayout.show(mainContainer, ViewProperties.LOGIN); //TODO: Changed from LOGIN for debugging
     }
 
     //TODO Create Logo
