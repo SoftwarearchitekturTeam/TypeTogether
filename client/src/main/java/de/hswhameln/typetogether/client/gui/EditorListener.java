@@ -2,24 +2,38 @@ package de.hswhameln.typetogether.client.gui;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
 
 import de.hswhameln.typetogether.client.businesslogic.LocalDocument;
 import de.hswhameln.typetogether.client.businesslogic.LocalDocumentSender;
+import de.hswhameln.typetogether.networking.api.User;
+import de.hswhameln.typetogether.networking.types.DocumentCharacter;
+import de.hswhameln.typetogether.networking.types.Identifier;
+import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 
 public class EditorListener implements DocumentListener {
     
     private LocalDocument localDocument;
     private LocalDocumentSender sender;
+    private User author;
 
-    public EditorListener(LocalDocument localDocument, LocalDocumentSender sender) {
+    public EditorListener(LocalDocument localDocument, LocalDocumentSender sender, User author) {
         this.localDocument = localDocument;
         this.sender = sender;
+        this.author = author;
     }
 
     @Override
     public void insertUpdate(DocumentEvent e) {
-        // TODO Auto-generated method stub
-
+        String update = getStringFromDocumentEvent(e);
+        
+        for(char c : update.toCharArray()) {
+            int index = this.localDocument.getIndexOfChar(c, update.toCharArray()); //TODO validate
+            DocumentCharacter characterToAdd = this.generateDocumentCharacter(this.localDocument.getDocumentCharacterOfIndex(index - 1),
+            this.localDocument.getDocumentCharacterOfIndex(index + 1), c);
+            this.localDocument.addChar(author, characterToAdd);
+            this.sender.addChar(characterToAdd);
+        }
         //Get Position of Changed Character(s)
         //Get DocumentCharacter for position
         //Get before and after
@@ -33,7 +47,15 @@ public class EditorListener implements DocumentListener {
     @Override
     public void removeUpdate(DocumentEvent e) {
         // TODO Auto-generated method stub
+        String update = getStringFromDocumentEvent(e);
 
+        for(char c : update.toCharArray()) {
+            int index = this.localDocument.getIndexOfChar(c, update.toCharArray()); //TODO validate
+            DocumentCharacter characterToRemove = this.generateDocumentCharacter(this.localDocument.getDocumentCharacterOfIndex(index - 1),
+            this.localDocument.getDocumentCharacterOfIndex(index + 1), c);
+            this.localDocument.removeChar(author, characterToRemove);
+            this.sender.removeChar(characterToRemove);
+        }
         //Get Position of Changed Character(s)
         // Get DocumentCharacter for position
         //Remove Character from localDocument
@@ -43,5 +65,33 @@ public class EditorListener implements DocumentListener {
     @Override
     public void changedUpdate(DocumentEvent e) {
         //Plain text components do not fire these events        
+    }
+
+    private String getStringFromDocumentEvent(DocumentEvent e) {
+        String update = "";
+        try {
+            update = e.getDocument().getText(e.getOffset(), e.getLength());
+        } catch (BadLocationException e1) {
+            ExceptionHandler.getExceptionHandler().handle(e1, "Error getting Position of change in Editor", EditorListener.class);
+        }
+        return update;
+    }
+
+    /**
+     * charBefore and charAfter may be null
+     */
+    private DocumentCharacter generateDocumentCharacter(DocumentCharacter charBefore, DocumentCharacter charAfter, char changedChar) {
+        DocumentCharacter characterToAdd;
+        if(charBefore != null && charAfter != null) {
+            characterToAdd = new DocumentCharacter(changedChar, charBefore.getPosition(), charAfter.getPosition(), author.getId());
+        } else if(charBefore == null && charAfter != null) {
+            throw new UnsupportedOperationException("Github Issue #1");
+            //TODO add implementation for negative counts
+        } else if(charBefore != null && charAfter == null) {
+            characterToAdd = new DocumentCharacter(changedChar, charBefore.getPosition(), author.getId());
+        } else {
+            characterToAdd = new DocumentCharacter(changedChar, new Identifier(1, author.getId()));
+        }
+        return characterToAdd;
     }
 }

@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
@@ -101,6 +102,24 @@ public class MainWindow extends JFrame {
         availableViews.put(viewId, panel);
         cardLayout.addLayoutComponent(panel, viewId);
     }
+
+    /**
+	 * Creates a pop-up with a notification of the given type. If the given type is
+	 * a QUESTION_MESSAGE the pop-up will have Options to choose.
+	 * 
+	 * @param message     Message shown in the pop-up
+	 * @param messageType Must be part of the {@link JOptionPane} values
+	 * @return Chosen option or an open confirmation if the messageType is not
+	 *         QUESTION_MESSAGE
+	 */
+	public int alert(String message, int messageType) {
+		if (messageType == JOptionPane.QUESTION_MESSAGE) {
+			return JOptionPane.showConfirmDialog(this, message, "thesisSpace", JOptionPane.YES_NO_OPTION);
+		} else {
+			JOptionPane.showMessageDialog(this, message, "thesisSpace", messageType);
+			return JOptionPane.CLOSED_OPTION;
+		}
+	}
 
     /**
      * Switch to a view that has already been registered.
