@@ -16,6 +16,7 @@ import javax.swing.UIManager;
 
 import com.formdev.flatlaf.FlatLightLaf;
 
+import de.hswhameln.typetogether.client.runtime.ClientRuntime;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 
 
@@ -30,8 +31,10 @@ public class MainWindow extends JFrame {
     private JPanel mainContainer;
     private Map<String, JPanel> availableViews;
     private CardLayout cardLayout;
+    private ClientRuntime runtime;
 
-    public MainWindow() {
+    public MainWindow(ClientRuntime runtime) {
+        this.runtime = runtime;
         this.mainContainer = new JPanel();
         this.cardLayout = new CardLayout();
         this.availableViews = new HashMap<>();
@@ -42,7 +45,7 @@ public class MainWindow extends JFrame {
             exceptionHandler.handle(e, "Failed to initialize look&feel", this.getClass());
         }
         this.add(mainContainer);
-
+        this.setResizable(false);
         this.setSize(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT);
         this.setMinimumSize(new Dimension(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT));
         /*
@@ -71,6 +74,10 @@ public class MainWindow extends JFrame {
         this.cardLayout.show(mainContainer, ViewProperties.LOGIN); //TODO: Changed from LOGIN for debugging
     }
 
+    public ClientRuntime getClientRuntime() {
+        return this.runtime;
+    }
+
     //TODO Create Logo
     private Image getApplicationIcon() {
         try {
@@ -83,7 +90,7 @@ public class MainWindow extends JFrame {
     }
 
     private void registerViews() {
-        this.registerSingleView(new EditorPanel(), ViewProperties.EDITOR);
+        this.registerSingleView(new EditorPanel(this), ViewProperties.EDITOR);
         this.registerSingleView(new LoginPanel(this), ViewProperties.LOGIN);
         this.registerSingleView(new MenuPanel(this), ViewProperties.MENU);
     }

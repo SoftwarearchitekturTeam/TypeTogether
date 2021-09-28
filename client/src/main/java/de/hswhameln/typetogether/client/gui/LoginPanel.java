@@ -1,6 +1,6 @@
 package de.hswhameln.typetogether.client.gui;
 
-import java.awt.BorderLayout;
+
 import java.awt.Color;
 import java.awt.Dimension;
 
@@ -20,17 +20,20 @@ import javax.swing.SwingConstants;
 
 public class LoginPanel extends AbstractPanel {
 
-   private MainWindow window;
    private JPanel headline;
   
    
     
 
     public LoginPanel(MainWindow window) {
-        this.window = window;
+super(window);
         this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
         this.setAlignmentX(CENTER_ALIGNMENT);
         this.setAlignmentY(CENTER_ALIGNMENT);
+
+        
+       
+
         this.setSize(ViewProperties.DEFAULT_WIDTH,ViewProperties.DEFAULT_HEIGHT);
         this.createGrid();
         this.setPreferredSize(new Dimension(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT));
