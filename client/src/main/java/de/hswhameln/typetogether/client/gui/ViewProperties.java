@@ -1,6 +1,7 @@
 package de.hswhameln.typetogether.client.gui;
 
 import java.awt.Color;
+import java.awt.Font;
 
 public interface ViewProperties {
 	// Color palette
@@ -8,6 +9,7 @@ public interface ViewProperties {
 	public static final Color BACKGROUND_COLOR = new Color(255, 255, 255);
 	public static final Color FONT_COLOR = new Color(52, 73, 94);
 	public static final Color CONTRAST_COLOR = new Color(154, 198, 197);
+	public static final Font SUBHEADLINE_FONT = new Font("Arial", Font.PLAIN, 9);
 	public static final float BUTTON_FONT_SIZE = 16f;
 	public static final float MENU_BUTTON_FONT_SIZE = 12f;
 	public static final int DEFAULT_HEIGHT = 950;
