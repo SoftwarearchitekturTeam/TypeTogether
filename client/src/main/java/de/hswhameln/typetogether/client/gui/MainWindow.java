@@ -16,6 +16,7 @@ import javax.swing.UIManager;
 
 import com.formdev.flatlaf.FlatLightLaf;
 
+import de.hswhameln.typetogether.client.runtime.ClientRuntime;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 
 
@@ -30,8 +31,10 @@ public class MainWindow extends JFrame {
     private JPanel mainContainer;
     private Map<String, JPanel> availableViews;
     private CardLayout cardLayout;
+    private ClientRuntime runtime;
 
-    public MainWindow() {
+    public MainWindow(ClientRuntime runtime) {
+        this.runtime = runtime;
         this.mainContainer = new JPanel();
         this.cardLayout = new CardLayout();
         this.availableViews = new HashMap<>();
@@ -69,6 +72,10 @@ public class MainWindow extends JFrame {
         this.setLocationRelativeTo(null);
         //this.setIconImage(getApplicationIcon());
         this.cardLayout.show(mainContainer, ViewProperties.LOGIN); //TODO: Changed from LOGIN for debugging
+    }
+
+    public ClientRuntime getClientRuntime() {
+        return this.runtime;
     }
 
     //TODO Create Logo

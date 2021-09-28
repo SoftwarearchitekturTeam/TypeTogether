@@ -1,7 +1,11 @@
 package de.hswhameln.typetogether.client.runtime;
 
+import de.hswhameln.typetogether.client.businesslogic.LocalDocument;
+import de.hswhameln.typetogether.client.businesslogic.LocalDocumentSender;
 import de.hswhameln.typetogether.client.proxy.LobbyClientProxy;
+import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.Lobby;
+import de.hswhameln.typetogether.networking.api.User;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -14,6 +18,9 @@ public class ClientRuntime {
 
     private final String url;
     private final int port;
+    private User user;
+    private LocalDocument localDocument;
+    private LocalDocumentSender sender;
 
     public ClientRuntime(Map<String, String> args) {
         String url = args.get("url");
@@ -30,5 +37,29 @@ public class ClientRuntime {
         } catch (IOException e) {
             throw new RuntimeException("Could not connect to server", e);
         }
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public User getUser() {
+        return this.user;
+    }
+
+    public LocalDocument getLocalDocument() {
+        return localDocument;
+    }
+
+    public void setLocalDocument(LocalDocument localDocument) {
+        this.localDocument = localDocument;
+    }
+
+    public LocalDocumentSender getSender() {
+        return sender;
+    }
+
+    public void generateSender(Document serverDocument) {
+        this.sender = new LocalDocumentSender(serverDocument, this.user);
     }
 }
