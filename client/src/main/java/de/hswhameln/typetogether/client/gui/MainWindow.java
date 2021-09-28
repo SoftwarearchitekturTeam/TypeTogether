@@ -12,10 +12,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
+
+import com.formdev.flatlaf.FlatLightLaf;
+
 
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 
@@ -29,7 +34,7 @@ public class MainWindow extends JFrame {
     private ExceptionHandler exceptionHandler = ExceptionHandler.getExceptionHandler();
 
     private JPanel mainContainer;
-    private Map<Integer, JPanel> availableViews;
+    private Map<String, JPanel> availableViews;
     private CardLayout cardLayout;
 
     public MainWindow() {
@@ -37,9 +42,16 @@ public class MainWindow extends JFrame {
         this.cardLayout = new CardLayout();
         this.availableViews = new HashMap<>();
         this.mainContainer.setLayout(cardLayout);
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch(Exception e) {
+            Logger.getLogger("gui").warning("Failed to initiate Look&Feel");
+        }
+        this.add(mainContainer);
 
         this.setSize(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT);
         this.setMinimumSize(new Dimension(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT));
+        /*
         this.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
                 Dimension dimension = MainWindow.this.getSize();
@@ -54,6 +66,7 @@ public class MainWindow extends JFrame {
                 scheduler.schedule(() -> MainWindow.this.setSize(dimension), ViewProperties.RESIZING_TIMER, TimeUnit.MILLISECONDS);
             }
         });
+        */
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setTitle("TypeTogether");
         this.setBackground(Color.PINK);
@@ -61,7 +74,7 @@ public class MainWindow extends JFrame {
         // center
         this.setLocationRelativeTo(null);
         //this.setIconImage(getApplicationIcon());
-        this.add(mainContainer);
+        this.cardLayout.show(mainContainer, ViewProperties.LOGIN);
     }
 
     //TODO Create Logo
@@ -76,7 +89,16 @@ public class MainWindow extends JFrame {
     }
 
     private void registerViews() {
-        
+        this.registerSingleView(new LoginPanel(), ViewProperties.LOGIN);
+        this.registerSingleView(new MenuPanel(), ViewProperties.MENU);
+        this.registerSingleView(new EditorPanel(), ViewProperties.EDITOR);
+    }
+
+    private void registerSingleView(JPanel panel, String viewId) {
+        this.add(panel);
+        availableViews.put(viewId, panel);
+        cardLayout.addLayoutComponent(panel, viewId);
+    
     }
 
     /**
@@ -84,10 +106,10 @@ public class MainWindow extends JFrame {
      * 
      * @param viewId Id of the view that shall be shown.
      */
-    public void switchToView(Integer viewId) {
+    public void switchToView(String viewId) {
         if (!this.availableViews.containsKey(viewId)) {
             throw new IllegalArgumentException(String.format("View %s not registered for this window.", viewId));
         }
-        cardLayout.show(mainContainer, viewId.toString());
+        cardLayout.show(mainContainer, viewId);
     }
 }
