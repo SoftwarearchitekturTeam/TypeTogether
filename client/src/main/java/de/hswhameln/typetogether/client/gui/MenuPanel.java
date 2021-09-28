@@ -15,7 +15,6 @@ import javax.swing.SwingConstants;
 
 public class MenuPanel extends AbstractPanel {
     
-    private MainWindow window;
     private JPanel headline;
     private JPanel leftSide;
     private JPanel rightSide;
@@ -23,7 +22,7 @@ public class MenuPanel extends AbstractPanel {
     private JTextField documentNameField;
 
     public MenuPanel(MainWindow window) {
-        this.window = window;
+        super(window);
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.setSize(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT);
         this.createGrid();

@@ -14,11 +14,14 @@ public class AbstractPanel extends JPanel {
     private List<Component> components = new ArrayList<>();
 	private TypeTogetherPanel headerPanel = new TypeTogetherPanel();
 
-    protected AbstractPanel() {
+    protected MainWindow window;
+
+    protected AbstractPanel(MainWindow window) {
         this.setSize(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT);
         this.setPreferredSize(new Dimension(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT));
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setVisible(true);
+        this.window = window;
     }
 
     protected void addComponents(Component... components) {

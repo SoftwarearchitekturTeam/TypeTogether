@@ -13,26 +13,27 @@ public class ButtonFactory {
 
     }
 
-    public static JButton createLeftButton(String label) {
-        JButton button = createButton(label);
+    public static JButton createLeftButton(String label, Runnable run) {
+        JButton button = createButton(label, run);
         button.setAlignmentX(Component.LEFT_ALIGNMENT);
         return button; 
     }
 
-    public static JButton createRightButton(String label) {
-        JButton button = createButton(label);
+    public static JButton createRightButton(String label, Runnable run) {
+        JButton button = createButton(label, run);
         button.setAlignmentX(Component.RIGHT_ALIGNMENT);
         return button;
     }
 
-    public static JButton createCenterButtion(String label) {
-        JButton button = createButton(label);
+    public static JButton createCenterButtion(String label, Runnable run) {
+        JButton button = createButton(label, run);
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         return button;
     }
 
-    private static JButton createButton(String label) {
+    private static JButton createButton(String label, Runnable run) {
         JButton button = new JButton(label);
+        button.addActionListener(a -> run.run());
         button.setBackground(ViewProperties.CONTRAST_COLOR);
         button.setMaximumSize(new Dimension(200, 50));
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
