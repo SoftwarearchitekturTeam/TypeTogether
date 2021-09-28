@@ -74,21 +74,23 @@ public class MenuPanel extends AbstractPanel {
         JLabel documentTitle = new JLabel("Name des Dokuments");
         Dimension sizeTitle = new Dimension(200, 70);
         documentTitle.setMaximumSize(sizeTitle);
+        documentTitle.setMinimumSize(sizeTitle);
         documentTitle.setVisible(true);
-        documentTitle.setAlignmentX(10);
+        documentTitle.setAlignmentX(100);
+        documentTitle.setHorizontalTextPosition(SwingConstants.LEFT);
         documentTitle.setFont(ViewProperties.SUBHEADLINE_FONT);
         documentTitle.setForeground(ViewProperties.FONT_COLOR);
-        documentTitle.setBackground(ViewProperties.BACKGROUND_COLOR);
+        documentTitle.setBackground(Color.CYAN);
         this.leftSide.add(documentTitle);
 
         this.documentNameField = new JTextField(2);
         this.documentNameField.setForeground(ViewProperties.FONT_COLOR);
-        this.documentNameField.setSize(500, 50);
-        this.documentNameField.setMaximumSize(new Dimension(500, 50));
+        this.documentNameField.setSize(500, 40);
+        this.documentNameField.setMaximumSize(new Dimension(500, 40));
         this.documentNameField.setBorder(BorderFactory.createLineBorder(ViewProperties.FONT_COLOR, 1));
         this.leftSide.add(this.documentNameField);
 
-        this.leftSide.add(Box.createRigidArea(new Dimension(500, 10)));
+        this.leftSide.add(Box.createRigidArea(new Dimension(500, 15)));
 
         this.leftSide.add(this.createButtons(new Dimension(500, 50)));
     }
