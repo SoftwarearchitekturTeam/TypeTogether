@@ -83,7 +83,7 @@ public class MainWindow extends JFrame {
     }
 
     private void registerViews() {
-        this.registerSingleView(new EditorPanel(), ViewProperties.EDITOR);
+        this.registerSingleView(new EditorPanel(this), ViewProperties.EDITOR);
         this.registerSingleView(new LoginPanel(this), ViewProperties.LOGIN);
         this.registerSingleView(new MenuPanel(this), ViewProperties.MENU);
     }

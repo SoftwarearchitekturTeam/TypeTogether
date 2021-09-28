@@ -16,14 +16,13 @@ import javax.swing.SwingConstants;
 
 public class LoginPanel extends AbstractPanel {
 
-   private MainWindow window;
    private JPanel headline;
   
    
     
 
     public LoginPanel(MainWindow window) {
-        this.window = window;
+        super(window);
         this.setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
         this.setSize(ViewProperties.DEFAULT_WIDTH,ViewProperties.DEFAULT_HEIGHT);
         this.createGrid();

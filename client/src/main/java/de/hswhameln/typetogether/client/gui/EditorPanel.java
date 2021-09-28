@@ -1,11 +1,10 @@
 package de.hswhameln.typetogether.client.gui;
 
+import static de.hswhameln.typetogether.client.gui.util.ButtonFactory.createLeftButton;
 import static de.hswhameln.typetogether.client.gui.util.ButtonFactory.createRightButton;
 
 import java.awt.Component;
 import java.awt.Dimension;
-
-import static de.hswhameln.typetogether.client.gui.util.ButtonFactory.createLeftButton;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -20,14 +19,15 @@ public class EditorPanel extends AbstractPanel {
     private JButton leave;
     private JButton export;
 
-    public EditorPanel(/*LocalDocument localDocument, LocalDocumentSender localDocumentSender*/) {
+    public EditorPanel(MainWindow window/*LocalDocument localDocument, LocalDocumentSender localDocumentSender*/) {
+        super(window);
         this.editor = new JTextArea(5, 20);
         this.editor.setFont(ViewProperties.EDITOR_FONT);
         this.editorPane = new JScrollPane(this.editor);
         this.editorPane.setMaximumSize(ViewProperties.EDITOR_SIZE);
         this.editorPane.setBorder(BorderFactory.createMatteBorder(50, 0, 50, 0, ViewProperties.GREY_BUTTON_COLOR));
-        this.leave = createRightButton("Verlassen");
-        this.export = createLeftButton("Exportieren");
+        this.leave = createRightButton("Verlassen", this::leaveEditor);
+        this.export = createLeftButton("Exportieren", this::exportText);
         this.export.setEnabled(false);
         this.editor.getDocument().addDocumentListener(new EditorListener(null, null));
 
@@ -35,4 +35,12 @@ public class EditorPanel extends AbstractPanel {
         Component rigArea = Box.createRigidArea(new Dimension(20, 0));
         this.addComponents(editorPane, leave, rigArea, export);
     } 
+
+    private void leaveEditor() {
+        this.window.switchToView(ViewProperties.MENU);
+    }
+
+    private void exportText() {
+
+    }
 }

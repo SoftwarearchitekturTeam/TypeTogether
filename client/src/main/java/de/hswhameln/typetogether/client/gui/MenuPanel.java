@@ -1,11 +1,7 @@
 package de.hswhameln.typetogether.client.gui;
 
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -14,11 +10,9 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
 public class MenuPanel extends AbstractPanel {
     
-    private MainWindow window;
     private JPanel headline;
     private JPanel leftSide;
     private JPanel rightSide;
@@ -26,7 +20,7 @@ public class MenuPanel extends AbstractPanel {
     private JTextField documentNameField;
 
     public MenuPanel(MainWindow window) {
-        this.window = window;
+        super(window);
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.setSize(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT);
         this.createGrid();
