@@ -10,16 +10,19 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 public class MenuPanel extends AbstractPanel {
     
+    private MainWindow window;
     private JPanel headline;
     private JPanel leftSide;
     private JPanel rightSide;
 
-    private JTextArea documentNameArea;
+    private JTextField documentNameField;
 
-    public MenuPanel() {
+    public MenuPanel(MainWindow window) {
+        this.window = window;
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.setSize(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT);
         this.createGrid();
@@ -69,23 +72,25 @@ public class MenuPanel extends AbstractPanel {
         documentTitle.setBackground(ViewProperties.BACKGROUND_COLOR);
         this.leftSide.add(documentTitle);
 
-        this.documentNameArea = new JTextArea();
-        this.documentNameArea.setColumns(1);
-        this.documentNameArea.setForeground(ViewProperties.FONT_COLOR);
-        this.documentNameArea.setMaximumSize(new Dimension(300, 70));
-        this.leftSide.add(this.documentNameArea);
+        this.documentNameField = new JTextField(2);
+        this.documentNameField.setForeground(ViewProperties.FONT_COLOR);
+        this.documentNameField.setMaximumSize(new Dimension(300, 50));
+        this.documentNameField.setBorder(BorderFactory.createLineBorder(ViewProperties.FONT_COLOR, 1));
+        this.leftSide.add(this.documentNameField);
 
         JButton createDocumentButton = new JButton("Erstellen");
         createDocumentButton.setForeground(ViewProperties.BACKGROUND_COLOR);
         createDocumentButton.setBackground(ViewProperties.GREY_BUTTON_COLOR);
-        createDocumentButton.setMaximumSize(new Dimension(120, 70));
+        createDocumentButton.setMaximumSize(new Dimension(120, 50));
+        createDocumentButton.setBorder(BorderFactory.createEmptyBorder());
         createDocumentButton.addActionListener(a -> this.createDocument());
         this.leftSide.add(createDocumentButton);
 
         JButton joinDocumentButton = new JButton("Beitreten");
         joinDocumentButton.setForeground(ViewProperties.BACKGROUND_COLOR);
         joinDocumentButton.setBackground(ViewProperties.CONTRAST_COLOR);
-        joinDocumentButton.setMaximumSize(new Dimension(120, 70));
+        joinDocumentButton.setMaximumSize(new Dimension(120, 50));
+        joinDocumentButton.setBorder(BorderFactory.createEmptyBorder());
         joinDocumentButton.addActionListener(a -> this.joinDocument());
         this.leftSide.add(joinDocumentButton);
     }
@@ -96,5 +101,6 @@ public class MenuPanel extends AbstractPanel {
 
     private void joinDocument() {
         System.out.println("Join");
+        this.window.switchToView(ViewProperties.EDITOR);
     }
 }

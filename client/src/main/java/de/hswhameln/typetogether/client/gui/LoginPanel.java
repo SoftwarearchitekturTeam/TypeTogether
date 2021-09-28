@@ -13,12 +13,14 @@ import javax.swing.JTextField;
 
 public class LoginPanel extends AbstractPanel {
 
+   private MainWindow window;
    private JPanel headline;
    private JPanel body;
    
     
 
-    public LoginPanel() {
+    public LoginPanel(MainWindow window) {
+        this.window = window;
         this.setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
         this.setSize(ViewProperties.DEFAULT_WIDTH,ViewProperties.DEFAULT_HEIGHT);
         this.createGrid();
@@ -82,6 +84,7 @@ public class LoginPanel extends AbstractPanel {
     }
     private void anmelden(){
         System.out.println("Anmelden");
+        this.window.switchToView(ViewProperties.MENU);
     }
     private void getText(String username){
         System.out.println(username);
