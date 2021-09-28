@@ -1,15 +1,19 @@
 package de.hswhameln.typetogether.client.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+
+
 
 
 
@@ -24,7 +28,9 @@ public class LoginPanel extends AbstractPanel {
 
     public LoginPanel(MainWindow window) {
         this.window = window;
-        this.setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
+        this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+        this.setAlignmentX(CENTER_ALIGNMENT);
+        this.setAlignmentY(CENTER_ALIGNMENT);
         this.setSize(ViewProperties.DEFAULT_WIDTH,ViewProperties.DEFAULT_HEIGHT);
         this.createGrid();
         this.setPreferredSize(new Dimension(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT));
@@ -44,6 +50,7 @@ public class LoginPanel extends AbstractPanel {
         
     }
     private void createBody(){
+        this.add(Box.createVerticalStrut(50));
         JLabel lable = new JLabel("Benutzername");
         Dimension sizeTitle = new Dimension(200, 70);
         lable.setMaximumSize(sizeTitle);
@@ -51,9 +58,8 @@ public class LoginPanel extends AbstractPanel {
         lable.setFont(ViewProperties.SUBHEADLINE_FONT);
         lable.setForeground(ViewProperties.FONT_COLOR);
         lable.setBackground(ViewProperties.BACKGROUND_COLOR);
-        
-       
         lable.setHorizontalAlignment(SwingConstants.CENTER);
+        lable.setAlignmentX(CENTER_ALIGNMENT);;
 
        this.add(lable);
         
@@ -68,15 +74,17 @@ public class LoginPanel extends AbstractPanel {
                 getText(text.getText());
         this.add(text);
         
-
+        this.add(Box.createVerticalStrut(50));
 
          JButton button = new JButton("Anmelden");
          button.setForeground(ViewProperties.BACKGROUND_COLOR);
          button.setBackground(ViewProperties.CONTRAST_COLOR);
-         button.setMaximumSize(new Dimension(120, 70));
+         button.setMaximumSize(new Dimension(100, 50));
          button.addActionListener(a -> this.anmelden());
          button.setAlignmentX(CENTER_ALIGNMENT);
          this.add(button);
+
+         
     }
     private void anmelden(){
         System.out.println("Anmelden");
