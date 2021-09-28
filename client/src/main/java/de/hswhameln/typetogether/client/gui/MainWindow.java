@@ -45,7 +45,7 @@ public class MainWindow extends JFrame {
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());
         } catch(Exception e) {
-            Logger.getLogger("gui").warning("Failed to initiate Look&Feel");
+            exceptionHandler.handle(e, "Failed to initialize look&feel", this.getClass());
         }
         this.add(mainContainer);
 
@@ -74,7 +74,7 @@ public class MainWindow extends JFrame {
         // center
         this.setLocationRelativeTo(null);
         //this.setIconImage(getApplicationIcon());
-        this.cardLayout.show(mainContainer, ViewProperties.LOGIN);
+        this.cardLayout.show(mainContainer, ViewProperties.EDITOR); //TODO: Changed from LOGIN for debugging
     }
 
     //TODO Create Logo
@@ -89,9 +89,9 @@ public class MainWindow extends JFrame {
     }
 
     private void registerViews() {
+        this.registerSingleView(new EditorPanel(), ViewProperties.EDITOR);
         this.registerSingleView(new LoginPanel(), ViewProperties.LOGIN);
         this.registerSingleView(new MenuPanel(), ViewProperties.MENU);
-        this.registerSingleView(new EditorPanel(), ViewProperties.EDITOR);
     }
 
     private void registerSingleView(JPanel panel, String viewId) {

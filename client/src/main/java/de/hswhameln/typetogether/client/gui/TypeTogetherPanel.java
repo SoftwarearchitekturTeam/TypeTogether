@@ -1,8 +1,9 @@
 package de.hswhameln.typetogether.client.gui;
 
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-public class TypeTogetherPanel extends AbstractPanel {
+public class TypeTogetherPanel extends JPanel {
 
     private JLabel headline;
     
