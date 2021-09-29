@@ -15,10 +15,10 @@ import de.hswhameln.typetogether.networking.types.Identifier;
 
 public class LocalDocument implements Document {
 
-    private String funcId;
+    private final String funcId;
 
-    private List<DocumentCharacter> content;
-    private Set<DocumentObserver> observers;
+    private final List<DocumentCharacter> content;
+    private final Set<DocumentObserver> observers;
 
     public LocalDocument() {
         this.content = new ArrayList<>();
@@ -41,9 +41,7 @@ public class LocalDocument implements Document {
     @Override
     public void removeChar(User author, DocumentCharacter character) {
         int offset = this.content.indexOf(character);
-        this.content.remove(character);
-        System.out.println("NEW LocalDocument: " + this.content.stream().map(DocumentCharacter::getStringRepresentation).collect(Collectors.joining("/")));
-
+        this.removeLocalChar(character);
         this.observers.stream().map(DocumentObserver::getRemoveCharConsumer).forEach(c -> c.accept(character.getValue(), offset));
     }
 
@@ -61,11 +59,18 @@ public class LocalDocument implements Document {
     }
 
     public void addLocalChar(DocumentCharacter character) {
-        System.out.println("[LocalDocument] AddingLocalChar: " + character.getValue());
+        System.out.println("[LocalDocument#addLocalChar] Adding LocalChar: " + character.getValue());
 
         this.content.add(character);
         Collections.sort(this.content);
-        System.out.println("NEW LocalDocument: " + this.content.stream().map(DocumentCharacter::getStringRepresentation).collect(Collectors.joining("/")));
+        System.out.println("ADDED LocalDocument: " + this.content.stream().map(DocumentCharacter::getStringRepresentation).collect(Collectors.joining("/")));
+    }
+
+    public void removeLocalChar(DocumentCharacter character) {
+        System.out.println("[LocalDocument#removeLocalChar] Removing LocalChar: " + character.getValue());
+
+        this.content.remove(character);
+        System.out.println("REMOVED LocalDocument: " + this.content.stream().map(DocumentCharacter::getStringRepresentation).collect(Collectors.joining("/")));
     }
 
     public void addObserver(DocumentObserver observer) {

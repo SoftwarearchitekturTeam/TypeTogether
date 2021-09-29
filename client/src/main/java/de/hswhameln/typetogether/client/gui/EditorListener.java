@@ -15,7 +15,7 @@ public class EditorListener implements DocumentListener {
 
     private LocalDocument localDocument;
     private LocalDocumentSender sender;
-    private User author;
+    private final User author;
 
     public EditorListener(LocalDocument localDocument, LocalDocumentSender sender, User author) {
         this.localDocument = localDocument;
@@ -55,15 +55,15 @@ public class EditorListener implements DocumentListener {
 
     @Override
     public void removeUpdate(DocumentEvent e) {
-        String update = getStringFromDocumentEvent(e);
+        if (e instanceof CustomSwingDocument.MyDefaultDocumentEvent) {
+            System.out.println("Stopping event propagation from programmatic insert.");
+            return;
+        }
 
-        int count = 0;
-        for (char c : update.toCharArray()) {
-            int index = e.getOffset() + count + 1;
-            count++;
-            DocumentCharacter characterToRemove = this.generateDocumentCharacter(this.localDocument.getDocumentCharacterOfIndex(index - 1),
-                    this.localDocument.getDocumentCharacterOfIndex(index + 1), c);
-            this.localDocument.removeChar(author, characterToRemove);
+        for (int i = 0; i < e.getLength(); i++) {
+            int index = e.getOffset() + 1;
+            DocumentCharacter characterToRemove = this.localDocument.getDocumentCharacterOfIndex(index);
+            this.localDocument.removeLocalChar(characterToRemove);
             this.sender.removeChar(characterToRemove);
         }
         //Get Position of Changed Character(s)

@@ -83,6 +83,76 @@ public class CustomSwingDocument extends PlainDocument {
         }
     }
 
+    @Override
+    public void remove(int offs, int len) throws BadLocationException {
+        this.remove(offs, len, new DefaultDocumentEvent(offs, len, DocumentEvent.EventType.REMOVE));
+    }
+
+    public void removeProgrammatically(int offs, int len) throws BadLocationException {
+        this.remove(offs, len, new MyDefaultDocumentEvent(offs, len, DocumentEvent.EventType.REMOVE));
+    }
+    /**
+     * Removes some content from the document.
+     * Removing content causes a write lock to be held while the
+     * actual changes are taking place.  Observers are notified
+     * of the change on the thread that called this method.
+     * <p>
+     * This method is thread safe, although most Swing methods
+     * are not. Please see
+     * <A HREF="https://docs.oracle.com/javase/tutorial/uiswing/concurrency/index.html">Concurrency
+     * in Swing</A> for more information.
+     *
+     * @param offs the starting offset &gt;= 0
+     * @param len the number of characters to remove &gt;= 0
+     * @exception BadLocationException  the given remove position is not a valid
+     *   position within the document
+     * @see Document#remove
+     */
+    public void remove(int offs, int len, DefaultDocumentEvent chng) throws BadLocationException {
+        DocumentFilter filter = getDocumentFilter();
+
+        writeLock();
+        try {
+            if (filter != null) {
+                throw new RuntimeException("This will hopefully never be accessed...");
+            }
+            else {
+                handleRemove(offs, len, chng);
+            }
+        } finally {
+            writeUnlock();
+        }
+    }
+
+    /**
+     * Performs the actual work of the remove. It is assumed the caller
+     * will have obtained a <code>writeLock</code> before invoking this.
+     */
+    void handleRemove(int offs, int len, DefaultDocumentEvent chng) throws BadLocationException {
+        if (len > 0) {
+            if (offs < 0 || (offs + len) > getLength()) {
+                throw new BadLocationException("Invalid remove",
+                        getLength() + 1);
+            }
+
+            removeUpdate(chng);
+            UndoableEdit u = getContent().remove(offs, len);
+            if (u != null) {
+                chng.addEdit(u);
+            }
+            postRemoveUpdate(chng);
+            // Mark the edit as done.
+            chng.end();
+            fireRemoveUpdate(chng);
+            // only fire undo if Content implementation supports it
+            // undo for the composed text is not supported for now
+            if ((u != null)) {
+                fireUndoableEditUpdate(new UndoableEditEvent(this, chng));
+            }
+        }
+    }
+
+
     public class MyDefaultDocumentEvent extends DefaultDocumentEvent {
 
 
