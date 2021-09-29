@@ -1,18 +1,18 @@
 package de.hswhameln.typetogether.client.gui;
 
-import java.util.List;
-
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
-
-import de.hswhameln.typetogether.networking.LocalDocument;
 import de.hswhameln.typetogether.client.businesslogic.LocalDocumentSender;
+import de.hswhameln.typetogether.networking.LocalDocument;
 import de.hswhameln.typetogether.networking.api.User;
 import de.hswhameln.typetogether.networking.types.DocumentCharacter;
 import de.hswhameln.typetogether.networking.types.Identifier;
 import de.hswhameln.typetogether.networking.util.DocumentCharacterFactory;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
+
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import java.util.List;
+import java.util.logging.Level;
 
 public class EditorListener implements DocumentListener {
 
@@ -85,7 +85,7 @@ public class EditorListener implements DocumentListener {
         try {
             update = e.getDocument().getText(e.getOffset(), e.getLength());
         } catch (BadLocationException e1) {
-            ExceptionHandler.getExceptionHandler().handle(e1, "Error getting Position of change in Editor", EditorListener.class);
+            ExceptionHandler.getExceptionHandler().handle(e1, Level.SEVERE, "Error getting Position of change in Editor. Update is ignored.", EditorListener.class);
         }
         return update;
     }

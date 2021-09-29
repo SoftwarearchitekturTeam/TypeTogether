@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
+import de.hswhameln.typetogether.networking.shared.helperinterfaces.ClientProxyCreator;
 import de.hswhameln.typetogether.networking.util.IOUtils;
 
 /**
@@ -17,7 +18,7 @@ import de.hswhameln.typetogether.networking.util.IOUtils;
  */
 public class ObjectResolver<T> {
 
-    private final Function<Socket, T> clientProxySupplier;
+    private final ClientProxyCreator<T> clientProxySupplier;
     private final BufferedReader in;
     private final PrintWriter out;
     private final InetAddress targetInetAddress;
@@ -26,7 +27,7 @@ public class ObjectResolver<T> {
     private final Map<Integer, T> objectsByCommunicationIds = new HashMap<>();
 
 
-    public ObjectResolver(Function<Socket, T> clientProxySupplier, BufferedReader in, PrintWriter out, InetAddress targetInetAddress) {
+    public ObjectResolver(ClientProxyCreator<T> clientProxySupplier, BufferedReader in, PrintWriter out, InetAddress targetInetAddress) {
         this.clientProxySupplier = clientProxySupplier;
         this.in = in;
         this.out = out;
@@ -56,7 +57,7 @@ public class ObjectResolver<T> {
         logger.info("Starting new ClientSocket (" + this.targetInetAddress + ":" + port + ")");
         Socket socket = new Socket(this.targetInetAddress, port);
         logger.fine("Successfully connected to Socket.");
-        T clientProxy = this.clientProxySupplier.apply(socket);
+        T clientProxy = this.clientProxySupplier.create(socket);
         logger.fine("ClientProxy of type " + clientProxy.getClass().getSimpleName() + " was successfully created.");
         this.objectsByCommunicationIds.put(communicationId, clientProxy);
         IOUtils.success(this.out);

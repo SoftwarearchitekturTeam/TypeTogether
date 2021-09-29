@@ -1,6 +1,6 @@
 package de.hswhameln.typetogether.networking.proxy;
 
-import de.hswhameln.typetogether.networking.shared.AbstractServerProxy;
+import de.hswhameln.typetogether.networking.shared.helperinterfaces.ServerProxyCreator;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 import de.hswhameln.typetogether.networking.util.IOUtils;
 
@@ -12,23 +12,23 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.function.BiFunction;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MarshallHandler<T> {
     private final Map<T, Integer> communicationIdsByObjects = new HashMap<>();
-    private final BiFunction<Socket, T, AbstractServerProxy> serverProxySupplier;
+    private final ServerProxyCreator<T> serverProxySupplier;
     private final PrintWriter out;
     private final BufferedReader in;
 
-    private ExceptionHandler exceptionHandler = ExceptionHandler.getExceptionHandler();
+    private final ExceptionHandler exceptionHandler = ExceptionHandler.getExceptionHandler();
 
     private int knownObjectCount = 0;
     private final Random random = new Random();
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
-    public MarshallHandler(BiFunction<Socket, T, AbstractServerProxy> serverProxySupplier, BufferedReader in, PrintWriter out) {
+    public MarshallHandler(ServerProxyCreator<T> serverProxySupplier, BufferedReader in, PrintWriter out) {
         this.serverProxySupplier = serverProxySupplier;
         this.in = in;
         this.out = out;
@@ -65,7 +65,7 @@ public class MarshallHandler<T> {
         this.out.println(serverSocket.getLocalPort());
         Socket clientSocket = serverSocket.accept();
         logger.info("New Client connected who wants to access " + t);
-        new Thread(this.serverProxySupplier.apply(clientSocket, t)).start();
+        new Thread(this.serverProxySupplier.create(clientSocket, t)).start();
 
         IOUtils.expectResponseCodeSuccess(this.in);
 
@@ -78,7 +78,8 @@ public class MarshallHandler<T> {
             try {
                 serverSocket = new ServerSocket(port);
             } catch (IOException e) {
-                exceptionHandler.handle(e, "Error while creating server socket", this.getClass());
+                this.exceptionHandler.handle(e, Level.INFO, "Error while creating server socket. The port " + port + " is probably already taken. Trying another port.", this.getClass());
+                // continue
             }
         } while (serverSocket == null);
         return serverSocket;

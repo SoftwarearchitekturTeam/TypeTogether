@@ -25,7 +25,7 @@ public class LobbyServerProxy extends AbstractServerProxy {
 
     private final Lobby lobby;
 
-    public LobbyServerProxy(Socket socket, Lobby lobby) {
+    public LobbyServerProxy(Socket socket, Lobby lobby) throws IOException {
         super(socket);
         this.lobby = lobby;
         this.userObjectResolver = new ObjectResolver<>(UserClientProxy::new, this.in, this.out, this.socket.getInetAddress());

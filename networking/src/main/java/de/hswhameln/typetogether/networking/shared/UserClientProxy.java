@@ -1,5 +1,6 @@
 package de.hswhameln.typetogether.networking.shared;
 
+import java.io.IOException;
 import java.net.Socket;
 
 import de.hswhameln.typetogether.networking.api.Document;
@@ -11,7 +12,7 @@ public class UserClientProxy extends AbstractClientProxy implements User {
 
     private final ObjectResolver<Document> localDocumentResolver;
 
-    public UserClientProxy(Socket socket) {
+    public UserClientProxy(Socket socket) throws IOException {
         super(socket);
         this.localDocumentResolver = new ObjectResolver<>(DocumentClientProxy::new, this.in, this.out, this.socket.getInetAddress());
     }

@@ -13,7 +13,7 @@ public class UserServerProxy extends AbstractServerProxy {
     private final User user;
     private final MarshallHandler<Document> documentMarshallHandler;
 
-    public UserServerProxy(Socket socket, User user) {
+    public UserServerProxy(Socket socket, User user) throws IOException {
         super(socket);
         this.user = user;
         this.documentMarshallHandler = new MarshallHandler<>(DocumentServerProxy::new, this.in, this.out);
@@ -29,11 +29,11 @@ public class UserServerProxy extends AbstractServerProxy {
         );
     }
 
-    private void doGetId() {
+    private void doGetId() throws IOException {
         this.safelySendResult("getId", this.user::getId);
     }
 
-    private void doGetName() {
+    private void doGetName() throws IOException {
         this.safelySendResult("getName", this.user::getName);
     }
 

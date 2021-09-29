@@ -1,5 +1,6 @@
 package de.hswhameln.typetogether.networking.shared;
 
+import java.io.IOException;
 import java.net.Socket;
 
 import de.hswhameln.typetogether.networking.api.Document;
@@ -12,7 +13,7 @@ public class DocumentClientProxy extends AbstractClientProxy implements Document
 
     private final MarshallHandler<User> userMarshallHandler;
 
-    public DocumentClientProxy(Socket socket) {
+    public DocumentClientProxy(Socket socket) throws IOException {
         super(socket);
         this.userMarshallHandler = new MarshallHandler<>(UserServerProxy::new, this.in, this.out);
     }

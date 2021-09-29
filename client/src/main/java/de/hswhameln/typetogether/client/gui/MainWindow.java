@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -43,7 +44,7 @@ public class MainWindow extends JFrame {
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());
         } catch(Exception e) {
-            exceptionHandler.handle(e, "Failed to initialize look&feel", this.getClass());
+            exceptionHandler.handle(e, Level.WARNING, "Failed to initialize lookAndFeel. Using default lookAndFeel.", this.getClass());
         }
         this.add(mainContainer);
         this.setResizable(false);
@@ -86,7 +87,7 @@ public class MainWindow extends JFrame {
             return ImageIO.read(resource);
         } catch (IOException e) {
             exceptionHandler.handle(e, "Could not load application icon", this.getClass());
-            return null;
+            return null; // TODO either make sure that the caller can deal with null values or throw an exception here
         }
     }
 

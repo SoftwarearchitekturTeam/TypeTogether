@@ -7,15 +7,11 @@ import de.hswhameln.typetogether.networking.util.IOUtils;
 import java.io.IOException;
 import java.net.Socket;
 
-public abstract class AbstractClientProxy extends AbstractProxy {
+public abstract class AbstractClientProxy extends AbstractProxy implements ClientProxy{
 
-    public AbstractClientProxy(Socket socket) {
+    public AbstractClientProxy(Socket socket) throws IOException {
         super(socket);
-        try {
-            this.readInitializationMessage();
-        } catch (IOException e) {
-            exceptionHandler.handle(e, "Error during initialization", this.getClass());
-        }
+        this.readInitializationMessage();
     }
 
     /**
@@ -68,7 +64,7 @@ public abstract class AbstractClientProxy extends AbstractProxy {
         try {
             runnableWithIOException.perform();
         } catch (IOException e) {
-            exceptionHandler.handle(e, "Could not execute action", this.getClass());
+            throw new RuntimeException(e);
         }
     }
 

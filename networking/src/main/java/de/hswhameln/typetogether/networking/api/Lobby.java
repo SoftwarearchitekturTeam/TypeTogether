@@ -1,13 +1,15 @@
 package de.hswhameln.typetogether.networking.api;
 
+import de.hswhameln.typetogether.networking.api.exceptions.InvalidDocumentIdException;
+import de.hswhameln.typetogether.networking.api.exceptions.UnknownUserException;
+
 public interface Lobby {
 
+    void joinDocument(User user, String documentId) throws InvalidDocumentIdException.DocumentDoesNotExistException;
 
-    void joinDocument(User user, String documentId);
+    void leaveDocument(User user, String documentId) throws InvalidDocumentIdException.DocumentDoesNotExistException, UnknownUserException;
 
-    void leaveDocument(User user, String documentId);
+    Document getDocumentById(String documentId) throws InvalidDocumentIdException.DocumentDoesNotExistException;
 
-    Document getDocumentById(String documentId);
-
-    void createDocument(String documentId);
+    void createDocument(String documentId) throws InvalidDocumentIdException.DocumentAlreadyExistsException;
 }

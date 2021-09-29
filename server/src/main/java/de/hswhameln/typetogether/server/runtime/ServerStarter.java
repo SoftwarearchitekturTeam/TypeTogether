@@ -6,6 +6,7 @@ import de.hswhameln.typetogether.networking.util.LoggerUtils;
 import de.hswhameln.typetogether.server.businesslogic.LobbyImpl;
 import de.hswhameln.typetogether.server.proxy.LobbyServerProxy;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -21,7 +22,13 @@ public class ServerStarter {
         int port = portArgument == null ? DEFAULT_PORT : Integer.parseInt(portArgument);
 
         Lobby lobby = new LobbyImpl();
-        Server server = new Server(port, socket -> new LobbyServerProxy(socket, lobby));
+        Server server = new Server(port, socket -> {
+            try {
+                return new LobbyServerProxy(socket, lobby);
+            } catch (IOException e) {
+               throw new RuntimeException("Could not start server", e);
+            }
+        });
         server.start();
     }
 }
