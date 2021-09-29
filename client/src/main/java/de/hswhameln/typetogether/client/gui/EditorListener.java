@@ -26,13 +26,14 @@ public class EditorListener implements DocumentListener {
     @Override
     public void insertUpdate(DocumentEvent e) {
         String update = getStringFromDocumentEvent(e);
-        
+        System.out.println("Update Length: " + update.length());
         for(char c : update.toCharArray()) {
-            int index = this.localDocument.getIndexOfChar(c, update.toCharArray()); //TODO validate
+            int index = e.getOffset() + 1;
             DocumentCharacter characterToAdd = this.generateDocumentCharacter(this.localDocument.getDocumentCharacterOfIndex(index - 1),
-            this.localDocument.getDocumentCharacterOfIndex(index + 1), c);
-            this.localDocument.addChar(author, characterToAdd);
+                this.localDocument.getDocumentCharacterOfIndex(index + 1), c);
+            this.localDocument.addLocalChar(characterToAdd);
             this.sender.addChar(characterToAdd);
+            System.out.println("Added char: " + c);
         }
         //Get Position of Changed Character(s)
         //Get DocumentCharacter for position
@@ -46,13 +47,14 @@ public class EditorListener implements DocumentListener {
 
     @Override
     public void removeUpdate(DocumentEvent e) {
-        // TODO Auto-generated method stub
         String update = getStringFromDocumentEvent(e);
 
+        int count = 0;
         for(char c : update.toCharArray()) {
-            int index = this.localDocument.getIndexOfChar(c, update.toCharArray()); //TODO validate
+            int index = e.getOffset() + count + 1;
+            count++;
             DocumentCharacter characterToRemove = this.generateDocumentCharacter(this.localDocument.getDocumentCharacterOfIndex(index - 1),
-            this.localDocument.getDocumentCharacterOfIndex(index + 1), c);
+                this.localDocument.getDocumentCharacterOfIndex(index + 1), c);
             this.localDocument.removeChar(author, characterToRemove);
             this.sender.removeChar(characterToRemove);
         }

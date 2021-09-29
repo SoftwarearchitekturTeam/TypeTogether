@@ -30,7 +30,7 @@ public class MainWindow extends JFrame {
     private ExceptionHandler exceptionHandler = ExceptionHandler.getExceptionHandler();
 
     private JPanel mainContainer;
-    private Map<String, JPanel> availableViews;
+    private Map<String, AbstractPanel> availableViews;
     private CardLayout cardLayout;
     private ClientRuntime runtime;
 
@@ -96,7 +96,7 @@ public class MainWindow extends JFrame {
         this.registerSingleView(new MenuPanel(this), ViewProperties.MENU);
     }
 
-    private void registerSingleView(JPanel panel, String viewId) {
+    private void registerSingleView(AbstractPanel panel, String viewId) {
         this.mainContainer.add(panel);
         panel.setVisible(true);
         availableViews.put(viewId, panel);
@@ -130,6 +130,7 @@ public class MainWindow extends JFrame {
         if (!this.availableViews.containsKey(viewId)) {
             throw new IllegalArgumentException(String.format("View %s not registered for this window.", viewId));
         }
+        this.availableViews.get(viewId).initialize();
         cardLayout.show(mainContainer, viewId);
     }
 }

@@ -30,4 +30,8 @@ public class AbstractPanel extends JPanel {
         this.components.forEach(this::add);
         this.components.forEach(component -> component.setVisible(true));
     }
+
+    public void initialize() {
+
+    }
 }

@@ -1,6 +1,7 @@
 package de.hswhameln.typetogether.client.runtime;
 
 import de.hswhameln.typetogether.client.businesslogic.LocalDocument;
+import de.hswhameln.typetogether.client.businesslogic.ClientUser;
 import de.hswhameln.typetogether.client.businesslogic.LocalDocumentSender;
 import de.hswhameln.typetogether.client.proxy.LobbyClientProxy;
 import de.hswhameln.typetogether.networking.api.Document;
@@ -18,8 +19,7 @@ public class ClientRuntime {
 
     private final String url;
     private final int port;
-    private User user;
-    private LocalDocument localDocument;
+    private ClientUser user;
     private LocalDocumentSender sender;
 
     public ClientRuntime(Map<String, String> args) {
@@ -39,20 +39,20 @@ public class ClientRuntime {
         }
     }
 
-    public void setUser(User user) {
+    public void setUser(ClientUser user) {
         this.user = user;
     }
 
-    public User getUser() {
+    public ClientUser getUser() {
         return this.user;
     }
 
     public LocalDocument getLocalDocument() {
-        return localDocument;
+        return (LocalDocument)this.user.getDocument();
     }
 
     public void setLocalDocument(LocalDocument localDocument) {
-        this.localDocument = localDocument;
+        this.user.setDocument(localDocument);
     }
 
     public LocalDocumentSender getSender() {

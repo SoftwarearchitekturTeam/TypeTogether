@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import de.hswhameln.typetogether.client.businesslogic.ClientUser;
 
 
 
@@ -21,6 +22,7 @@ import javax.swing.SwingConstants;
 public class LoginPanel extends AbstractPanel {
 
    private JPanel headline;
+   private JTextField text;
   
    
     
@@ -66,7 +68,7 @@ super(window);
 
        this.add(lable);
         
-        JTextField text = new JTextField();
+        this.text = new JTextField();
         Dimension sizeText = new Dimension(200, 30);
         text.setMaximumSize(sizeText);
         text.setVisible(true);
@@ -89,8 +91,10 @@ super(window);
 
          
     }
+    
     private void anmelden(){
         System.out.println("Anmelden");
+        this.window.getClientRuntime().setUser(new ClientUser(this.text.getText()));
         this.window.switchToView(ViewProperties.MENU);
     }
     private void getText(String username){
