@@ -37,7 +37,7 @@ public class EditorPanel extends AbstractPanel {
         this.editor.setFont(ViewProperties.EDITOR_FONT);
         this.editorPane = new JScrollPane(this.editor);
         this.editorPane.setMaximumSize(ViewProperties.EDITOR_SIZE);
-        this.editorPane.setBorder(BorderFactory.createMatteBorder(50, 0, 50, 0, ViewProperties.GREY_BUTTON_COLOR));
+        this.editorPane.setBorder(BorderFactory.createEmptyBorder(50, 0, 50, 0));
         this.leave = createRightButton("Verlassen", this::leaveEditor);
         this.export = createLeftButton("Exportieren", this::exportText);
         this.export.setEnabled(false);
