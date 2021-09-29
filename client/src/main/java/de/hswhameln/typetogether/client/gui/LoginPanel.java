@@ -22,7 +22,7 @@ public class LoginPanel extends AbstractPanel {
 
     public LoginPanel(MainWindow window) {
         super(window);
-        this.getRootPane().setDefaultButton(button);
+      
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setAlignmentX(CENTER_ALIGNMENT);
         this.setAlignmentY(CENTER_ALIGNMENT);
@@ -67,6 +67,7 @@ public class LoginPanel extends AbstractPanel {
         text.setForeground(ViewProperties.FONT_COLOR);
         text.setBackground(ViewProperties.BACKGROUND_COLOR);
         text.setHorizontalAlignment(SwingConstants.CENTER);
+        text.addActionListener(a-> this.anmelden());
         getText(text.getText());
         this.add(text);
 
