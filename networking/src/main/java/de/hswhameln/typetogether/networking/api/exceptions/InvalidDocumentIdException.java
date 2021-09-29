@@ -8,14 +8,22 @@ public class InvalidDocumentIdException extends FunctionalException {
     }
 
     public static class DocumentDoesNotExistException extends InvalidDocumentIdException {
-        public DocumentDoesNotExistException(String documentId) {
-            super("Document with id " + documentId + " does not exist.");
+
+        public DocumentDoesNotExistException(String message) {
+            super(message);
+        }
+
+        public static DocumentDoesNotExistException create(String documentId) {
+            return new DocumentDoesNotExistException("Document with id " + documentId + " does not exist.");
         }
     }
 
     public static class DocumentAlreadyExistsException extends InvalidDocumentIdException {
-        public DocumentAlreadyExistsException(String documentId) {
-            super("Document with id " + documentId + " already exist.");
+        public DocumentAlreadyExistsException(String message) {
+            super(message);
+        }
+        public static DocumentAlreadyExistsException create(String documentId) {
+            return new DocumentAlreadyExistsException("Document with id " + documentId + " does not exist.");
         }
     }
 

@@ -1,11 +1,15 @@
 package de.hswhameln.typetogether.networking.shared;
 
-import de.hswhameln.typetogether.networking.shared.helperinterfaces.Action;
+import de.hswhameln.typetogether.networking.api.exceptions.FunctionalException;
+import de.hswhameln.typetogether.networking.shared.helperinterfaces.ProxiedSupplier;
+import de.hswhameln.typetogether.networking.shared.helperinterfaces.ProxiedTask;
 import de.hswhameln.typetogether.networking.shared.helperinterfaces.UnsafeSupplier;
 import de.hswhameln.typetogether.networking.util.IOUtils;
 
 import java.io.IOException;
 import java.net.Socket;
+
+import static de.hswhameln.typetogether.networking.util.ExceptionUtil.sneakyThrow;
 
 public abstract class AbstractClientProxy extends AbstractProxy implements ClientProxy{
 
@@ -46,11 +50,13 @@ public abstract class AbstractClientProxy extends AbstractProxy implements Clien
      * Note: I hope you know what you are doing when you use this method!
      * </p>
      */
-    protected <T> T safelyExecute(UnsafeSupplier<T> supplierWithIOExceptions) {
+    protected <T> T safelyExecute(ProxiedSupplier<T> supplierWithIOExceptions) {
         try {
             return supplierWithIOExceptions.supply();
         } catch (IOException e) {
             throw new RuntimeException("Unexpected communication exception", e);
+        } catch (FunctionalException e) {
+            throw sneakyThrow(e);
         }
     }
 
@@ -60,12 +66,13 @@ public abstract class AbstractClientProxy extends AbstractProxy implements Clien
      * Note: I hope you know what you are doing when you use this method!
      * </p>
      */
-    protected void safelyExecute(Action runnableWithIOException) {
+    protected void safelyExecute(ProxiedTask runnableWithIOException) {
         try {
-            runnableWithIOException.perform();
+            runnableWithIOException.run();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (FunctionalException e) {
+            throw sneakyThrow(e);
         }
     }
-
 }

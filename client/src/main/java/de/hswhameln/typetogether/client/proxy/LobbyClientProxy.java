@@ -3,17 +3,21 @@ package de.hswhameln.typetogether.client.proxy;
 import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.Lobby;
 import de.hswhameln.typetogether.networking.api.User;
+import de.hswhameln.typetogether.networking.api.exceptions.InvalidDocumentIdException;
+import de.hswhameln.typetogether.networking.api.exceptions.UnknownUserException;
 import de.hswhameln.typetogether.networking.proxy.MarshallHandler;
 import de.hswhameln.typetogether.networking.proxy.ObjectResolver;
 import de.hswhameln.typetogether.networking.shared.AbstractClientProxy;
 import de.hswhameln.typetogether.networking.shared.DocumentClientProxy;
 import de.hswhameln.typetogether.networking.shared.UserServerProxy;
-import de.hswhameln.typetogether.networking.util.IOUtils;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Logger;
 
+import static de.hswhameln.typetogether.networking.FluentExceptionHandler.expectSuccess;
+
+@SuppressWarnings("RedundantThrows")
 public class LobbyClientProxy extends AbstractClientProxy implements Lobby {
 
     private final MarshallHandler<User> userMarshallHandler;
@@ -27,7 +31,7 @@ public class LobbyClientProxy extends AbstractClientProxy implements Lobby {
     }
 
     @Override
-    public void joinDocument(User user, String documentId) {
+    public void joinDocument(User user, String documentId) throws InvalidDocumentIdException.DocumentDoesNotExistException {
         this.safelyExecute(() -> {
             this.chooseOption("1");
             this.userMarshallHandler.marshall(user);
@@ -36,12 +40,13 @@ public class LobbyClientProxy extends AbstractClientProxy implements Lobby {
             logger.fine(this.in.readLine());
             this.out.println(documentId);
 
-            IOUtils.expectResponseCodeSuccess(this.in);
+            expectSuccess(this.in)
+                    .andHandleError(InvalidDocumentIdException.DocumentDoesNotExistException.class);
         });
     }
 
     @Override
-    public void leaveDocument(User user, String documentId) {
+    public void leaveDocument(User user, String documentId) throws InvalidDocumentIdException.DocumentDoesNotExistException, UnknownUserException {
         this.safelyExecute(() -> {
             this.chooseOption("2");
             this.userMarshallHandler.marshall(user);
@@ -50,30 +55,37 @@ public class LobbyClientProxy extends AbstractClientProxy implements Lobby {
             logger.fine(this.in.readLine());
             this.out.println(documentId);
 
-            IOUtils.expectResponseCodeSuccess(this.in);
+            expectSuccess(this.in)
+                    .andHandleError(InvalidDocumentIdException.DocumentDoesNotExistException.class)
+                    .andHandleError(UnknownUserException.class);
         });
     }
 
     @Override
-    public Document getDocumentById(String documentId) {
+    public Document getDocumentById(String documentId) throws InvalidDocumentIdException.DocumentDoesNotExistException {
         return this.safelyExecute(() -> {
+            this.chooseOption("3");
             this.chooseOption("3");
             // "Provide documentId"
             logger.fine(this.in.readLine());
             this.out.println(documentId);
-            IOUtils.expectResponseCodeSuccess(this.in);
+
+            expectSuccess(this.in)
+                    .andHandleError(InvalidDocumentIdException.DocumentDoesNotExistException.class);
+
             return this.documentObjectResolver.resolveObject();
         });
     }
 
     @Override
-    public void createDocument(String documentId) {
+    public void createDocument(String documentId) throws InvalidDocumentIdException.DocumentAlreadyExistsException {
         this.safelyExecute(() -> {
             this.chooseOption("4");
             // "Provide documentId"
             logger.fine(this.in.readLine());
             this.out.println(documentId);
-            IOUtils.expectResponseCodeSuccess(this.in);
+            expectSuccess(this.in)
+                    .andHandleError(InvalidDocumentIdException.DocumentAlreadyExistsException.class);
         });
     }
 }
