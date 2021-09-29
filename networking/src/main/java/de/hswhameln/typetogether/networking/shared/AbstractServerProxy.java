@@ -15,7 +15,7 @@ import java.util.logging.Level;
 public abstract class AbstractServerProxy extends AbstractProxy implements Runnable {
 
     private Map<String, ServerProxyAction> availableActions;
-    protected ServerProxyAction closeConnectionAction = ServerProxyAction.of("closeConnection", this::closeConnection);
+    protected final ServerProxyAction closeConnectionAction = ServerProxyAction.of("closeConnection", this::closeConnection);
 
     protected AbstractServerProxy(Socket socket) throws IOException{
         super(socket);
@@ -105,7 +105,6 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
     }
 
     /**
-     * @throws IOException
      * @see AbstractClientProxy#chooseOption(String)
      */
     private void handleCommand() throws IOException {
@@ -133,9 +132,7 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
         this.logger.fine("Sending initialization message");
         this.out.println("Connection established. Available commands:");
         this.out.println(this.getAvailableActions().size());
-        this.getAvailableActions().forEach((id, action) -> {
-            this.out.println(id + " - " + action.getName());
-        });
+        this.getAvailableActions().forEach((id, action) -> this.out.println(id + " - " + action.getName()));
     }
 
     private Map<String, ServerProxyAction> getAvailableActions() {

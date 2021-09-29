@@ -21,8 +21,7 @@ public class LobbyImpl implements Lobby {
         if (!this.documentsById.containsKey(documentId)) {
             throw InvalidDocumentIdException.DocumentDoesNotExistException.create(documentId);
         }
-        DocumentDistributor document = this.documentsById.get(documentId);
-        return document;
+        return this.documentsById.get(documentId);
     }
 
     @Override

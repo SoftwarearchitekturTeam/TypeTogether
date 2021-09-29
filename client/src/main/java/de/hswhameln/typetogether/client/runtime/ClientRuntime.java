@@ -30,8 +30,7 @@ public class ClientRuntime {
 
     public Lobby getLobby() {
         try {
-            Socket lobbyClientSocket = null;
-            lobbyClientSocket = new Socket(this.url, this.port);
+            Socket lobbyClientSocket = new Socket(this.url, this.port);
             return new LobbyClientProxy(lobbyClientSocket);
         } catch (IOException e) {
             throw new RuntimeException("Could not connect to server", e);

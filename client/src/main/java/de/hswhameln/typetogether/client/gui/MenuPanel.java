@@ -169,9 +169,8 @@ public class MenuPanel extends AbstractPanel {
         }
         ClientRuntime runtime = this.window.getClientRuntime();
         Lobby lobby = runtime.getLobby();
-        Document document = null;
         try {
-            document = lobby.getDocumentById(documentName);
+            Document document = lobby.getDocumentById(documentName);
             runtime.setLocalDocument(new LocalDocument());
             runtime.generateSender(document);
             this.window.switchToView(ViewProperties.EDITOR);

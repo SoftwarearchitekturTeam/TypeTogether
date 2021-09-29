@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 
 import javax.imageio.ImageIO;
@@ -28,12 +29,12 @@ import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 public class MainWindow extends JFrame {
     private static final long serialVersionUID = 1L;
 
-    private ExceptionHandler exceptionHandler = ExceptionHandler.getExceptionHandler();
+    private final ExceptionHandler exceptionHandler = ExceptionHandler.getExceptionHandler();
 
-    private JPanel mainContainer;
-    private Map<String, AbstractPanel> availableViews;
-    private CardLayout cardLayout;
-    private ClientRuntime runtime;
+    private final JPanel mainContainer;
+    private final Map<String, AbstractPanel> availableViews;
+    private final CardLayout cardLayout;
+    private final ClientRuntime runtime;
 
     public MainWindow(ClientRuntime runtime) {
         this.runtime = runtime;
@@ -84,7 +85,7 @@ public class MainWindow extends JFrame {
     private Image getApplicationIcon() {
         try {
             URL resource = this.getClass().getResource("resource/images/diploma-icon.png");
-            return ImageIO.read(resource);
+            return ImageIO.read(Objects.requireNonNull(resource));
         } catch (IOException e) {
             exceptionHandler.handle(e, "Could not load application icon", this.getClass());
             return null; // TODO either make sure that the caller can deal with null values or throw an exception here

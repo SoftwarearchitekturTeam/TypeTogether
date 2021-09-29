@@ -3,7 +3,6 @@ package de.hswhameln.typetogether.networking.shared;
 import de.hswhameln.typetogether.networking.api.exceptions.FunctionalException;
 import de.hswhameln.typetogether.networking.shared.helperinterfaces.ProxiedSupplier;
 import de.hswhameln.typetogether.networking.shared.helperinterfaces.ProxiedTask;
-import de.hswhameln.typetogether.networking.shared.helperinterfaces.UnsafeSupplier;
 import de.hswhameln.typetogether.networking.util.IOUtils;
 
 import java.io.IOException;

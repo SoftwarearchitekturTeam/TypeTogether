@@ -8,8 +8,8 @@ import javax.swing.JPanel;
 
 public class TypeTogetherPanel extends JPanel {
 
-    private JLabel headline;
-    
+    private final JLabel headline;
+
     public TypeTogetherPanel() {
         this.headline = new JLabel(ViewProperties.HEADLINE);
         this.headline.setFont(ViewProperties.HEADLINE_FONT);

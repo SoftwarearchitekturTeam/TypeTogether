@@ -1,6 +1,5 @@
 package de.hswhameln.typetogether.networking.util;
 
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

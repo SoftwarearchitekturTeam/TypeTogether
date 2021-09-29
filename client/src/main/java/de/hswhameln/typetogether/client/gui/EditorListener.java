@@ -16,8 +16,8 @@ import java.util.logging.Level;
 
 public class EditorListener implements DocumentListener {
 
-    private LocalDocument localDocument;
-    private LocalDocumentSender sender;
+    private final LocalDocument localDocument;
+    private final LocalDocumentSender sender;
     private final User author;
 
     public EditorListener(LocalDocument localDocument, LocalDocumentSender sender, User author) {
@@ -36,24 +36,22 @@ public class EditorListener implements DocumentListener {
         System.out.println("Update Length: " + update.length());
 
         for (char c : update.toCharArray()) {
+            //Get Position of Changed Character(s)
             int index = e.getOffset() + 1;
             System.out.println("EditorListener#insertUpdate: generating character at index " + index + ", between " + (index - 1) + " and " + (index));
             // Between old indices index - 1 and index <=> between new indices index - 1 and index + 1
+            //Get DocumentCharacter for position
+            //Get before and after
             DocumentCharacter characterToAdd = this.generateDocumentCharacter(this.localDocument.getDocumentCharacterOfIndex(index - 1),
                     this.localDocument.getDocumentCharacterOfIndex(index), c);
+            //Add DocumentCharacter to localDocument (without re-adding it to the editor!)
             this.localDocument.addLocalChar(characterToAdd);
 
+            //Send DocumentCharacter with sender
             this.sender.addChar(characterToAdd);
             System.out.println("Added char: " + c);
         }
-        //Get Position of Changed Character(s)
-        //Get DocumentCharacter for position
-        //Get before and after
-        //Add DocumentCharacter to localDocument (without re-adding it to the editor!)
-        //Send DocumentCharacter with sender
 
-        //this.localDocument.addChar(author, character);
-        //this.sender.addChar(charBefore, charAfter, changedChar);
     }
 
     @Override
@@ -64,15 +62,15 @@ public class EditorListener implements DocumentListener {
         }
 
         for (int i = 0; i < e.getLength(); i++) {
+            //Get Position of Changed Character(s)
             int index = e.getOffset() + 1;
+            // Get DocumentCharacter for position
             DocumentCharacter characterToRemove = this.localDocument.getDocumentCharacterOfIndex(index);
+            //Remove Character from localDocument
             this.localDocument.removeLocalChar(characterToRemove);
+            //Send removeDocumentCharacter with sender
             this.sender.removeChar(characterToRemove);
         }
-        //Get Position of Changed Character(s)
-        // Get DocumentCharacter for position
-        //Remove Character from localDocument
-        //Send removeDocumentCharacter with sender        
     }
 
     @Override
@@ -101,7 +99,7 @@ public class EditorListener implements DocumentListener {
         } else if (charBefore == null && charAfter != null) {
             throw new UnsupportedOperationException("Github Issue #1");
             //TODO add implementation for negative counts
-        } else if (charBefore != null && charAfter == null) {
+        } else if (charBefore != null) {
             characterToAdd = DocumentCharacterFactory.getDocumentCharacter(changedChar, charBefore.getPosition(), author.getId());
         } else {
             characterToAdd = new DocumentCharacter(changedChar, List.of(new Identifier(1, author.getId())));

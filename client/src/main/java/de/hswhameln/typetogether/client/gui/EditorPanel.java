@@ -19,14 +19,14 @@ import static de.hswhameln.typetogether.client.gui.util.ButtonFactory.createRigh
 public class EditorPanel extends AbstractPanel {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
-    private DocumentObserver observer;
+    private final DocumentObserver observer;
 
-    private JScrollPane editorPane;
-    private JTextArea editor;
-    private JButton leave;
-    private JButton export;
+    private final JScrollPane editorPane;
+    private final JTextArea editor;
+    private final JButton leave;
+    private final JButton export;
 
-    private CustomSwingDocument swingDocument;
+    private final CustomSwingDocument swingDocument;
 
     public EditorPanel(MainWindow window/*LocalDocument localDocument, LocalDocumentSender localDocumentSender*/) {
         super(window);

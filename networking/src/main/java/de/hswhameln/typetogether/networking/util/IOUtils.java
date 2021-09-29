@@ -9,7 +9,7 @@ import java.io.PrintWriter;
 import java.util.logging.Logger;
 
 public final class IOUtils {
-    private static Logger logger = Logger.getLogger(IOUtils.class.getName());
+    private static final Logger logger = Logger.getLogger(IOUtils.class.getName());
 
     public static String getStringArgument(String argumentName, BufferedReader in, PrintWriter out) throws IOException {
         return getUntypedArgument(argumentName, String.class, in, out);
@@ -40,8 +40,8 @@ public final class IOUtils {
      *
      * @param argumentName Name of the argument
      * @param type         Type of the argument - only used to display the correct message.
-     * @param in
-     * @param out
+     * @param in           BufferedReader for client communication
+     * @param out          PrintWriter for client communication
      * @return A string representation of the given argument
      * @throws IOException On communication errors
      */
