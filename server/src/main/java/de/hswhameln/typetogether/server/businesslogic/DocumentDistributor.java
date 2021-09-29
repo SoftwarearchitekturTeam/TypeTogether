@@ -48,6 +48,8 @@ public class DocumentDistributor implements Document {
 
     public void addUser(User user) {
         this.activeUsers.add(user);
+        Document document = user.getDocument();
+        this.serverBackup.getContent().forEach(documentCharacter -> document.addChar(null, documentCharacter));
     }
 
     public void removeUser(User user) {
