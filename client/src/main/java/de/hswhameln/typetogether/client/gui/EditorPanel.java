@@ -20,6 +20,7 @@ import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 
 import de.hswhameln.typetogether.client.businesslogic.DocumentObserver;
+import de.hswhameln.typetogether.client.gui.util.FileHelper;
 import de.hswhameln.typetogether.client.runtime.ClientRuntime;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 
@@ -46,7 +47,6 @@ public class EditorPanel extends AbstractPanel {
         this.editorPane.setBorder(BorderFactory.createEmptyBorder(50, 0, 50, 0));
         this.leave = createRightButton("Verlassen", this::leaveEditor);
         this.export = createLeftButton("Exportieren", this::exportText);
-        this.export.setEnabled(false);
 
         this.editor.setText("");
         Component rigArea = Box.createRigidArea(new Dimension(20, 0));
@@ -60,7 +60,7 @@ public class EditorPanel extends AbstractPanel {
     private void exportText() {
         JFileChooser fileChooser = new JFileChooser(System.getProperty("user.home") + "/Desktop");
         if(fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            try(PrintWriter output = new PrintWriter(fileChooser.getSelectedFile())) {
+            try(PrintWriter output = new PrintWriter(FileHelper.parseFile(fileChooser.getSelectedFile()))) {
                 output.println(this.editor.getText());
             } catch (FileNotFoundException e) {
                 ExceptionHandler.getExceptionHandler().handle(e, "Failed to write Text into file", EditorPanel.class);
