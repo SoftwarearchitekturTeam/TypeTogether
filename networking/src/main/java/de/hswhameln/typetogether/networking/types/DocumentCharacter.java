@@ -1,12 +1,10 @@
 package de.hswhameln.typetogether.networking.types;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import de.hswhameln.typetogether.networking.util.Decimal;
+import de.hswhameln.typetogether.networking.util.StringEscaper;
 import de.hswhameln.typetogether.networking.util.StringRepresentationSchema;
 
 public class DocumentCharacter implements Comparable<DocumentCharacter> {
@@ -136,7 +134,7 @@ public class DocumentCharacter implements Comparable<DocumentCharacter> {
 
     public String getStringRepresentation() {
         return stringRepresentationSchema.getStringRepresentation(
-                Character.toString(this.value),
+                StringEscaper.escape(Character.toString(this.value)),
                 this.position.stream()
                         .map(Identifier::getStringRepresentation)
                         .collect(Collectors.joining(POSTION_DELIMITER))
@@ -148,13 +146,15 @@ public class DocumentCharacter implements Comparable<DocumentCharacter> {
     }
 
     private static DocumentCharacter fromStringArray(String stringRepresentation, String[] elements) {
-        if (elements[0].length() != 1) {
+        if (elements[0].length() > 2) {
             throw new ParseException(DocumentCharacter.class, stringRepresentation, "First element must be a single character.");
         }
-        char value = elements[0].charAt(0);
+        char value = StringEscaper.unescape(elements[0]).charAt(0);
         List<Identifier> position = Arrays.stream(elements[1].split(POSTION_DELIMITER))
                 .map(Identifier::parse)
                 .collect(Collectors.toList());
         return new DocumentCharacter(value, position);
     }
+
+
 }
