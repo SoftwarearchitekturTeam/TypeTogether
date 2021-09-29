@@ -37,16 +37,19 @@ public class LobbyServerProxy extends AbstractServerProxy {
         return Map.ofEntries(
                 Map.entry("0", this.closeConnectionAction),
                 Map.entry("1", ServerProxyAction.of("joinDocument", this::doJoinDocument)),
-                Map.entry("2", ServerProxyAction.of("leaveDocument", this::doLeaveDocument)));
+                Map.entry("2", ServerProxyAction.of("leaveDocument", this::doLeaveDocument)),
+                Map.entry("3", ServerProxyAction.of("getDocumentById", this::doGetDocumentById)));
     }
 
-    public void doJoinDocument() throws IOException {
+
+
+    private void doJoinDocument() throws IOException {
         User user = this.resolveUser();
         String documentId = IOUtils.getStringArgument("documentId", this.in, this.out);
-        this.safelySendResult("joinDocument", () -> this.lobby.joinDocument(user, documentId), this.documentMarshallHandler::marshall);
+        this.safelyExecute("joinDocument", () -> this.lobby.joinDocument(user, documentId));
     }
 
-    public void doLeaveDocument() throws IOException {
+    private void doLeaveDocument() throws IOException {
         User user = this.resolveUser();
         String documentId = IOUtils.getStringArgument("documentId", this.in, this.out);
         this.safelyExecute("leaveDocument", () -> this.lobby.leaveDocument(user, documentId));
@@ -55,5 +58,10 @@ public class LobbyServerProxy extends AbstractServerProxy {
     private User resolveUser() throws IOException {
         this.logger.fine("Trying to resolve user...");
         return this.userObjectResolver.resolveObject();
+    }
+
+    private void doGetDocumentById() throws IOException {
+        String documentId = IOUtils.getStringArgument("documentId", this.in, this.out);
+        this.safelySendResult("leaveDocument", () -> this.lobby.getDocumentById(documentId), this.documentMarshallHandler::marshall);
     }
 }
