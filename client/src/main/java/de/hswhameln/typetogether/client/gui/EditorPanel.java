@@ -44,11 +44,11 @@ public class EditorPanel extends AbstractPanel {
         this.leave = createRightButton("Verlassen", this::leaveEditor);
         this.export = createLeftButton("Exportieren", this::exportText);
         this.export.setEnabled(false);
-        
+
         this.editor.setText("");
         Component rigArea = Box.createRigidArea(new Dimension(20, 0));
         this.addComponents(editorPane, leave, rigArea, export);
-    } 
+    }
 
     private void leaveEditor() {
         this.window.switchToView(ViewProperties.MENU);
@@ -62,7 +62,7 @@ public class EditorPanel extends AbstractPanel {
     public void initialize() {
         ClientRuntime runtime = this.window.getClientRuntime();
         this.swingDocument.addDocumentListener(new EditorListener(runtime.getLocalDocument(), runtime.getSender(), runtime.getUser()));
-        
+
         runtime.getLocalDocument().addObserver(this.observer);
     }
 
@@ -70,15 +70,24 @@ public class EditorPanel extends AbstractPanel {
         this.logger.log(Level.INFO, String.format("Inserted Character %c at Position %d", value, offset));
         EventQueue.invokeLater(() -> {
             try {
-                this.swingDocument.insertStringProgrammatically(offset - 1 , Character.toString(value), null);
+                this.swingDocument.insertStringProgrammatically(offset - 1, Character.toString(value), null);
+                System.out.println("Inserted character successfully");
             } catch (BadLocationException e) {
                 ExceptionHandler.getExceptionHandler().handle(e, "Error trying to insert character into receiver localDocument", EditorPanel.class);
             }
         });
-        System.out.println("Inserted character successfully");
     }
 
     private void removeChar(char value, int offset) {
+        this.logger.log(Level.INFO, String.format("Removed Character %c at Position %d", value, offset - 1));
+        EventQueue.invokeLater(() -> {
+            try {
+                this.swingDocument.removeProgrammatically(offset - 1, 1);
+                System.out.println("Removed character successfully");
+            } catch (BadLocationException e) {
+                ExceptionHandler.getExceptionHandler().handle(e, "Error trying to remove character into receiver localDocument", EditorPanel.class);
+            }
+        });
 
     }
 }
