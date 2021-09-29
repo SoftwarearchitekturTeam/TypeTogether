@@ -29,8 +29,9 @@ public class EditorListener implements DocumentListener {
             System.out.println("Stopping event propagation from programmatic insert.");
             return;
         }
-        String update = getStringFromDocumentEvent(e);
+        String update = new StringBuilder(getStringFromDocumentEvent(e)).reverse().toString();
         System.out.println("Update Length: " + update.length());
+
         for (char c : update.toCharArray()) {
             int index = e.getOffset() + 1;
             System.out.println("EditorListener#insertUpdate: generating character at index " + index + ", between " + (index - 1) + " and " + (index));
