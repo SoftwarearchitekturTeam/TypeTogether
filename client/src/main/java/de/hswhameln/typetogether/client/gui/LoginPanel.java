@@ -20,13 +20,14 @@ import javax.swing.SwingConstants;
 
 public class LoginPanel extends AbstractPanel {
 
-   private JPanel headline;
-  
+    private JPanel headline;
+    private JButton button;
    
     
 
     public LoginPanel(MainWindow window) {
-super(window);
+        super(window);
+        this.getRootPane().setDefaultButton(button);
         this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
         this.setAlignmentX(CENTER_ALIGNMENT);
         this.setAlignmentY(CENTER_ALIGNMENT);
@@ -74,18 +75,18 @@ super(window);
         text.setForeground(ViewProperties.FONT_COLOR);
         text.setBackground(ViewProperties.BACKGROUND_COLOR);
         text.setHorizontalAlignment(SwingConstants.CENTER);
-                getText(text.getText());
+        getText(text.getText());
         this.add(text);
         
         this.add(Box.createVerticalStrut(50));
 
-         JButton button = new JButton("Anmelden");
-         button.setForeground(ViewProperties.BACKGROUND_COLOR);
-         button.setBackground(ViewProperties.CONTRAST_COLOR);
-         button.setMaximumSize(new Dimension(100, 50));
-         button.addActionListener(a -> this.anmelden());
-         button.setAlignmentX(CENTER_ALIGNMENT);
-         this.add(button);
+        button = new JButton("Anmelden");
+        button.setForeground(ViewProperties.BACKGROUND_COLOR);
+        button.setBackground(ViewProperties.CONTRAST_COLOR);
+        button.setMaximumSize(new Dimension(100, 50));
+        button.addActionListener(a -> this.anmelden());
+        button.setAlignmentX(CENTER_ALIGNMENT);
+        this.add(button);
 
          
     }
