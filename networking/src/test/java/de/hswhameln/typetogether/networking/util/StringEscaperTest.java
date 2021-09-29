@@ -28,16 +28,6 @@ class StringEscaperTest {
     }
 
     @Test
-    void testEscapeTab() {
-        assertEquals("a\\tb", StringEscaper.escape("a\tb"));
-    }
-
-    @Test
-    void testUnescapeTab() {
-        assertEquals("a\tb", StringEscaper.unescape("a\\tb"));
-    }
-
-    @Test
     void testEscapeBackslash() {
         assertEquals("a\\\\b", StringEscaper.escape("a\\b"));
     }
