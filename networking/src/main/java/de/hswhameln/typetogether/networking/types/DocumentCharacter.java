@@ -141,6 +141,19 @@ public class DocumentCharacter implements Comparable<DocumentCharacter> {
                );
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DocumentCharacter character = (DocumentCharacter) o;
+        return value == character.value && Objects.equals(position, character.position);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(position, value);
+    }
+
     public static DocumentCharacter parse(String stringRepresentation) {
         return stringRepresentationSchema.parse(stringRepresentation, (elements) -> fromStringArray(stringRepresentation, elements));
     }
