@@ -39,7 +39,13 @@ public class LocalDocument implements Document {
         return this.funcId;
     }
 
-    //Get DocumentCharacter of index
+    public int getIndexOfChar(char c, char[] arr) {
+        return 0;
+    }
+
+    public DocumentCharacter getDocumentCharacterOfIndex(int index) {
+        return this.content.get(index);
+    }
 
     // get adjacent DocumentCharacters (x2) (maybe)
 

@@ -12,6 +12,8 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import de.hswhameln.typetogether.client.runtime.ClientRuntime;
+
 public class EditorPanel extends AbstractPanel {
     
     private JScrollPane editorPane;
@@ -29,7 +31,8 @@ public class EditorPanel extends AbstractPanel {
         this.leave = createRightButton("Verlassen", this::leaveEditor);
         this.export = createLeftButton("Exportieren", this::exportText);
         this.export.setEnabled(false);
-        this.editor.getDocument().addDocumentListener(new EditorListener(null, null));
+        ClientRuntime runtime = this.window.getClientRuntime();
+        this.editor.getDocument().addDocumentListener(new EditorListener(runtime.getLocalDocument(), runtime.getSender(), runtime.getUser()));
 
         this.editor.setText("Editor-Test");
         Component rigArea = Box.createRigidArea(new Dimension(20, 0));

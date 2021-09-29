@@ -9,9 +9,16 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+
+import de.hswhameln.typetogether.client.businesslogic.LocalDocument;
+import de.hswhameln.typetogether.client.runtime.ClientRuntime;
+import de.hswhameln.typetogether.networking.api.Document;
+import de.hswhameln.typetogether.networking.api.Lobby;
+import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 
 public class MenuPanel extends AbstractPanel {
     
@@ -82,6 +89,7 @@ public class MenuPanel extends AbstractPanel {
         this.documentNameField.setForeground(ViewProperties.FONT_COLOR);
         this.documentNameField.setSize(500, 40);
         this.documentNameField.setMaximumSize(new Dimension(500, 40));
+        this.documentNameField.setFont(ViewProperties.EDITOR_FONT);
         this.documentNameField.setBorder(BorderFactory.createLineBorder(ViewProperties.FONT_COLOR, 1));
         this.leftSide.add(this.documentNameField);
 
@@ -134,11 +142,29 @@ public class MenuPanel extends AbstractPanel {
     }
 
     private void createDocument() {
+
+        //Create localDocument sender
+        //Add leerzeile as first char with [0, 0]
         System.out.println("Create");
     }
 
     private void joinDocument() {
         System.out.println("Join");
-        this.window.switchToView(ViewProperties.EDITOR);
+        String documentName = this.documentNameField.getText();
+        if(!documentName.isEmpty()) {
+            try {
+                ClientRuntime runtime = this.window.getClientRuntime();
+                Lobby lobby = runtime.getLobby();
+                Document document = lobby.joinDocument(runtime.getUser(), documentName);
+                runtime.setLocalDocument(new LocalDocument());
+                runtime.generateSender(document);
+                this.window.switchToView(ViewProperties.EDITOR);
+            } catch(Exception e) {
+                ExceptionHandler.getExceptionHandler().handle(e, "Error while joining Document", MenuPanel.class);
+                this.window.alert("Geben sie einen gültigen Dokumentnamen ein!", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            this.window.alert("Geben Sie einen gültigen Dokumentnamen ein!", JOptionPane.WARNING_MESSAGE);
+        }
     }
 }
