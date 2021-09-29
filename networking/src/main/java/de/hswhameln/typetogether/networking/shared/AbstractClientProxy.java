@@ -8,6 +8,7 @@ import de.hswhameln.typetogether.networking.util.IOUtils;
 import java.io.IOException;
 import java.net.Socket;
 
+import static de.hswhameln.typetogether.networking.FluentExceptionHandler.expectSuccess;
 import static de.hswhameln.typetogether.networking.util.ExceptionUtil.sneakyThrow;
 
 public abstract class AbstractClientProxy extends AbstractProxy implements ClientProxy{
@@ -35,11 +36,12 @@ public abstract class AbstractClientProxy extends AbstractProxy implements Clien
      *
      * @param code The command code to send to the server
      */
-    protected void chooseOption(String code) throws IOException {
+    protected void chooseOption(String code) throws IOException, FunctionalException {
         this.logger.fine("[Server]" + this.in.readLine());
         this.logger.info("Requesting execution of code " + code);
         this.out.println(code);
-        IOUtils.expectResponseCodeSuccess(this.in);
+        expectSuccess(this.in)
+                .andHandleAllFunctionalExceptions();
         this.logger.info("[Server] " + this.in.readLine());
     }
 

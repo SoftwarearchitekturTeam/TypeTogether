@@ -41,6 +41,19 @@ public class FluentExceptionHandler {
         throw e;
     }
 
+    @SuppressWarnings("unchecked")
+    public <T extends FunctionalException> FluentExceptionHandler andHandleAllFunctionalExceptions() throws FunctionalException {
+        if (!ResponseCodes.FUNCTIONAL_ERROR.equals(this.responseCode)) {
+            return this;
+        }
+        try {
+            return this.andHandleError((Class<T>) Class.forName(this.className));
+        } catch (ClassNotFoundException ex) {
+            ExceptionHandler.getExceptionHandler().handle(ex, Level.WARNING, "Could not create exception " + this.className + ".", FluentExceptionHandler.class);
+            return this;
+        }
+    }
+
     public static FluentExceptionHandler expectSuccess(BufferedReader in) throws IOException {
         String responseCode = in.readLine();
         if (ResponseCodes.SUCCESS.equals(responseCode)) {

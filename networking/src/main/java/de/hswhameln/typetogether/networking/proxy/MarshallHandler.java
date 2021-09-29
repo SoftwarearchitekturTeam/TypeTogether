@@ -15,6 +15,8 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static de.hswhameln.typetogether.networking.FluentExceptionHandler.expectSuccess;
+
 public class MarshallHandler<T> {
     private final Map<T, Integer> communicationIdsByObjects = new HashMap<>();
     private final ServerProxyCreator<T> serverProxySupplier;
@@ -67,7 +69,7 @@ public class MarshallHandler<T> {
         logger.info("New Client connected who wants to access " + t);
         new Thread(this.serverProxySupplier.create(clientSocket, t)).start();
 
-        IOUtils.expectResponseCodeSuccess(this.in);
+        expectSuccess(this.in);
 
     }
 

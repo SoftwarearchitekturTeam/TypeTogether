@@ -65,7 +65,6 @@ public class LobbyClientProxy extends AbstractClientProxy implements Lobby {
     public Document getDocumentById(String documentId) throws InvalidDocumentIdException.DocumentDoesNotExistException {
         return this.safelyExecute(() -> {
             this.chooseOption("3");
-            this.chooseOption("3");
             // "Provide documentId"
             logger.fine(this.in.readLine());
             this.out.println(documentId);

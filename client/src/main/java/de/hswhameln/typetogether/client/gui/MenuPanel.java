@@ -148,15 +148,17 @@ public class MenuPanel extends AbstractPanel {
         String documentName = this.documentNameField.getText();
         if (documentName.isBlank()) {
             this.window.alert("Geben Sie einen Dokumentnamen ein!", JOptionPane.WARNING_MESSAGE);
+            return;
         }
         Lobby lobby = this.window.getClientRuntime().getLobby();
         try {
             lobby.createDocument(documentName);
         } catch (InvalidDocumentIdException.DocumentAlreadyExistsException e) {
+            ExceptionHandler.getExceptionHandler().handle(e, Level.INFO, "Document already exists.", MenuPanel.class);
             this.window.alert("Document already exists!", JOptionPane.ERROR_MESSAGE);
+            return;
         }
 
-        // TODO join the newly created document
          this.joinDocument();
     }
 

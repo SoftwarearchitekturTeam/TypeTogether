@@ -1,13 +1,14 @@
 package de.hswhameln.typetogether.networking.shared;
 
-import java.io.IOException;
-import java.net.Socket;
-
 import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.User;
 import de.hswhameln.typetogether.networking.proxy.MarshallHandler;
 import de.hswhameln.typetogether.networking.types.DocumentCharacter;
-import de.hswhameln.typetogether.networking.util.IOUtils;
+
+import java.io.IOException;
+import java.net.Socket;
+
+import static de.hswhameln.typetogether.networking.FluentExceptionHandler.expectSuccess;
 
 public class DocumentClientProxy extends AbstractClientProxy implements Document {
 
@@ -27,7 +28,7 @@ public class DocumentClientProxy extends AbstractClientProxy implements Document
             this.logger.fine("[Server] " + this.in.readLine());
             this.out.println(character.getStringRepresentation());
 
-            IOUtils.expectResponseCodeSuccess(this.in);
+            expectSuccess(this.in);
         });
     }
 
@@ -40,7 +41,7 @@ public class DocumentClientProxy extends AbstractClientProxy implements Document
             this.logger.fine("[Server] " + this.in.readLine());
             this.out.println(character.getStringRepresentation());
 
-            IOUtils.expectResponseCodeSuccess(this.in);
+            expectSuccess(this.in);
         });
     }
 
@@ -48,7 +49,7 @@ public class DocumentClientProxy extends AbstractClientProxy implements Document
     public String getFuncId() {
         return this.safelyExecute(() -> {
             this.chooseOption("3");
-            IOUtils.expectResponseCodeSuccess(this.in);
+            expectSuccess(this.in);
             String funcId = this.in.readLine();
             logger.fine("getFuncId returned " + funcId);
             return funcId;
