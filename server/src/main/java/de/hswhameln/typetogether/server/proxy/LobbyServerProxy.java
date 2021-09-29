@@ -38,9 +38,9 @@ public class LobbyServerProxy extends AbstractServerProxy {
                 Map.entry("0", this.closeConnectionAction),
                 Map.entry("1", ServerProxyAction.of("joinDocument", this::doJoinDocument)),
                 Map.entry("2", ServerProxyAction.of("leaveDocument", this::doLeaveDocument)),
-                Map.entry("3", ServerProxyAction.of("getDocumentById", this::doGetDocumentById)));
+                Map.entry("3", ServerProxyAction.of("getDocumentById", this::doGetDocumentById)),
+                Map.entry("4", ServerProxyAction.of("createDocument", this::doCreateDocument)));
     }
-
 
 
     private void doJoinDocument() throws IOException {
@@ -62,6 +62,11 @@ public class LobbyServerProxy extends AbstractServerProxy {
 
     private void doGetDocumentById() throws IOException {
         String documentId = IOUtils.getStringArgument("documentId", this.in, this.out);
-        this.safelySendResult("leaveDocument", () -> this.lobby.getDocumentById(documentId), this.documentMarshallHandler::marshall);
+        this.safelySendResult("getDocumentById", () -> this.lobby.getDocumentById(documentId), this.documentMarshallHandler::marshall);
+    }
+
+    private void doCreateDocument() throws IOException {
+        String documentId = IOUtils.getStringArgument("documentId", this.in, this.out);
+        this.safelyExecute("createDocument", () -> this.lobby.createDocument(documentId));
     }
 }

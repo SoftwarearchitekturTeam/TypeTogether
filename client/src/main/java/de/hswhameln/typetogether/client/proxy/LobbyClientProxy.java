@@ -64,4 +64,15 @@ public class LobbyClientProxy extends AbstractClientProxy implements Lobby {
             return this.documentObjectResolver.resolveObject();
         });
     }
+
+    @Override
+    public void createDocument(String documentId) {
+        this.safelyExecute(() -> {
+            this.chooseOption("4");
+            // "Provide documentId"
+            logger.fine(this.in.readLine());
+            this.out.println(documentId);
+            IOUtils.expectResponseCodeSuccess(this.in);
+        });
+    }
 }

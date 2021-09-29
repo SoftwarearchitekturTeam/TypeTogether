@@ -28,7 +28,7 @@ public class LobbyImpl implements Lobby {
     public void joinDocument(User user, String documentId) {
         logger.info("Functional method joinDocument called with user " + user + " and documentId" + documentId);
         if (!this.documentsById.containsKey(documentId)) {
-            createNewDocument(documentId);
+            throw new RuntimeException("Document with id " + documentId + " does not exist.");
         }
         DocumentDistributor documentToJoin = this.documentsById.get(documentId);
         documentToJoin.addUser(user);
@@ -47,8 +47,12 @@ public class LobbyImpl implements Lobby {
         documentToLeave.removeUser(user);
     }
 
-    private void createNewDocument(String documentId) {
-        logger.info("Functional method createNewDocument called with documentId" + documentId);
+    @Override
+    public void createDocument(String documentId) {
+        if (this.documentsById.containsKey(documentId)) {
+            throw new RuntimeException("Document already exists!");
+        }
+        logger.info("Functional method createDocument called with documentId" + documentId);
         DocumentDistributor documentDistributor = new DocumentDistributor(documentId);
         this.documentsById.put(documentId, documentDistributor);
     }
