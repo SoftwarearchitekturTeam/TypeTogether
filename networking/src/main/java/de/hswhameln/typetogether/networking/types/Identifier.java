@@ -3,8 +3,8 @@ package de.hswhameln.typetogether.networking.types;
 import de.hswhameln.typetogether.networking.util.StringRepresentationSchema;
 
 public class Identifier {
-    private int digit;
-    private int userId;
+    private final int digit;
+    private final int userId;
 
     private static final StringRepresentationSchema<Identifier> stringRepresentationSchema = new StringRepresentationSchema<>(
             Identifier.class,
@@ -23,20 +23,8 @@ public class Identifier {
         return this.digit;
     }
 
-    public void incrementDigit() {
-        this.digit++;
-    }
-
     public int getUserId() {
         return this.userId;
-    }
-
-    public void setDigit(int digit) {
-        this.digit = digit;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     @Override

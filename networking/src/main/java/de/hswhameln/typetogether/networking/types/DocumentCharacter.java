@@ -89,14 +89,17 @@ public class DocumentCharacter implements Comparable<DocumentCharacter> {
     }
 
     private List<Identifier> generatePositionAfter(List<Identifier> positionBefore, int userId) {
-        List<Identifier> returnIn = new ArrayList<>();
-        positionBefore.forEach(i -> returnIn.add(i));
+        System.out.println("Trying to generate a position for user "+ userId + " after " + positionBefore);
+        List<Identifier> returnIn = new ArrayList<>(positionBefore);
         if(returnIn.get(returnIn.size() - 1).getUserId() == userId) {
-            returnIn.get(returnIn.size() - 1).incrementDigit();
+            Identifier identifier = returnIn.remove(returnIn.size() - 1);
+            returnIn.add(new Identifier(identifier.getDigit() + 1, userId));
         } else {
             returnIn.add(new Identifier(1, userId));
         }
-        return returnIn;
+        System.out.println("The new position is " + returnIn);
+
+        return Collections.unmodifiableList(returnIn);
     }
 
     private List<Identifier> generatePositionBetween(List<Identifier> p1, List<Identifier> p2, int userId) {
@@ -121,9 +124,9 @@ public class DocumentCharacter implements Comparable<DocumentCharacter> {
             return Decimal.toIdentifierList(next, p1, p2, userId);
         } else {
             if(head1.getUserId() != head2.getUserId()) {
-                return Decimal.cons(head1, generatePositionBetween(Decimal.rest(p1), Collections.emptyList(), userId));
+                return Collections.unmodifiableList(Decimal.cons(head1, generatePositionBetween(Decimal.rest(p1), Collections.emptyList(), userId)));
             } else if(head1.getUserId() == head2.getUserId()) {
-                return Decimal.cons(head1, generatePositionBetween(Decimal.rest(p1), Decimal.rest(p2), userId));
+                return Collections.unmodifiableList(Decimal.cons(head1, generatePositionBetween(Decimal.rest(p1), Decimal.rest(p2), userId)));
             } else {
                 throw new IllegalArgumentException("Invalid UserId ordering");
             }
