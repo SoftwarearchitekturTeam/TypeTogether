@@ -24,16 +24,19 @@ public class EditorPanel extends AbstractPanel {
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
     private DocumentObserver observer;
-    
+
     private JScrollPane editorPane;
     private JTextArea editor;
     private JButton leave;
     private JButton export;
 
+    private CustomSwingDocument swingDocument;
+
     public EditorPanel(MainWindow window/*LocalDocument localDocument, LocalDocumentSender localDocumentSender*/) {
         super(window);
         this.observer = new DocumentObserver(this::addChar, this::removeChar);
-        this.editor = new JTextArea(5, 20);
+        this.swingDocument = new CustomSwingDocument();
+        this.editor = new JTextArea(this.swingDocument, "", 5, 20);
         this.editor.setFont(ViewProperties.EDITOR_FONT);
         this.editorPane = new JScrollPane(this.editor);
         this.editorPane.setMaximumSize(ViewProperties.EDITOR_SIZE);
@@ -58,7 +61,7 @@ public class EditorPanel extends AbstractPanel {
     @Override
     public void initialize() {
         ClientRuntime runtime = this.window.getClientRuntime();
-        this.editor.getDocument().addDocumentListener(new EditorListener(runtime.getLocalDocument(), runtime.getSender(), runtime.getUser()));
+        this.swingDocument.addDocumentListener(new EditorListener(runtime.getLocalDocument(), runtime.getSender(), runtime.getUser()));
         
         runtime.getLocalDocument().addObserver(this.observer);
     }
@@ -67,7 +70,7 @@ public class EditorPanel extends AbstractPanel {
         this.logger.log(Level.INFO, String.format("Inserted Character %c at Position %d", value, offset));
         EventQueue.invokeLater(() -> {
             try {
-                this.editor.getDocument().insertString(offset -1 , Character.toString(value), null);
+                this.swingDocument.insertStringProgrammatically(offset - 1 , Character.toString(value), null);
             } catch (BadLocationException e) {
                 ExceptionHandler.getExceptionHandler().handle(e, "Error trying to insert character into receiver localDocument", EditorPanel.class);
             }

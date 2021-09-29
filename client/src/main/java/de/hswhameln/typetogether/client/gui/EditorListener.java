@@ -12,7 +12,7 @@ import de.hswhameln.typetogether.networking.types.Identifier;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 
 public class EditorListener implements DocumentListener {
-    
+
     private LocalDocument localDocument;
     private LocalDocumentSender sender;
     private User author;
@@ -25,13 +25,18 @@ public class EditorListener implements DocumentListener {
 
     @Override
     public void insertUpdate(DocumentEvent e) {
+        if (e instanceof CustomSwingDocument.MyDefaultDocumentEvent) {
+            System.out.println("Stopping event propagation from programmatic insert.");
+            return;
+        }
         String update = getStringFromDocumentEvent(e);
         System.out.println("Update Length: " + update.length());
-        for(char c : update.toCharArray()) {
+        for (char c : update.toCharArray()) {
             int index = e.getOffset() + 1;
             DocumentCharacter characterToAdd = this.generateDocumentCharacter(this.localDocument.getDocumentCharacterOfIndex(index - 1),
-                this.localDocument.getDocumentCharacterOfIndex(index + 1), c);
+                    this.localDocument.getDocumentCharacterOfIndex(index + 1), c);
             this.localDocument.addLocalChar(characterToAdd);
+
             this.sender.addChar(characterToAdd);
             System.out.println("Added char: " + c);
         }
@@ -50,11 +55,11 @@ public class EditorListener implements DocumentListener {
         String update = getStringFromDocumentEvent(e);
 
         int count = 0;
-        for(char c : update.toCharArray()) {
+        for (char c : update.toCharArray()) {
             int index = e.getOffset() + count + 1;
             count++;
             DocumentCharacter characterToRemove = this.generateDocumentCharacter(this.localDocument.getDocumentCharacterOfIndex(index - 1),
-                this.localDocument.getDocumentCharacterOfIndex(index + 1), c);
+                    this.localDocument.getDocumentCharacterOfIndex(index + 1), c);
             this.localDocument.removeChar(author, characterToRemove);
             this.sender.removeChar(characterToRemove);
         }
@@ -84,12 +89,12 @@ public class EditorListener implements DocumentListener {
      */
     private DocumentCharacter generateDocumentCharacter(DocumentCharacter charBefore, DocumentCharacter charAfter, char changedChar) {
         DocumentCharacter characterToAdd;
-        if(charBefore != null && charAfter != null) {
+        if (charBefore != null && charAfter != null) {
             characterToAdd = new DocumentCharacter(changedChar, charBefore.getPosition(), charAfter.getPosition(), author.getId());
-        } else if(charBefore == null && charAfter != null) {
+        } else if (charBefore == null && charAfter != null) {
             throw new UnsupportedOperationException("Github Issue #1");
             //TODO add implementation for negative counts
-        } else if(charBefore != null && charAfter == null) {
+        } else if (charBefore != null && charAfter == null) {
             characterToAdd = new DocumentCharacter(changedChar, charBefore.getPosition(), author.getId());
         } else {
             characterToAdd = new DocumentCharacter(changedChar, new Identifier(1, author.getId()));
