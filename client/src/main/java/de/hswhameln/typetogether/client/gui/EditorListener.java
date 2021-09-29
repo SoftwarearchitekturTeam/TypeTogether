@@ -59,12 +59,9 @@ public class EditorListener implements DocumentListener {
             System.out.println("Stopping event propagation from programmatic insert.");
             return;
         }
-        String update = getStringFromDocumentEvent(e);
 
-        int count = 0;
-        for (char c : update.toCharArray()) {
-            int index = e.getOffset() + count + 1;
-            count++;
+        for (int i = 0; i < e.getLength(); i++) {
+            int index = e.getOffset() + 1;
             DocumentCharacter characterToRemove = this.localDocument.getDocumentCharacterOfIndex(index);
             this.localDocument.removeLocalChar(characterToRemove);
             this.sender.removeChar(characterToRemove);
