@@ -22,7 +22,6 @@
         <module>networking</module>
         <module>client</module>
         <module>server</module>
-        <module>console-client</module>
     </modules>
 
     <build>
