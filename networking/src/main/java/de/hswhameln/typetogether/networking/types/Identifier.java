@@ -56,4 +56,9 @@ public class Identifier {
             throw new ParseException(Identifier.class, stringRepresentation, e);
         }
     }
+
+    @Override
+    public String toString() {
+        return this.getStringRepresentation();
+    }
 }

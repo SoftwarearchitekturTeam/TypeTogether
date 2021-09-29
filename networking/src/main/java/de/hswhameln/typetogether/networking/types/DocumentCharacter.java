@@ -89,7 +89,7 @@ public class DocumentCharacter implements Comparable<DocumentCharacter> {
     }
 
     private List<Identifier> generatePositionAfter(List<Identifier> positionBefore, int userId) {
-        System.out.println("Trying to generate a position for user "+ userId + " after " + positionBefore);
+        System.out.println("Trying to generate a position for user "+ userId + " after " + positionBefore.stream().map(Identifier::getStringRepresentation).collect(Collectors.joining("/")));
         List<Identifier> returnIn = new ArrayList<>(positionBefore);
         if(returnIn.get(returnIn.size() - 1).getUserId() == userId) {
             Identifier identifier = returnIn.remove(returnIn.size() - 1);
@@ -97,12 +97,13 @@ public class DocumentCharacter implements Comparable<DocumentCharacter> {
         } else {
             returnIn.add(new Identifier(1, userId));
         }
-        System.out.println("The new position is " + returnIn);
+        System.out.println("The new position is " + returnIn.stream().map(Identifier::getStringRepresentation).collect(Collectors.joining("/")));
 
         return Collections.unmodifiableList(returnIn);
     }
 
     private List<Identifier> generatePositionBetween(List<Identifier> p1, List<Identifier> p2, int userId) {
+        System.out.println("Trying to generate a position for user "+ userId + " after " + p1.stream().map(Identifier::getStringRepresentation).collect(Collectors.joining("/")) + " and before " + p2.stream().map(Identifier::getStringRepresentation).collect(Collectors.joining("/")));
         Identifier head1;
         if(p1.size() > 0 && p2.get(0) != null) {
             head1 = p1.get(0);

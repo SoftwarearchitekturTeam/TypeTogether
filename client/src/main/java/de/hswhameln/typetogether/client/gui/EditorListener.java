@@ -33,8 +33,10 @@ public class EditorListener implements DocumentListener {
         System.out.println("Update Length: " + update.length());
         for (char c : update.toCharArray()) {
             int index = e.getOffset() + 1;
+            System.out.println("EditorListener#insertUpdate: generating character at index " + index + ", between " + (index - 1) + " and " + (index));
+            // Between old indices index - 1 and index <=> between new indices index - 1 and index + 1
             DocumentCharacter characterToAdd = this.generateDocumentCharacter(this.localDocument.getDocumentCharacterOfIndex(index - 1),
-                    this.localDocument.getDocumentCharacterOfIndex(index + 1), c);
+                    this.localDocument.getDocumentCharacterOfIndex(index), c);
             this.localDocument.addLocalChar(characterToAdd);
 
             this.sender.addChar(characterToAdd);
@@ -88,6 +90,7 @@ public class EditorListener implements DocumentListener {
      * charBefore and charAfter may be null
      */
     private DocumentCharacter generateDocumentCharacter(DocumentCharacter charBefore, DocumentCharacter charAfter, char changedChar) {
+        System.out.println("EditorListener#generateDocumentCharacter: generating " + changedChar + "  between " + saveGetStringRepr(charBefore) + " and " + saveGetStringRepr(charAfter));
         DocumentCharacter characterToAdd;
         if (charBefore != null && charAfter != null) {
             characterToAdd = new DocumentCharacter(changedChar, charBefore.getPosition(), charAfter.getPosition(), author.getId());
@@ -100,5 +103,9 @@ public class EditorListener implements DocumentListener {
             characterToAdd = new DocumentCharacter(changedChar, new Identifier(1, author.getId()));
         }
         return characterToAdd;
+    }
+
+    private String saveGetStringRepr(DocumentCharacter charBefore) {
+        return charBefore == null ? "null" : charBefore.getStringRepresentation();
     }
 }

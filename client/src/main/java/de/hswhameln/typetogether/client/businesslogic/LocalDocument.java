@@ -53,6 +53,7 @@ public class LocalDocument implements Document {
     }
 
     public DocumentCharacter getDocumentCharacterOfIndex(int index) {
+        System.out.println("LocalDocument#getDocumentCharacterOfIndex for index " + index + " at length " +  this.content.size() );
         if (index < 0 || index >= content.size()) {
             return null;
         }

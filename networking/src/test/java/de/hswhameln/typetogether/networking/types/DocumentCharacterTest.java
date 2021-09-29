@@ -118,7 +118,6 @@ public class DocumentCharacterTest {
         assertEquals("saeg", erg);
     }
 
-    @Disabled
     @Test
     public void doCharectertestUseCase3(){
         
@@ -154,6 +153,23 @@ public class DocumentCharacterTest {
             erg = erg + character.getValue();
         }
         assertEquals("sagen", erg);
+    }
+
+    @Test
+    public void testInsertBetween() {
+        var zero = new DocumentCharacter('#', List.of(new Identifier(0, 0)));
+        var a = new DocumentCharacter('A', List.of(new Identifier(0, 0), new Identifier(1, 4711)));
+        var b = new DocumentCharacter('B', List.of(new Identifier(0, 0), new Identifier(2, 4711)));
+
+        var c = new DocumentCharacter('C', List.of(new Identifier(0, 0), new Identifier(1, 4711), new Identifier(1, 4711)));
+
+        DocumentCharacter d = new DocumentCharacter('D', c.getPosition(), b.getPosition(), 4711);
+
+        assertEquals(new Identifier(0, 0), d.getPosition().get(0));
+        assertEquals(new Identifier(1, 4711), d.getPosition().get(1));
+        assertEquals(new Identifier(2, 4711), d.getPosition().get(2));
+        assertEquals(3, d.getPosition().size());
+
     }
 
     @Test

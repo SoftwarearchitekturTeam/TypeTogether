@@ -29,7 +29,7 @@ public class Decimal {
 
     public static List<Integer> increment(List<Integer> n1, List<Integer> delta) {
         int firstNonzeroDigit = 0;
-        for(int i = 0; i < delta.size() && delta.get(i) > 0; i++) {
+        for(int i = 0; i < delta.size() && delta.get(i) <= 0; i++) {
             firstNonzeroDigit = i;
         }
 
