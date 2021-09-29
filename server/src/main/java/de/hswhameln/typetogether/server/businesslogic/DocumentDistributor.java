@@ -1,5 +1,6 @@
 package de.hswhameln.typetogether.server.businesslogic;
 
+import de.hswhameln.typetogether.networking.LocalDocument;
 import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.User;
 import de.hswhameln.typetogether.networking.types.DocumentCharacter;
@@ -13,13 +14,17 @@ public class DocumentDistributor implements Document {
 
     private final Set<User> activeUsers = new HashSet<>();
 
+    private final LocalDocument serverBackup;
+
     public DocumentDistributor(String id) {
+        this.serverBackup = new LocalDocument();
         this.id = id;
     }
 
     @Override
     public void addChar(User author, DocumentCharacter character) {
         int authorId = author.getId();
+        this.serverBackup.addChar(author, character);
         this.activeUsers.stream()
                 .filter(user -> user.getId() != authorId)
                 .map(User::getDocument)
@@ -29,6 +34,7 @@ public class DocumentDistributor implements Document {
     @Override
     public void removeChar(User author, DocumentCharacter character) {
         int authorId = author.getId();
+        this.serverBackup.removeChar(author, character);
         this.activeUsers.stream()
                 .filter(user -> user.getId() != authorId)
                 .map(User::getDocument)
@@ -42,6 +48,8 @@ public class DocumentDistributor implements Document {
 
     public void addUser(User user) {
         this.activeUsers.add(user);
+        Document document = user.getDocument();
+        this.serverBackup.getContent().forEach(documentCharacter -> document.addChar(null, documentCharacter));
     }
 
     public void removeUser(User user) {

@@ -2,7 +2,7 @@ package de.hswhameln.typetogether.client.businesslogic;
 
 import de.hswhameln.typetogether.networking.api.User;
 import de.hswhameln.typetogether.networking.api.Document;
-import de.hswhameln.typetogether.client.businesslogic.LocalDocument;
+import de.hswhameln.typetogether.networking.LocalDocument;
 
 public class ClientUser implements User {
     

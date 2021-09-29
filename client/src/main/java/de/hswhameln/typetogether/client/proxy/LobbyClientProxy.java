@@ -26,8 +26,8 @@ public class LobbyClientProxy extends AbstractClientProxy implements Lobby {
     }
 
     @Override
-    public Document joinDocument(User user, String documentId) {
-        return this.safelyExecute(() -> {
+    public void joinDocument(User user, String documentId) {
+        this.safelyExecute(() -> {
             this.chooseOption("1");
             this.userMarshallHandler.marshall(user);
 
@@ -36,7 +36,6 @@ public class LobbyClientProxy extends AbstractClientProxy implements Lobby {
             this.out.println(documentId);
 
             IOUtils.expectResponseCodeSuccess(this.in);
-            return this.documentObjectResolver.resolveObject();
         });
     }
 
@@ -50,6 +49,29 @@ public class LobbyClientProxy extends AbstractClientProxy implements Lobby {
             logger.fine(this.in.readLine());
             this.out.println(documentId);
 
+            IOUtils.expectResponseCodeSuccess(this.in);
+        });
+    }
+
+    @Override
+    public Document getDocumentById(String documentId) {
+        return this.safelyExecute(() -> {
+            this.chooseOption("3");
+            // "Provide documentId"
+            logger.fine(this.in.readLine());
+            this.out.println(documentId);
+            IOUtils.expectResponseCodeSuccess(this.in);
+            return this.documentObjectResolver.resolveObject();
+        });
+    }
+
+    @Override
+    public void createDocument(String documentId) {
+        this.safelyExecute(() -> {
+            this.chooseOption("4");
+            // "Provide documentId"
+            logger.fine(this.in.readLine());
+            this.out.println(documentId);
             IOUtils.expectResponseCodeSuccess(this.in);
         });
     }

@@ -1,4 +1,4 @@
-package de.hswhameln.typetogether.client.businesslogic;
+package de.hswhameln.typetogether.networking;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +12,7 @@ import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.User;
 import de.hswhameln.typetogether.networking.types.DocumentCharacter;
 import de.hswhameln.typetogether.networking.types.Identifier;
+import de.hswhameln.typetogether.networking.util.Decimal;
 
 public class LocalDocument implements Document {
 
@@ -75,6 +76,10 @@ public class LocalDocument implements Document {
 
     public void addObserver(DocumentObserver observer) {
         this.observers.add(observer);
+    }
+
+    public List<DocumentCharacter> getContent() {
+        return Decimal.rest(content);
     }
 
     // get adjacent DocumentCharacters (x2) (maybe)

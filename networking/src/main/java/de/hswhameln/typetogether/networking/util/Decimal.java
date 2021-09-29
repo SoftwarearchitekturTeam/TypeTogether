@@ -19,8 +19,8 @@ public class Decimal {
         return returnIn;
     }
 
-    public static List<Identifier> rest(List<Identifier> position) {
-        List<Identifier> returnIn = new ArrayList<>();
+    public static <T> List<T> rest(List<T> position) {
+        List<T> returnIn = new ArrayList<>();
         for(int i = 1; i < position.size(); i++) {
             returnIn.add(position.get(i));
         }
