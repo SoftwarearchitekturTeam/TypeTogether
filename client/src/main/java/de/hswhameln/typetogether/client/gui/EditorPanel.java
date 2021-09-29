@@ -6,12 +6,15 @@ import static de.hswhameln.typetogether.client.gui.util.ButtonFactory.createRigh
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
@@ -55,7 +58,14 @@ public class EditorPanel extends AbstractPanel {
     }
 
     private void exportText() {
-
+        JFileChooser fileChooser = new JFileChooser(System.getProperty("user.home") + "/Desktop");
+        if(fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            try(PrintWriter output = new PrintWriter(fileChooser.getSelectedFile())) {
+                output.println(this.editor.getText());
+            } catch (FileNotFoundException e) {
+                ExceptionHandler.getExceptionHandler().handle(e, "Failed to write Text into file", EditorPanel.class);
+            }
+        }
     }
 
     @Override
