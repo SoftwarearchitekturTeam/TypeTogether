@@ -1,12 +1,11 @@
 package de.hswhameln.typetogether.client.runtime;
 
-import de.hswhameln.typetogether.client.businesslogic.LocalDocument;
+import de.hswhameln.typetogether.networking.LocalDocument;
 import de.hswhameln.typetogether.client.businesslogic.ClientUser;
 import de.hswhameln.typetogether.client.businesslogic.LocalDocumentSender;
 import de.hswhameln.typetogether.client.proxy.LobbyClientProxy;
 import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.Lobby;
-import de.hswhameln.typetogether.networking.api.User;
 
 import java.io.IOException;
 import java.net.Socket;

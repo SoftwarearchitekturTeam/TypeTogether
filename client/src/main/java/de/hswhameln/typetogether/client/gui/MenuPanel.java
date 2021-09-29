@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import de.hswhameln.typetogether.client.businesslogic.LocalDocument;
+import de.hswhameln.typetogether.networking.LocalDocument;
 import de.hswhameln.typetogether.client.runtime.ClientRuntime;
 import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.Lobby;

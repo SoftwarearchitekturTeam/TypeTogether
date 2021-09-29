@@ -1,4 +1,4 @@
-package de.hswhameln.typetogether.client.businesslogic;
+package de.hswhameln.typetogether.networking;
 
 import java.util.function.ObjIntConsumer;
 
