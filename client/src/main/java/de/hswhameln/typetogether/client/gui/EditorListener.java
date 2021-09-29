@@ -1,5 +1,7 @@
 package de.hswhameln.typetogether.client.gui;
 
+import java.util.List;
+
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
@@ -9,6 +11,7 @@ import de.hswhameln.typetogether.client.businesslogic.LocalDocumentSender;
 import de.hswhameln.typetogether.networking.api.User;
 import de.hswhameln.typetogether.networking.types.DocumentCharacter;
 import de.hswhameln.typetogether.networking.types.Identifier;
+import de.hswhameln.typetogether.networking.util.DocumentCharacterFactory;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 
 public class EditorListener implements DocumentListener {
@@ -94,14 +97,14 @@ public class EditorListener implements DocumentListener {
         System.out.println("EditorListener#generateDocumentCharacter: generating " + changedChar + "  between " + saveGetStringRepr(charBefore) + " and " + saveGetStringRepr(charAfter));
         DocumentCharacter characterToAdd;
         if (charBefore != null && charAfter != null) {
-            characterToAdd = new DocumentCharacter(changedChar, charBefore.getPosition(), charAfter.getPosition(), author.getId());
+            characterToAdd = DocumentCharacterFactory.getDocumentCharacter(changedChar, charBefore.getPosition(), charAfter.getPosition(), author.getId());
         } else if (charBefore == null && charAfter != null) {
             throw new UnsupportedOperationException("Github Issue #1");
             //TODO add implementation for negative counts
         } else if (charBefore != null && charAfter == null) {
-            characterToAdd = new DocumentCharacter(changedChar, charBefore.getPosition(), author.getId());
+            characterToAdd = DocumentCharacterFactory.getDocumentCharacter(changedChar, charBefore.getPosition(), author.getId());
         } else {
-            characterToAdd = new DocumentCharacter(changedChar, new Identifier(1, author.getId()));
+            characterToAdd = new DocumentCharacter(changedChar, List.of(new Identifier(1, author.getId())));
         }
         return characterToAdd;
     }

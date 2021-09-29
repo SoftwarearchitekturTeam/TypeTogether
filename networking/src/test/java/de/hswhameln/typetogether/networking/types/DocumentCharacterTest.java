@@ -9,6 +9,8 @@ import java.util.List;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import de.hswhameln.typetogether.networking.util.DocumentCharacterFactory;
+
 public class DocumentCharacterTest {
    
     @Test
@@ -19,11 +21,11 @@ public class DocumentCharacterTest {
     @Test
     public void doCharectertestfUseCase1() {
         List<DocumentCharacter> list = new ArrayList<>();
-        list.add(new DocumentCharacter('s', new Identifier(1, 1)));
-        list.add(new DocumentCharacter('e', new Identifier(3, 1)));
-        list.add(new DocumentCharacter('a', new Identifier(2, 1)));
-        list.add(new DocumentCharacter('g', new Identifier(4, 1)));
-        list.add(new DocumentCharacter('n', new Identifier(5, 1)));
+        list.add(new DocumentCharacter('s', List.of(new Identifier(1, 1))));
+        list.add(new DocumentCharacter('e', List.of(new Identifier(3, 1))));
+        list.add(new DocumentCharacter('a', List.of(new Identifier(2, 1))));
+        list.add(new DocumentCharacter('g', List.of(new Identifier(4, 1))));
+        list.add(new DocumentCharacter('n', List.of(new Identifier(5, 1))));
         Collections.sort(list);
         String erg = "";
         
@@ -41,10 +43,10 @@ public class DocumentCharacterTest {
         List<Identifier> after = new ArrayList<>();
         befor.add(new Identifier(2, 1));
         after.add(new Identifier(3, 1));
-        list.add(new DocumentCharacter('s', new Identifier(1, 1)));
-        list.add(new DocumentCharacter('a', new Identifier(2, 1)));
-        list.add(new DocumentCharacter('g', new Identifier(3, 1)));
-        list.add(new DocumentCharacter('e', befor, after, 2));
+        list.add(new DocumentCharacter('s', List.of(new Identifier(1, 1))));
+        list.add(new DocumentCharacter('a', List.of(new Identifier(2, 1))));
+        list.add(new DocumentCharacter('g', List.of(new Identifier(3, 1))));
+        list.add(DocumentCharacterFactory.getDocumentCharacter('e', befor, after, 2));
         Collections.sort(list);
         String erg = "";
 
@@ -61,10 +63,10 @@ public class DocumentCharacterTest {
         List<Identifier> after = new ArrayList<>();
         befor.add(new Identifier(1, 2));
         after.add(new Identifier(1, 3));
-        list.add(new DocumentCharacter('s', new Identifier(1, 1)));
-        list.add(new DocumentCharacter('a', new Identifier(1, 2)));
-        list.add(new DocumentCharacter('g', new Identifier(1, 3)));
-        list.add(new DocumentCharacter('e', befor, after, 4));
+        list.add(new DocumentCharacter('s', List.of(new Identifier(1, 1))));
+        list.add(new DocumentCharacter('a', List.of(new Identifier(1, 2))));
+        list.add(new DocumentCharacter('g', List.of(new Identifier(1, 3))));
+        list.add(DocumentCharacterFactory.getDocumentCharacter('e', befor, after, 4));
         Collections.sort(list);
         String erg = "";
 
@@ -83,10 +85,10 @@ public class DocumentCharacterTest {
         List<Identifier> befor = new ArrayList<>();
         List<Identifier> after = new ArrayList<>();
         after.add(new Identifier(1, 1));
-        list.add(new DocumentCharacter('s', new Identifier(1, 1)));
-        list.add(new DocumentCharacter('a', new Identifier(1, 2)));
-        list.add(new DocumentCharacter('g', new Identifier(1, 3)));
-        list.add(new DocumentCharacter('i', befor, after, 4));
+        list.add(new DocumentCharacter('s', List.of(new Identifier(1, 1))));
+        list.add(new DocumentCharacter('a', List.of(new Identifier(1, 2))));
+        list.add(new DocumentCharacter('g', List.of(new Identifier(1, 3))));
+        list.add(DocumentCharacterFactory.getDocumentCharacter('i', befor, after, 4));
         Collections.sort(list);
         String erg = "";
 
@@ -105,10 +107,10 @@ public class DocumentCharacterTest {
         List<Identifier> after = new ArrayList<>();
         befor.add(new Identifier(1, 3));
         after.add(new Identifier(1, 2));
-        list.add(new DocumentCharacter('s', new Identifier(1, 1)));
-        list.add(new DocumentCharacter('a', new Identifier(1, 3)));
-        list.add(new DocumentCharacter('g', new Identifier(1, 2)));
-        list.add(new DocumentCharacter('e', befor, after, 4));
+        list.add(new DocumentCharacter('s', List.of(new Identifier(1, 1))));
+        list.add(new DocumentCharacter('a', List.of(new Identifier(1, 3))));
+        list.add(new DocumentCharacter('g', List.of(new Identifier(1, 2))));
+        list.add(DocumentCharacterFactory.getDocumentCharacter('e', befor, after, 4));
         Collections.sort(list);
         String erg = "";
 
@@ -125,19 +127,19 @@ public class DocumentCharacterTest {
         List<Identifier> before = new ArrayList<>();
         List<Identifier> after = new ArrayList<>();
         
-        list.add(new DocumentCharacter('s', new Identifier(1, 1)));
-        list.add(new DocumentCharacter('n', new Identifier(2, 1)));
+        list.add(new DocumentCharacter('s', List.of(new Identifier(1, 1))));
+        list.add(new DocumentCharacter('n', List.of(new Identifier(2, 1))));
 
         before.add(new Identifier(1, 1));
         after.add(new Identifier(2, 1));
-        list.add(new DocumentCharacter('a', before, after, 2));
+        list.add(DocumentCharacterFactory.getDocumentCharacter('a', before, after, 2));
 
         before.clear();
         after.clear();
         before.add(new Identifier(1, 1));
         before.add(new Identifier(1, 2));
         after.add(new Identifier(2, 1));
-        list.add(new DocumentCharacter('e', before, after, 2));
+        list.add(DocumentCharacterFactory.getDocumentCharacter('e', before, after, 2));
 
         before.clear();
         after.clear();
@@ -145,7 +147,7 @@ public class DocumentCharacterTest {
         before.add(new Identifier(1, 2));
         after.add(new Identifier(1, 1));
         after.add(new Identifier(2, 2));
-        list.add(new DocumentCharacter('g', before, after, 3));
+        list.add(DocumentCharacterFactory.getDocumentCharacter('g', before, after, 3));
         Collections.sort(list);
 
         String erg = "";
@@ -163,7 +165,7 @@ public class DocumentCharacterTest {
 
         var c = new DocumentCharacter('C', List.of(new Identifier(0, 0), new Identifier(1, 4711), new Identifier(1, 4711)));
 
-        DocumentCharacter d = new DocumentCharacter('D', c.getPosition(), b.getPosition(), 4711);
+        DocumentCharacter d = DocumentCharacterFactory.getDocumentCharacter('D', c.getPosition(), b.getPosition(), 4711);
 
         assertEquals(new Identifier(0, 0), d.getPosition().get(0));
         assertEquals(new Identifier(1, 4711), d.getPosition().get(1));

@@ -19,9 +19,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 
-import de.hswhameln.typetogether.client.businesslogic.DocumentObserver;
 import de.hswhameln.typetogether.client.gui.util.FileHelper;
 import de.hswhameln.typetogether.client.runtime.ClientRuntime;
+import de.hswhameln.typetogether.networking.DocumentObserver;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 
 public class EditorPanel extends AbstractPanel {

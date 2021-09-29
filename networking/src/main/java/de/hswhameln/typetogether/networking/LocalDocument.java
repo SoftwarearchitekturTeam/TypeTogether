@@ -23,7 +23,7 @@ public class LocalDocument implements Document {
 
     public LocalDocument() {
         this.content = new ArrayList<>();
-        this.content.add(new DocumentCharacter('#', new Identifier(0, 0)));
+        this.content.add(new DocumentCharacter('#', List.of(new Identifier(0, 0))));
         System.out.println("STARTING LocalDocument: " + this.content.stream().map(DocumentCharacter::getStringRepresentation).collect(Collectors.joining("/")));
 
         this.observers = new HashSet<>();
