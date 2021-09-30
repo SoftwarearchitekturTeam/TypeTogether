@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -71,7 +72,7 @@ public class MainWindow extends JFrame {
         this.registerViews();
         // center
         this.setLocationRelativeTo(null);
-        //this.setIconImage(getApplicationIcon());
+        this.setIconImage(getApplicationIcon().getImage());
         this.cardLayout.show(mainContainer, ViewProperties.LOGIN); //TODO: Changed from LOGIN for debugging
     }
 
@@ -80,14 +81,10 @@ public class MainWindow extends JFrame {
     }
 
     //TODO Create Logo
-    private Image getApplicationIcon() {
-        try {
-            URL resource = this.getClass().getResource("resource/images/diploma-icon.png");
-            return ImageIO.read(resource);
-        } catch (IOException e) {
-            exceptionHandler.handle(e, "Could not load application icon", this.getClass());
-            return null;
-        }
+    private ImageIcon getApplicationIcon() {
+            System.out.println(System.getProperty("user.dir"));
+            ImageIcon icon = new ImageIcon("./resources/favicon.jpg");
+            return icon;
     }
 
     private void registerViews() {

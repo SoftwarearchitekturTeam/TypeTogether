@@ -36,9 +36,8 @@ public class Decimal {
         List<Integer> inc = new ArrayList<>();
         inc = delta.subList(0, firstNonzeroDigit);
         
-        //TODO critical lines. Needed for Usecase2 but not Usecase 1
         inc.add(0);
-        inc.add(1); //TODO position for possible addition of programm wide counter
+        inc.add(1);
 
         List<Integer> v1 = Decimal.add(n1, inc);
         return v1.get(v1.size() - 1) == 0 ? Decimal.add(v1, inc) : v1;

@@ -3,7 +3,6 @@ package de.hswhameln.typetogether.client.businesslogic;
 import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.User;
 import de.hswhameln.typetogether.networking.types.DocumentCharacter;
-import de.hswhameln.typetogether.networking.types.Identifier;
 
 public class LocalDocumentSender {
 

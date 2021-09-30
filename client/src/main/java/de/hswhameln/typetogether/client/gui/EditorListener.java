@@ -99,8 +99,7 @@ public class EditorListener implements DocumentListener {
         if (charBefore != null && charAfter != null) {
             characterToAdd = DocumentCharacterFactory.getDocumentCharacter(changedChar, charBefore.getPosition(), charAfter.getPosition(), author.getId());
         } else if (charBefore == null && charAfter != null) {
-            throw new UnsupportedOperationException("Github Issue #1");
-            //TODO add implementation for negative counts
+            throw new UnsupportedOperationException("Inserting a char before the first character should not be possible");
         } else if (charBefore != null && charAfter == null) {
             characterToAdd = DocumentCharacterFactory.getDocumentCharacter(changedChar, charBefore.getPosition(), author.getId());
         } else {
