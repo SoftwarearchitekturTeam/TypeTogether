@@ -23,9 +23,7 @@ import java.util.logging.Level;
 
 public class MenuPanel extends AbstractPanel {
 
-    private JPanel headline;
     private JPanel leftSide;
-    private JPanel rightSide;
 
     private JTextField documentNameField;
 
@@ -38,8 +36,8 @@ public class MenuPanel extends AbstractPanel {
     }
 
     private void createGrid() {
-        this.headline = new TypeTogetherPanel();
-        this.add(this.headline);
+        JPanel headline = new TypeTogetherPanel();
+        this.add(headline);
         headline.setVisible(true);
         headline.setBorder(BorderFactory.createEmptyBorder());
         JPanel body = new JPanel();
@@ -60,13 +58,13 @@ public class MenuPanel extends AbstractPanel {
         this.leftSide.setBorder(BorderFactory.createEmptyBorder());
         this.leftSide.setBackground(ViewProperties.BACKGROUND_COLOR);
         body.add(this.leftSide);
-        this.rightSide = new JPanel();
-        this.rightSide.setSize(size);
-        this.rightSide.setPreferredSize(size);
-        this.rightSide.setVisible(true);
-        this.rightSide.setBorder(BorderFactory.createEmptyBorder());
-        this.rightSide.setBackground(ViewProperties.BACKGROUND_COLOR);
-        body.add(this.rightSide);
+        JPanel rightSide = new JPanel();
+        rightSide.setSize(size);
+        rightSide.setPreferredSize(size);
+        rightSide.setVisible(true);
+        rightSide.setBorder(BorderFactory.createEmptyBorder());
+        rightSide.setBackground(ViewProperties.BACKGROUND_COLOR);
+        body.add(rightSide);
     }
 
     private void createLeftSide() {

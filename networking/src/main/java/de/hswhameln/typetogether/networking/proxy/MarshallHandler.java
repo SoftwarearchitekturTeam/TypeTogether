@@ -2,7 +2,6 @@ package de.hswhameln.typetogether.networking.proxy;
 
 import de.hswhameln.typetogether.networking.shared.helperinterfaces.ServerProxyCreator;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
-import de.hswhameln.typetogether.networking.util.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;

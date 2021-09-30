@@ -21,10 +21,7 @@ public class EditorPanel extends AbstractPanel {
     private final Logger logger = Logger.getLogger(this.getClass().getName());
     private final DocumentObserver observer;
 
-    private final JScrollPane editorPane;
     private final JTextArea editor;
-    private final JButton leave;
-    private final JButton export;
 
     private final CustomSwingDocument swingDocument;
 
@@ -34,11 +31,11 @@ public class EditorPanel extends AbstractPanel {
         this.swingDocument = new CustomSwingDocument();
         this.editor = new JTextArea(this.swingDocument, "", 5, 20);
         this.editor.setFont(ViewProperties.EDITOR_FONT);
-        this.editorPane = new JScrollPane(this.editor);
-        this.editorPane.setMaximumSize(ViewProperties.EDITOR_SIZE);
-        this.editorPane.setBorder(BorderFactory.createEmptyBorder(50, 0, 50, 0));
-        this.leave = createRightButton("Verlassen", this::leaveEditor);
-        this.export = createLeftButton("Exportieren", this::exportText);
+        JScrollPane editorPane = new JScrollPane(this.editor);
+        editorPane.setMaximumSize(ViewProperties.EDITOR_SIZE);
+        editorPane.setBorder(BorderFactory.createEmptyBorder(50, 0, 50, 0));
+        JButton leave = createRightButton("Verlassen", this::leaveEditor);
+        JButton export = createLeftButton("Exportieren", this::exportText);
 
         this.editor.setText("");
         Component rigArea = Box.createRigidArea(new Dimension(20, 0));
@@ -90,6 +87,5 @@ public class EditorPanel extends AbstractPanel {
                 ExceptionHandler.getExceptionHandler().handle(e, Level.SEVERE, "Error trying to remove character from receiver localDocument. Skipping this character, but continuing as usual.", EditorPanel.class);
             }
         });
-
     }
 }

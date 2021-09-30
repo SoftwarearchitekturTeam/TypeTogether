@@ -47,41 +47,19 @@ public class MainWindow extends JFrame {
         this.setResizable(false);
         this.setSize(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT);
         this.setMinimumSize(new Dimension(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT));
-        /*
-        this.addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent e) {
-                Dimension dimension = MainWindow.this.getSize();
-                Dimension minDimension = MainWindow.this.getMinimumSize();
-                if(dimension.width<minDimension.width) {
-                    dimension.width=minDimension.width;
-                }
-                if(dimension.height<minDimension.height) {
-                    dimension.height=minDimension.height;
-                }
-                ScheduledThreadPoolExecutor scheduler = new ScheduledThreadPoolExecutor(1);
-                scheduler.schedule(() -> MainWindow.this.setSize(dimension), ViewProperties.RESIZING_TIMER, TimeUnit.MILLISECONDS);
-            }
-        });
-        */
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setTitle("TypeTogether");
         this.setBackground(Color.PINK);
         this.registerViews();
         // center
         this.setLocationRelativeTo(null);
-        this.setIconImage(getApplicationIcon().getImage());
+        this.setIconImage(new ImageIcon("./resources/favicon.jpg").getImage());
         this.cardLayout.show(mainContainer, ViewProperties.LOGIN); //TODO: Changed from LOGIN for debugging
     }
 
     public ClientRuntime getClientRuntime() {
         return this.runtime;
     }
-
-    private ImageIcon getApplicationIcon() {
-        ImageIcon icon = new ImageIcon("./resources/favicon.jpg");
-        return icon;
-    }
-
 
     private void registerViews() {
         this.registerSingleView(new EditorPanel(this), ViewProperties.EDITOR);

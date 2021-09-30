@@ -15,10 +15,7 @@ import de.hswhameln.typetogether.client.businesslogic.ClientUser;
 
 public class LoginPanel extends AbstractPanel {
 
-    private JPanel headline;
     private JTextField text;
-
-    private JButton button;
 
     public LoginPanel(MainWindow window) {
         super(window);
@@ -38,8 +35,8 @@ public class LoginPanel extends AbstractPanel {
     }
 
     private void createGrid() {
-        this.headline = new TypeTogetherPanel();
-        this.add(this.headline);
+        JPanel headline = new TypeTogetherPanel();
+        this.add(headline);
         headline.setVisible(true);
         headline.setBorder(BorderFactory.createEmptyBorder());
 
@@ -73,7 +70,7 @@ public class LoginPanel extends AbstractPanel {
 
         this.add(Box.createVerticalStrut(50));
 
-        button = new JButton("Anmelden");
+        JButton button = new JButton("Anmelden");
         button.setForeground(ViewProperties.BACKGROUND_COLOR);
         button.setBackground(ViewProperties.CONTRAST_COLOR);
         button.setMaximumSize(new Dimension(100, 50));

@@ -6,7 +6,6 @@ import java.net.Socket;
 import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.User;
 import de.hswhameln.typetogether.networking.proxy.ObjectResolver;
-import de.hswhameln.typetogether.networking.util.IOUtils;
 
 import static de.hswhameln.typetogether.networking.FluentExceptionHandler.expectSuccess;
 
