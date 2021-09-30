@@ -30,9 +30,8 @@ public class ClientRuntime {
 
     public Lobby getLobby() {
         try {
-        Socket lobbyClientSocket = null;
-            lobbyClientSocket = new Socket(this.url, this.port);
-        return new LobbyClientProxy(lobbyClientSocket);
+            Socket lobbyClientSocket = new Socket(this.url, this.port);
+            return new LobbyClientProxy(lobbyClientSocket);
         } catch (IOException e) {
             throw new RuntimeException("Could not connect to server", e);
         }
@@ -47,7 +46,7 @@ public class ClientRuntime {
     }
 
     public LocalDocument getLocalDocument() {
-        return (LocalDocument)this.user.getDocument();
+        return (LocalDocument) this.user.getDocument();
     }
 
     public void setLocalDocument(LocalDocument localDocument) {

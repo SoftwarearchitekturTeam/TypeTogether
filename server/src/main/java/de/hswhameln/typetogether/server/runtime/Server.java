@@ -1,9 +1,12 @@
 package de.hswhameln.typetogether.server.runtime;
 
+import de.hswhameln.typetogether.networking.util.ExceptionHandler;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.function.Function;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Server {
@@ -34,10 +37,11 @@ public class Server {
             try {
                 Socket clientSocket = this.serverSocket.accept();
                 logger.info("Client connected.");
-                new Thread(this.onConnect.apply(clientSocket)).start();
+                Runnable runnable = this.onConnect.apply(clientSocket);
+                new Thread(runnable).start();
             } catch (Exception e) {
                 // ignore any exception caused by the connection to a single client
-                e.printStackTrace();
+                ExceptionHandler.getExceptionHandler().handle(e, Level.SEVERE, "Unexpected exception when handling client.", Server.class);
             }
         }
 

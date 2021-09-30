@@ -15,7 +15,7 @@ public class DocumentServerProxy extends AbstractServerProxy {
     private final ObjectResolver<User> objectResolver;
     private final Document underlyingDocument;
 
-    public DocumentServerProxy(Socket socket, Document underlyingDocument) {
+    public DocumentServerProxy(Socket socket, Document underlyingDocument) throws IOException {
         super(socket);
         this.underlyingDocument = underlyingDocument;
         this.objectResolver = new ObjectResolver<>(UserClientProxy::new, this.in, this.out, this.socket.getInetAddress());
@@ -39,7 +39,7 @@ public class DocumentServerProxy extends AbstractServerProxy {
         });
     }
 
-    private void doRemoveChar() {
+    private void doRemoveChar() throws IOException {
         this.safelyExecute("removeChar", () -> {
             User author = this.objectResolver.resolveObject();
             DocumentCharacter character = IOUtils.getDocumentCharacterArgument("char to remove", this.in, this.out);
@@ -47,7 +47,7 @@ public class DocumentServerProxy extends AbstractServerProxy {
         });
     }
 
-    private void doGetFuncId() {
+    private void doGetFuncId() throws IOException {
         this.safelySendResult("getFuncId", this.underlyingDocument::getFuncId);
     }
 

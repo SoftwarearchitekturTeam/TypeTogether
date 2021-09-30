@@ -11,10 +11,10 @@ import javax.swing.JPanel;
 
 public class AbstractPanel extends JPanel {
 
-    private List<Component> components = new ArrayList<>();
-	private TypeTogetherPanel headerPanel = new TypeTogetherPanel();
+    private final List<Component> components = new ArrayList<>();
+	private final TypeTogetherPanel headerPanel = new TypeTogetherPanel();
 
-    protected MainWindow window;
+    protected final MainWindow window;
 
     protected AbstractPanel(MainWindow window) {
         this.setSize(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT);

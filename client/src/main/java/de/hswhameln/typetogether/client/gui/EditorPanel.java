@@ -1,40 +1,32 @@
 package de.hswhameln.typetogether.client.gui;
 
-import static de.hswhameln.typetogether.client.gui.util.ButtonFactory.createLeftButton;
-import static de.hswhameln.typetogether.client.gui.util.ButtonFactory.createRightButton;
-
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.text.BadLocationException;
-
 import de.hswhameln.typetogether.client.gui.util.FileHelper;
 import de.hswhameln.typetogether.client.runtime.ClientRuntime;
 import de.hswhameln.typetogether.networking.DocumentObserver;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 
+import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import java.awt.*;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static de.hswhameln.typetogether.client.gui.util.ButtonFactory.createLeftButton;
+import static de.hswhameln.typetogether.client.gui.util.ButtonFactory.createRightButton;
+
 public class EditorPanel extends AbstractPanel {
 
-    private Logger logger = Logger.getLogger(this.getClass().getName());
-    private DocumentObserver observer;
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final DocumentObserver observer;
 
-    private JScrollPane editorPane;
-    private JTextArea editor;
-    private JButton leave;
-    private JButton export;
+    private final JScrollPane editorPane;
+    private final JTextArea editor;
+    private final JButton leave;
+    private final JButton export;
 
-    private CustomSwingDocument swingDocument;
+    private final CustomSwingDocument swingDocument;
 
     public EditorPanel(MainWindow window/*LocalDocument localDocument, LocalDocumentSender localDocumentSender*/) {
         super(window);
@@ -59,8 +51,8 @@ public class EditorPanel extends AbstractPanel {
 
     private void exportText() {
         JFileChooser fileChooser = new JFileChooser(System.getProperty("user.home") + "/Desktop");
-        if(fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            try(PrintWriter output = new PrintWriter(FileHelper.parseFile(fileChooser.getSelectedFile()))) {
+        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            try (PrintWriter output = new PrintWriter(FileHelper.parseFile(fileChooser.getSelectedFile()))) {
                 output.println(this.editor.getText());
             } catch (FileNotFoundException e) {
                 ExceptionHandler.getExceptionHandler().handle(e, "Failed to write Text into file", EditorPanel.class);
@@ -83,7 +75,7 @@ public class EditorPanel extends AbstractPanel {
                 this.swingDocument.insertStringProgrammatically(offset - 1, Character.toString(value), null);
                 System.out.println("Inserted character successfully");
             } catch (BadLocationException e) {
-                ExceptionHandler.getExceptionHandler().handle(e, "Error trying to insert character into receiver localDocument", EditorPanel.class);
+                ExceptionHandler.getExceptionHandler().handle(e, Level.SEVERE, "Error trying to insert character into receiver localDocument. Skipping this character, but continuing as usual.", EditorPanel.class);
             }
         });
     }
@@ -95,7 +87,7 @@ public class EditorPanel extends AbstractPanel {
                 this.swingDocument.removeProgrammatically(offset - 1, 1);
                 System.out.println("Removed character successfully");
             } catch (BadLocationException e) {
-                ExceptionHandler.getExceptionHandler().handle(e, "Error trying to remove character into receiver localDocument", EditorPanel.class);
+                ExceptionHandler.getExceptionHandler().handle(e, Level.SEVERE, "Error trying to remove character from receiver localDocument. Skipping this character, but continuing as usual.", EditorPanel.class);
             }
         });
 

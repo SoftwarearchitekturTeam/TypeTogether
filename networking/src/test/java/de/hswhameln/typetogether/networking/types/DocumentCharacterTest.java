@@ -27,12 +27,12 @@ public class DocumentCharacterTest {
         list.add(new DocumentCharacter('g', List.of(new Identifier(4, 1))));
         list.add(new DocumentCharacter('n', List.of(new Identifier(5, 1))));
         Collections.sort(list);
-        String erg = "";
+        StringBuilder erg = new StringBuilder();
         
         for(DocumentCharacter character : list) {
-            erg = erg + character.getValue();
+            erg.append(character.getValue());
         }
-        assertEquals("saegn", erg);
+        assertEquals("saegn", erg.toString());
     }
 
     @Test
@@ -48,12 +48,12 @@ public class DocumentCharacterTest {
         list.add(new DocumentCharacter('g', List.of(new Identifier(3, 1))));
         list.add(DocumentCharacterFactory.getDocumentCharacter('e', befor, after, 2));
         Collections.sort(list);
-        String erg = "";
+        StringBuilder erg = new StringBuilder();
 
         for(DocumentCharacter character : list) {
-            erg = erg + character.getValue();
+            erg.append(character.getValue());
         }
-        assertEquals("saeg", erg);
+        assertEquals("saeg", erg.toString());
     }
 
     @Test
@@ -68,12 +68,12 @@ public class DocumentCharacterTest {
         list.add(new DocumentCharacter('g', List.of(new Identifier(1, 3))));
         list.add(DocumentCharacterFactory.getDocumentCharacter('e', befor, after, 4));
         Collections.sort(list);
-        String erg = "";
+        StringBuilder erg = new StringBuilder();
 
         for(DocumentCharacter character : list) {
-            erg = erg + character.getValue();
+            erg.append(character.getValue());
         }
-        assertEquals("saeg", erg);
+        assertEquals("saeg", erg.toString());
     }
 
     //Refers to Issue #1
@@ -90,12 +90,12 @@ public class DocumentCharacterTest {
         list.add(new DocumentCharacter('g', List.of(new Identifier(1, 3))));
         list.add(DocumentCharacterFactory.getDocumentCharacter('i', befor, after, 4));
         Collections.sort(list);
-        String erg = "";
+        StringBuilder erg = new StringBuilder();
 
         for(DocumentCharacter character : list) {
-            erg = erg + character.getValue();
+            erg.append(character.getValue());
         }
-        assertEquals("isag", erg);
+        assertEquals("isag", erg.toString());
     }
 
     @Disabled
@@ -112,12 +112,12 @@ public class DocumentCharacterTest {
         list.add(new DocumentCharacter('g', List.of(new Identifier(1, 2))));
         list.add(DocumentCharacterFactory.getDocumentCharacter('e', befor, after, 4));
         Collections.sort(list);
-        String erg = "";
+        StringBuilder erg = new StringBuilder();
 
         for(DocumentCharacter character : list) {
-            erg = erg + character.getValue();
+            erg.append(character.getValue());
         }
-        assertEquals("saeg", erg);
+        assertEquals("saeg", erg.toString());
     }
 
     @Test
@@ -150,17 +150,15 @@ public class DocumentCharacterTest {
         list.add(DocumentCharacterFactory.getDocumentCharacter('g', before, after, 3));
         Collections.sort(list);
 
-        String erg = "";
+        StringBuilder erg = new StringBuilder();
         for(DocumentCharacter character : list) {
-            erg = erg + character.getValue();
+            erg.append(character.getValue());
         }
-        assertEquals("sagen", erg);
+        assertEquals("sagen", erg.toString());
     }
 
     @Test
     public void testInsertBetween() {
-        var zero = new DocumentCharacter('#', List.of(new Identifier(0, 0)));
-        var a = new DocumentCharacter('A', List.of(new Identifier(0, 0), new Identifier(1, 4711)));
         var b = new DocumentCharacter('B', List.of(new Identifier(0, 0), new Identifier(2, 4711)));
 
         var c = new DocumentCharacter('C', List.of(new Identifier(0, 0), new Identifier(1, 4711), new Identifier(1, 4711)));

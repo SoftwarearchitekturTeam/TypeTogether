@@ -7,8 +7,8 @@ import de.hswhameln.typetogether.networking.util.StringEscaper;
 import de.hswhameln.typetogether.networking.util.StringRepresentationSchema;
 
 public class DocumentCharacter implements Comparable<DocumentCharacter> {
-    private List<Identifier> position;
-    private char value;
+    private final List<Identifier> position;
+    private final char value;
 
     private static final StringRepresentationSchema<DocumentCharacter> stringRepresentationSchema = new StringRepresentationSchema<>(
             DocumentCharacter.class,
@@ -28,10 +28,6 @@ public class DocumentCharacter implements Comparable<DocumentCharacter> {
         return this.value;
     }
 
-    public void setValue(char value) {
-        this.value = value;
-    }
-
     public List<Identifier> getPosition() {
         return this.position;
     }
@@ -44,29 +40,14 @@ public class DocumentCharacter implements Comparable<DocumentCharacter> {
                 return comp;
             }
         }
-        if(this.position.size() < character.position.size()) {
-            return -1;
-        } else if(this.position.size() > character.position.size()) {
-            return 1;
-        } else {
-            return 0;
-        }
+        return Integer.compare(this.position.size(), character.position.size());
     }
 
     private int compareIdentifier(Identifier i1, Identifier i2) {
-        if(i1.getDigit() < i2.getDigit()) {
-            return -1;
-        } else if(i1.getDigit() > i2.getDigit()) {
-            return 1;
-        } else {
-            if(i1.getUserId() < i2.getUserId()) {
-                return -1;
-            } else if(i1.getUserId() > i2.getUserId()) {
-                return 1;
-            } else {
-                return 0;
-            }
+        if (i1.getDigit() == i2.getDigit()) {
+            return Integer.compare(i1.getUserId(), i2.getUserId());
         }
+        return Integer.compare(i1.getDigit(), i2.getDigit());
     }
 
     public String getStringRepresentation() {

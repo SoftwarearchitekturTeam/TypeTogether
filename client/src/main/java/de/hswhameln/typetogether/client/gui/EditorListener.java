@@ -1,23 +1,23 @@
 package de.hswhameln.typetogether.client.gui;
 
-import java.util.List;
-
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
-
-import de.hswhameln.typetogether.networking.LocalDocument;
 import de.hswhameln.typetogether.client.businesslogic.LocalDocumentSender;
+import de.hswhameln.typetogether.networking.LocalDocument;
 import de.hswhameln.typetogether.networking.api.User;
 import de.hswhameln.typetogether.networking.types.DocumentCharacter;
 import de.hswhameln.typetogether.networking.types.Identifier;
 import de.hswhameln.typetogether.networking.util.DocumentCharacterFactory;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import java.util.List;
+import java.util.logging.Level;
+
 public class EditorListener implements DocumentListener {
 
-    private LocalDocument localDocument;
-    private LocalDocumentSender sender;
+    private final LocalDocument localDocument;
+    private final LocalDocumentSender sender;
     private final User author;
 
     public EditorListener(LocalDocument localDocument, LocalDocumentSender sender, User author) {
@@ -36,24 +36,22 @@ public class EditorListener implements DocumentListener {
         System.out.println("Update Length: " + update.length());
 
         for (char c : update.toCharArray()) {
+            //Get Position of Changed Character(s)
             int index = e.getOffset() + 1;
             System.out.println("EditorListener#insertUpdate: generating character at index " + index + ", between " + (index - 1) + " and " + (index));
             // Between old indices index - 1 and index <=> between new indices index - 1 and index + 1
+            //Get DocumentCharacter for position
+            //Get before and after
             DocumentCharacter characterToAdd = this.generateDocumentCharacter(this.localDocument.getDocumentCharacterOfIndex(index - 1),
                     this.localDocument.getDocumentCharacterOfIndex(index), c);
+            //Add DocumentCharacter to localDocument (without re-adding it to the editor!)
             this.localDocument.addLocalChar(characterToAdd);
 
+            //Send DocumentCharacter with sender
             this.sender.addChar(characterToAdd);
             System.out.println("Added char: " + c);
         }
-        //Get Position of Changed Character(s)
-        //Get DocumentCharacter for position
-        //Get before and after
-        //Add DocumentCharacter to localDocument (without re-adding it to the editor!)
-        //Send DocumentCharacter with sender
 
-        //this.localDocument.addChar(author, character);
-        //this.sender.addChar(charBefore, charAfter, changedChar);
     }
 
     @Override
@@ -64,15 +62,15 @@ public class EditorListener implements DocumentListener {
         }
 
         for (int i = 0; i < e.getLength(); i++) {
+            //Get Position of Changed Character(s)
             int index = e.getOffset() + 1;
+            // Get DocumentCharacter for position
             DocumentCharacter characterToRemove = this.localDocument.getDocumentCharacterOfIndex(index);
+            //Remove Character from localDocument
             this.localDocument.removeLocalChar(characterToRemove);
+            //Send removeDocumentCharacter with sender
             this.sender.removeChar(characterToRemove);
         }
-        //Get Position of Changed Character(s)
-        // Get DocumentCharacter for position
-        //Remove Character from localDocument
-        //Send removeDocumentCharacter with sender        
     }
 
     @Override
@@ -85,7 +83,7 @@ public class EditorListener implements DocumentListener {
         try {
             update = e.getDocument().getText(e.getOffset(), e.getLength());
         } catch (BadLocationException e1) {
-            ExceptionHandler.getExceptionHandler().handle(e1, "Error getting Position of change in Editor", EditorListener.class);
+            ExceptionHandler.getExceptionHandler().handle(e1, Level.SEVERE, "Error getting Position of change in Editor. Update is ignored.", EditorListener.class);
         }
         return update;
     }
@@ -100,7 +98,7 @@ public class EditorListener implements DocumentListener {
             characterToAdd = DocumentCharacterFactory.getDocumentCharacter(changedChar, charBefore.getPosition(), charAfter.getPosition(), author.getId());
         } else if (charBefore == null && charAfter != null) {
             throw new UnsupportedOperationException("Inserting a char before the first character should not be possible");
-        } else if (charBefore != null && charAfter == null) {
+        } else if (charBefore != null) {
             characterToAdd = DocumentCharacterFactory.getDocumentCharacter(changedChar, charBefore.getPosition(), author.getId());
         } else {
             characterToAdd = new DocumentCharacter(changedChar, List.of(new Identifier(1, author.getId())));

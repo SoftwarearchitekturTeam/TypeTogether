@@ -1,21 +1,21 @@
 package de.hswhameln.typetogether.networking.shared;
 
-import de.hswhameln.typetogether.networking.shared.helperinterfaces.Action;
-import de.hswhameln.typetogether.networking.shared.helperinterfaces.UnsafeSupplier;
+import de.hswhameln.typetogether.networking.api.exceptions.FunctionalException;
+import de.hswhameln.typetogether.networking.shared.helperinterfaces.ProxiedSupplier;
+import de.hswhameln.typetogether.networking.shared.helperinterfaces.ProxiedTask;
 import de.hswhameln.typetogether.networking.util.IOUtils;
 
 import java.io.IOException;
 import java.net.Socket;
 
-public abstract class AbstractClientProxy extends AbstractProxy {
+import static de.hswhameln.typetogether.networking.FluentExceptionHandler.expectSuccess;
+import static de.hswhameln.typetogether.networking.util.ExceptionUtil.sneakyThrow;
 
-    public AbstractClientProxy(Socket socket) {
+public abstract class AbstractClientProxy extends AbstractProxy implements ClientProxy{
+
+    public AbstractClientProxy(Socket socket) throws IOException {
         super(socket);
-        try {
-            this.readInitializationMessage();
-        } catch (IOException e) {
-            exceptionHandler.handle(e, "Error during initialization", this.getClass());
-        }
+        this.readInitializationMessage();
     }
 
     /**
@@ -36,11 +36,12 @@ public abstract class AbstractClientProxy extends AbstractProxy {
      *
      * @param code The command code to send to the server
      */
-    protected void chooseOption(String code) throws IOException {
+    protected void chooseOption(String code) throws IOException, FunctionalException {
         this.logger.fine("[Server]" + this.in.readLine());
         this.logger.info("Requesting execution of code " + code);
         this.out.println(code);
-        IOUtils.expectResponseCodeSuccess(this.in);
+        expectSuccess(this.in)
+                .andHandleAllFunctionalExceptions();
         this.logger.info("[Server] " + this.in.readLine());
     }
 
@@ -50,11 +51,13 @@ public abstract class AbstractClientProxy extends AbstractProxy {
      * Note: I hope you know what you are doing when you use this method!
      * </p>
      */
-    protected <T> T safelyExecute(UnsafeSupplier<T> supplierWithIOExceptions) {
+    protected <T> T safelyExecute(ProxiedSupplier<T> supplierWithIOExceptions) {
         try {
             return supplierWithIOExceptions.supply();
         } catch (IOException e) {
             throw new RuntimeException("Unexpected communication exception", e);
+        } catch (FunctionalException e) {
+            throw sneakyThrow(e);
         }
     }
 
@@ -64,12 +67,13 @@ public abstract class AbstractClientProxy extends AbstractProxy {
      * Note: I hope you know what you are doing when you use this method!
      * </p>
      */
-    protected void safelyExecute(Action runnableWithIOException) {
+    protected void safelyExecute(ProxiedTask runnableWithIOException) {
         try {
-            runnableWithIOException.perform();
+            runnableWithIOException.run();
         } catch (IOException e) {
-            exceptionHandler.handle(e, "Could not execute action", this.getClass());
+            throw new RuntimeException(e);
+        } catch (FunctionalException e) {
+            throw sneakyThrow(e);
         }
     }
-
 }

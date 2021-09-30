@@ -3,13 +3,10 @@ package de.hswhameln.typetogether.client.gui;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Image;
-import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -28,12 +25,12 @@ import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 public class MainWindow extends JFrame {
     private static final long serialVersionUID = 1L;
 
-    private ExceptionHandler exceptionHandler = ExceptionHandler.getExceptionHandler();
+    private final ExceptionHandler exceptionHandler = ExceptionHandler.getExceptionHandler();
 
-    private JPanel mainContainer;
-    private Map<String, AbstractPanel> availableViews;
-    private CardLayout cardLayout;
-    private ClientRuntime runtime;
+    private final JPanel mainContainer;
+    private final Map<String, AbstractPanel> availableViews;
+    private final CardLayout cardLayout;
+    private final ClientRuntime runtime;
 
     public MainWindow(ClientRuntime runtime) {
         this.runtime = runtime;
@@ -44,7 +41,7 @@ public class MainWindow extends JFrame {
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());
         } catch(Exception e) {
-            exceptionHandler.handle(e, "Failed to initialize look&feel", this.getClass());
+            exceptionHandler.handle(e, Level.WARNING, "Failed to initialize lookAndFeel. Using default lookAndFeel.", this.getClass());
         }
         this.add(mainContainer);
         this.setResizable(false);
@@ -80,12 +77,11 @@ public class MainWindow extends JFrame {
         return this.runtime;
     }
 
-    //TODO Create Logo
     private ImageIcon getApplicationIcon() {
-            System.out.println(System.getProperty("user.dir"));
-            ImageIcon icon = new ImageIcon("./resources/favicon.jpg");
-            return icon;
+        ImageIcon icon = new ImageIcon("./resources/favicon.jpg");
+        return icon;
     }
+
 
     private void registerViews() {
         this.registerSingleView(new EditorPanel(this), ViewProperties.EDITOR);

@@ -9,7 +9,7 @@ import java.io.PrintWriter;
 import java.util.logging.Logger;
 
 public final class IOUtils {
-    private static Logger logger = Logger.getLogger(IOUtils.class.getName());
+    private static final Logger logger = Logger.getLogger(IOUtils.class.getName());
 
     public static String getStringArgument(String argumentName, BufferedReader in, PrintWriter out) throws IOException {
         return getUntypedArgument(argumentName, String.class, in, out);
@@ -40,8 +40,8 @@ public final class IOUtils {
      *
      * @param argumentName Name of the argument
      * @param type         Type of the argument - only used to display the correct message.
-     * @param in
-     * @param out
+     * @param in           BufferedReader for client communication
+     * @param out          PrintWriter for client communication
      * @return A string representation of the given argument
      * @throws IOException On communication errors
      */
@@ -49,26 +49,4 @@ public final class IOUtils {
         out.println("Provide a " + argumentName + " (" + type + ")");
         return in.readLine();
     }
-
-
-    /**
-     * Read the response code - do nothing if it is SUCCESS, otherwise read the error message and throw a RuntimeException which includes said message.
-     *
-     * <p>
-     * This is a simple method for when there are only two possible results - success or error. Don't use this method if there are some states which need special treatment.
-     * </p>
-     *
-     * @throws IOException On communication errors
-     */
-    public static void expectResponseCodeSuccess(BufferedReader in) throws IOException {
-        String responseCode = in.readLine();
-        if (ResponseCodes.SUCCESS.equals(responseCode)) {
-            logger.fine("ResponseCode success returned");
-            return;
-        }
-        logger.warning("Action unsuccessful, response code: " + responseCode);
-        String message = in.readLine();
-        throw new RuntimeException("Error (" + responseCode + "): " + message);
-    }
-
 }

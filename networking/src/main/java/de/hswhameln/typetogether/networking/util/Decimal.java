@@ -9,7 +9,7 @@ import de.hswhameln.typetogether.networking.types.Identifier;
 public class Decimal {
     
     public static List<Integer> fromIdentifierList(List<Identifier> identifiers) {
-        return identifiers.stream().map(ident -> ident.getDigit()).collect(Collectors.toList());
+        return identifiers.stream().map(Identifier::getDigit).collect(Collectors.toList());
     }
 
     public static List<Identifier> cons(Identifier identifier, List<Identifier> position) {
@@ -33,8 +33,7 @@ public class Decimal {
             firstNonzeroDigit = i;
         }
 
-        List<Integer> inc = new ArrayList<>();
-        inc = delta.subList(0, firstNonzeroDigit);
+        List<Integer> inc = delta.subList(0, firstNonzeroDigit);
         
         inc.add(0);
         inc.add(1);
@@ -79,7 +78,7 @@ public class Decimal {
         List<Integer> returnIn = new ArrayList<>();
         int j = 0;
         for(int i = 0; i < Math.min(n1.size(), n2.size()); i++) {
-            if(n1.get(i) == n2.get(i)) {
+            if(n1.get(i).equals(n2.get(i))) {
                 returnIn.add(0);
             } else if(n1.get(i) > n2.get(i)) {
                 returnIn.add(n1.get(i) - n2.get(i));

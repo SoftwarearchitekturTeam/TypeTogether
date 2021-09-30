@@ -1,30 +1,28 @@
 package de.hswhameln.typetogether.client.gui;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Dimension;
+import java.awt.*;
 
 public interface ViewProperties {
-	// Color palette
-	public static final Color GREY_BUTTON_COLOR = new Color(195, 215, 223);
-	public static final Color BACKGROUND_COLOR = new Color(255, 255, 255);
-	public static final Color FONT_COLOR = new Color(52, 73, 94);
-	public static final Color CONTRAST_COLOR = new Color(105, 145, 172);
-	public static final Font SUBHEADLINE_FONT = new Font("Arial", Font.PLAIN, 18);
-	public static final Font HEADLINE_FONT = new Font("Bauhaus 93", Font.BOLD, 60);
-	public static final float BUTTON_FONT_SIZE = 16f;
-	public static final float MENU_BUTTON_FONT_SIZE = 12f;
-	public static final int DEFAULT_HEIGHT = 950;
-	public static final int DEFAULT_WIDTH = 1200;
-	public static final int HEADLINE_HEIGHT = 200;
-	public static final long NOTIFICATION_TIMER = 4;
-	public static final long RESIZING_TIMER = 100;
+    // Color palette
+    Color GREY_BUTTON_COLOR = new Color(195, 215, 223);
+    Color BACKGROUND_COLOR = new Color(255, 255, 255);
+    Color FONT_COLOR = new Color(52, 73, 94);
+    Color CONTRAST_COLOR = new Color(105, 145, 172);
+    Font SUBHEADLINE_FONT = new Font("Arial", Font.PLAIN, 18);
+    Font HEADLINE_FONT = new Font("Bauhaus 93", Font.BOLD, 60);
+    float BUTTON_FONT_SIZE = 16f;
+    float MENU_BUTTON_FONT_SIZE = 12f;
+    int DEFAULT_HEIGHT = 950;
+    int DEFAULT_WIDTH = 1200;
+    int HEADLINE_HEIGHT = 200;
+    long NOTIFICATION_TIMER = 4;
+    long RESIZING_TIMER = 100;
 
-	public static final String LOGIN = "login";
-	public static final String MENU = "menu";
-	public static final String EDITOR = "editor";
-	public static final String HEADLINE = "TypeTogether";
-	
-	public static final Dimension EDITOR_SIZE = new Dimension(1000, 550);
-	public static final Font EDITOR_FONT = new Font("Calibri", Font.PLAIN, 20);
+    String LOGIN = "login";
+    String MENU = "menu";
+    String EDITOR = "editor";
+    String HEADLINE = "TypeTogether";
+
+    Dimension EDITOR_SIZE = new Dimension(1000, 550);
+    Font EDITOR_FONT = new Font("Calibri", Font.PLAIN, 20);
 }

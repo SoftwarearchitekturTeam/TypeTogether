@@ -6,8 +6,8 @@ import de.hswhameln.typetogether.networking.types.DocumentCharacter;
 
 public class LocalDocumentSender {
 
-    private Document serverDocument;
-    private User author;
+    private final Document serverDocument;
+    private final User author;
 
     public LocalDocumentSender(Document serverDocument, User author) {
         this.serverDocument = serverDocument;
@@ -17,9 +17,9 @@ public class LocalDocumentSender {
     public void addChar(DocumentCharacter characterToAdd) {
         this.serverDocument.addChar(this.author, characterToAdd);
     }
-  
+
     public void removeChar(DocumentCharacter charToRemove) {
         this.serverDocument.removeChar(author, charToRemove);
     }
-    
+
 }

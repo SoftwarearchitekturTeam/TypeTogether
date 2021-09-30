@@ -1,5 +1,6 @@
 package de.hswhameln.typetogether.networking.shared;
 
+import de.hswhameln.typetogether.networking.api.exceptions.FunctionalException;
 import de.hswhameln.typetogether.networking.proxy.ResponseCodes;
 import de.hswhameln.typetogether.networking.shared.helperinterfaces.FunctionalFunction;
 import de.hswhameln.typetogether.networking.shared.helperinterfaces.FunctionalTask;
@@ -14,9 +15,9 @@ import java.util.logging.Level;
 public abstract class AbstractServerProxy extends AbstractProxy implements Runnable {
 
     private Map<String, ServerProxyAction> availableActions;
-    protected ServerProxyAction closeConnectionAction = ServerProxyAction.of("closeConnection", this::closeConnection);
+    protected final ServerProxyAction closeConnectionAction = ServerProxyAction.of("closeConnection", this::closeConnection);
 
-    protected AbstractServerProxy(Socket socket) {
+    protected AbstractServerProxy(Socket socket) throws IOException{
         super(socket);
     }
 
@@ -29,34 +30,50 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
 
     protected abstract Map<String, ServerProxyAction> createAvailableActions();
 
-    protected void safelyExecute(String name, FunctionalTask functionalTask) {
+    protected void safelyExecute(String name, FunctionalTask functionalTask) throws IOException {
         try {
             functionalTask.run();
             logger.info("Successfully completed " + name + ". Sending success message.");
             this.success();
         } catch (IOException e) {
-            exceptionHandler.handle(e, "Could not execute task " + name, this.getClass());
-        } catch (Exception e) {
+            throw e;
+        } catch (FunctionalException e) {
             this.logger.log(Level.INFO, "Functional error", e);
-            this.error(ResponseCodes.FUNCTIONAL_ERROR, "Error when executing " + name + ": " + e.getMessage());
+            this.out.println(ResponseCodes.FUNCTIONAL_ERROR);
+            this.out.println(e.getClass().getName());
+            this.out.println(e.getMessage());
+        } catch (Exception e) {
+            this.logger.log(Level.INFO, "Unexpected error", e);
+            this.error(ResponseCodes.UNEXPECTED_ERROR, "Error when executing " + name + ": " + e.getMessage());
         }
     }
 
-    protected <T> void safelySendResult(String name, FunctionalFunction<T> functionalTask) {
-       this.safelySendResult(name, functionalTask, this.out::println);
+    protected <T> void safelySendResult(String name, FunctionalFunction<T> functionalTask) throws IOException {
+        this.safelySendResult(name, functionalTask, this.out::println);
     }
 
-    protected <T> void safelySendResult(String name, FunctionalFunction<T> functionalTask, UnsafeConsumer<T> sender) {
-        try {
+    protected <T> void safelySendResult(String name, FunctionalFunction<T> functionalTask, UnsafeConsumer<T> sender) throws IOException {
+        this.executeAndSendExceptions(name, () -> {
             T t = functionalTask.apply();
             logger.info("Successfully completed " + name + ". Sending success message and returning output.");
             this.success();
             sender.accept(t);
+        });
+    }
+
+    private void executeAndSendExceptions(String name, FunctionalTask functionalTask) throws IOException {
+        try {
+            functionalTask.run();
         } catch (IOException e) {
-            exceptionHandler.handle(e, "Could not send result " + name, this.getClass());
-        } catch (Exception e) {
+            throw e;
+        } catch (FunctionalException e) {
             this.logger.log(Level.INFO, "Functional error", e);
-            this.error(ResponseCodes.FUNCTIONAL_ERROR, "Error when executing " + name + ": " + e.getMessage());
+            this.out.println(ResponseCodes.FUNCTIONAL_ERROR);
+            this.out.println(e.getClass().getName());
+            this.out.println(e.getMessage());
+        } catch (Exception e) {
+            this.logger.log(Level.INFO, "Unexpected error", e);
+            this.error(ResponseCodes.UNEXPECTED_ERROR, "Error when executing " + name + ": " + e.getMessage());
         }
     }
 
@@ -68,19 +85,26 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
      * Listen to requests coming from {@link #in} and perform the relevant action.
      */
     private void waitForCommands() {
-        while (!this.socket.isClosed()) {
-            try {
+
+        try {
+            while (!this.socket.isClosed()) {
                 handleCommand();
-            } catch(IOException e) {
-                exceptionHandler.handle(e, "Could not handle comman properly", this.getClass());
-            } catch (Exception e) {
-                this.logger.log(Level.WARNING, "Exception when handling command. Continuing...", e);
             }
+        } catch (IOException e) {
+            exceptionHandler.handle(e, Level.SEVERE, "Communication with ClientProxy was interrupted. Stopping connection.", this.getClass());
+        } catch (Exception e) {
+            exceptionHandler.handle(e, Level.SEVERE, "Unexpected exception when executing a command. Stopping connection.", this.getClass());
         }
+
+        try {
+            this.closeConnection();
+        } catch (IOException e) {
+            this.exceptionHandler.handle(e, Level.WARNING, "Could not close the connection. It's probably already closed.", this.getClass());
+        }
+
     }
 
     /**
-     * @throws IOException
      * @see AbstractClientProxy#chooseOption(String)
      */
     private void handleCommand() throws IOException {
@@ -108,9 +132,7 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
         this.logger.fine("Sending initialization message");
         this.out.println("Connection established. Available commands:");
         this.out.println(this.getAvailableActions().size());
-        this.getAvailableActions().forEach((id, action) -> {
-            this.out.println(id + " - " + action.getName());
-        });
+        this.getAvailableActions().forEach((id, action) -> this.out.println(id + " - " + action.getName()));
     }
 
     private Map<String, ServerProxyAction> getAvailableActions() {

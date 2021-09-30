@@ -7,8 +7,8 @@ import de.hswhameln.typetogether.networking.LocalDocument;
 public class ClientUser implements User {
     
     private LocalDocument document;
-    private int userId;
-    private String name;
+    private final int userId;
+    private final String name;
 
     public ClientUser(String name) {
         this.name = name;

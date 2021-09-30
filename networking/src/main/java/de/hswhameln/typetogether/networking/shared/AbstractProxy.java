@@ -1,5 +1,8 @@
 package de.hswhameln.typetogether.networking.shared;
 
+import de.hswhameln.typetogether.networking.util.ExceptionHandler;
+import de.hswhameln.typetogether.networking.util.IOUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,24 +11,17 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.logging.Logger;
 
-import de.hswhameln.typetogether.networking.util.ExceptionHandler;
-import de.hswhameln.typetogether.networking.util.IOUtils;
-
 public class AbstractProxy {
-    protected Logger logger = Logger.getLogger(this.getClass().getName());
-    protected ExceptionHandler exceptionHandler = ExceptionHandler.getExceptionHandler();
-    protected Socket socket;
+    protected final Logger logger = Logger.getLogger(this.getClass().getName());
+    protected final ExceptionHandler exceptionHandler = ExceptionHandler.getExceptionHandler();
+    protected final Socket socket;
 
     protected BufferedReader in;
     protected PrintWriter out;
 
-    public AbstractProxy(Socket socket) {
+    public AbstractProxy(Socket socket) throws IOException {
         this.socket = socket;
-        try {
-            this.openStreams();
-        } catch (IOException e) {
-            exceptionHandler.handle(e, "Unexpected initialization error", this.getClass());
-        }
+        this.openStreams();
     }
 
     private void openStreams() throws IOException {
