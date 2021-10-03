@@ -1,6 +1,7 @@
 package de.hswhameln.typetogether.client.runtime;
 
 import de.hswhameln.typetogether.client.businesslogic.ClientUser;
+import de.hswhameln.typetogether.client.runtime.commands.base.CommandInvoker;
 import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.Lobby;
 import de.hswhameln.typetogether.networking.api.User;
@@ -12,6 +13,7 @@ public class SessionStorage {
     private final Lobby lobby;
     private ClientUser currentUser;
     private Document currentSharedDocument;
+    private CommandInvoker invoker;
 
     // Descriptors
     public static final String CURRENT_USER = "currentUser";
@@ -23,6 +25,7 @@ public class SessionStorage {
     public SessionStorage(Lobby lobby) {
         this.lobby = lobby;
         this.propertyChangeSupport = new PropertyChangeSupport(this);
+        this.invoker = new CommandInvoker();
     }
 
     public void setCurrentUser(ClientUser currentUser) {
@@ -47,6 +50,10 @@ public class SessionStorage {
 
     public Lobby getLobby() {
         return this.lobby;
+    }
+
+    public CommandInvoker getCommandInvoker() {
+        return this.invoker;
     }
 
     public Document getCurrentSharedDocument() {

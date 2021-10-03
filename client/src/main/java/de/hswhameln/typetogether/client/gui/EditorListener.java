@@ -3,6 +3,9 @@ package de.hswhameln.typetogether.client.gui;
 import de.hswhameln.typetogether.client.businesslogic.ClientUser;
 import de.hswhameln.typetogether.client.runtime.PropertyChangeManager;
 import de.hswhameln.typetogether.client.runtime.SessionStorage;
+import de.hswhameln.typetogether.client.runtime.commands.base.CommandInvoker;
+import de.hswhameln.typetogether.client.runtime.commands.base.CreateDocumentCharacterCommand;
+import de.hswhameln.typetogether.client.runtime.commands.base.DeleteDocumentCharacterCommand;
 import de.hswhameln.typetogether.networking.LocalDocument;
 import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.types.DocumentCharacter;
@@ -25,11 +28,13 @@ public class EditorListener implements DocumentListener {
     private Document sharedDocument;
     private ClientUser user;
     private LocalDocument localDocument;
+    private CommandInvoker invoker;
 
     private final PropertyChangeManager propertyChangeManager;
 
     public EditorListener(SessionStorage sessionStorage) {
         this.sharedDocument = sessionStorage.getCurrentSharedDocument();
+        this.invoker = sessionStorage.getCommandInvoker();
         this.setUser(sessionStorage.getCurrentUser());
 
         this.propertyChangeManager = new PropertyChangeManager();
@@ -73,14 +78,8 @@ public class EditorListener implements DocumentListener {
             //Get before and after
             DocumentCharacter characterToAdd = this.generateDocumentCharacter(this.localDocument.getDocumentCharacterOfIndex(index - 1),
                     this.localDocument.getDocumentCharacterOfIndex(index), c);
-            //Add DocumentCharacter to localDocument (without re-adding it to the editor!)
-            this.localDocument.addLocalChar(characterToAdd);
-
-            //Send DocumentCharacter with sender
-            this.sharedDocument.addChar(this.user, characterToAdd);
-            System.out.println("Added char: " + c);
+            this.invoker.execute(new CreateDocumentCharacterCommand(characterToAdd, this.user, this.localDocument, this.sharedDocument));
         }
-
     }
 
     @Override
@@ -108,10 +107,7 @@ public class EditorListener implements DocumentListener {
             int index = e.getOffset() + 1;
             // Get DocumentCharacter for position
             DocumentCharacter characterToRemove = this.localDocument.getDocumentCharacterOfIndex(index);
-            //Remove Character from localDocument
-            this.localDocument.removeLocalChar(characterToRemove);
-            //Send removeDocumentCharacter with sender
-            this.sharedDocument.removeChar(this.user, characterToRemove);
+            this.invoker.execute(new DeleteDocumentCharacterCommand(characterToRemove, this.user, this.localDocument, this.sharedDocument));
         }
     }
 
