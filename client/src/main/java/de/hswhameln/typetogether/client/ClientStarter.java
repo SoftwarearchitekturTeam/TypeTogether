@@ -4,6 +4,7 @@ import java.util.Map;
 
 import de.hswhameln.typetogether.client.gui.MainWindow;
 import de.hswhameln.typetogether.client.runtime.ClientRuntime;
+import de.hswhameln.typetogether.client.runtime.SessionStorage;
 import de.hswhameln.typetogether.networking.util.ArgumentParser;
 
 public class ClientStarter {
@@ -17,7 +18,8 @@ public class ClientStarter {
         System.out.println(" |_|   !_! |_| |___| |_| \\__/ \\__/___| |_| |_||_|___|_|_\\");
 
         ClientRuntime clientRuntime = new ClientRuntime(arguments);
-        MainWindow window = new MainWindow(clientRuntime);
+        SessionStorage sessionStorage = new SessionStorage(clientRuntime.createLobby());
+        MainWindow window = new MainWindow(sessionStorage);
         window.setVisible(true);
     }
 }

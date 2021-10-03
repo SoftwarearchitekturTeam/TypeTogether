@@ -17,6 +17,9 @@ public class DocumentServerProxy extends AbstractServerProxy {
 
     public DocumentServerProxy(Socket socket, Document underlyingDocument) throws IOException {
         super(socket);
+        if (underlyingDocument == null) {
+            throw new IllegalArgumentException("UnderLyingDocument must not be null.");
+        }
         this.underlyingDocument = underlyingDocument;
         this.objectResolver = new ObjectResolver<>(UserClientProxy::new, this.in, this.out, this.socket.getInetAddress());
     }

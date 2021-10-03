@@ -27,6 +27,9 @@ public class LobbyServerProxy extends AbstractServerProxy {
 
     public LobbyServerProxy(Socket socket, Lobby lobby) throws IOException {
         super(socket);
+        if (lobby == null) {
+            throw new IllegalArgumentException("UnderlyingLobby must not be null");
+        }
         this.lobby = lobby;
         this.userObjectResolver = new ObjectResolver<>(UserClientProxy::new, this.in, this.out, this.socket.getInetAddress());
         this.documentMarshallHandler = new MarshallHandler<>(DocumentServerProxy::new, this.in, this.out);

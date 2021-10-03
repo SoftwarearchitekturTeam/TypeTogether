@@ -12,13 +12,14 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import de.hswhameln.typetogether.client.businesslogic.ClientUser;
+import de.hswhameln.typetogether.client.runtime.SessionStorage;
 
 public class LoginPanel extends AbstractPanel {
 
     private JTextField text;
 
-    public LoginPanel(MainWindow window) {
-        super(window);
+    public LoginPanel(MainWindow window, SessionStorage sessionStorage) {
+        super(window, sessionStorage);
       
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setAlignmentX(CENTER_ALIGNMENT);
@@ -64,7 +65,7 @@ public class LoginPanel extends AbstractPanel {
         text.setForeground(ViewProperties.FONT_COLOR);
         text.setBackground(ViewProperties.BACKGROUND_COLOR);
         text.setHorizontalAlignment(SwingConstants.CENTER);
-        text.addActionListener(a-> this.anmelden());
+        text.addActionListener(a-> this.login());
         getText(text.getText());
         this.add(text);
 
@@ -74,15 +75,15 @@ public class LoginPanel extends AbstractPanel {
         button.setForeground(ViewProperties.BACKGROUND_COLOR);
         button.setBackground(ViewProperties.CONTRAST_COLOR);
         button.setMaximumSize(new Dimension(100, 50));
-        button.addActionListener(a -> this.anmelden());
+        button.addActionListener(a -> this.login());
         button.setAlignmentX(CENTER_ALIGNMENT);
         this.add(button);
 
     }
 
-    private void anmelden() {
-        System.out.println("Anmelden");
-        this.window.getClientRuntime().setUser(new ClientUser(this.text.getText()));
+    private void login() {
+        System.out.println("Login");
+        this.sessionStorage.setCurrentUser(new ClientUser(this.text.getText()));
         this.window.switchToView(ViewProperties.MENU);
     }
 

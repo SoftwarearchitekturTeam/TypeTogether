@@ -1,34 +1,26 @@
 package de.hswhameln.typetogether.client.gui;
 
-import de.hswhameln.typetogether.client.runtime.ClientRuntime;
+import de.hswhameln.typetogether.client.runtime.SessionStorage;
 import de.hswhameln.typetogether.networking.LocalDocument;
 import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.Lobby;
 import de.hswhameln.typetogether.networking.api.exceptions.InvalidDocumentIdException;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.util.logging.Level;
 
 public class MenuPanel extends AbstractPanel {
 
     private JPanel leftSide;
-
     private JTextField documentNameField;
+    private final Lobby lobby;
 
-    public MenuPanel(MainWindow window) {
-        super(window);
+    public MenuPanel(MainWindow window, SessionStorage sessionStorage) {
+        super(window, sessionStorage);
+        this.lobby = sessionStorage.getLobby();
+
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.setSize(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT);
         this.createGrid();
@@ -148,16 +140,15 @@ public class MenuPanel extends AbstractPanel {
             this.window.alert("Geben Sie einen Dokumentnamen ein!", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        Lobby lobby = this.window.getClientRuntime().getLobby();
         try {
-            lobby.createDocument(documentName);
+            this.sessionStorage.getLobby().createDocument(documentName);
         } catch (InvalidDocumentIdException.DocumentAlreadyExistsException e) {
             ExceptionHandler.getExceptionHandler().handle(e, Level.INFO, "Document already exists.", MenuPanel.class);
             this.window.alert("Document already exists!", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-         this.joinDocument();
+        this.joinDocument();
     }
 
     private void joinDocument() {
@@ -167,14 +158,15 @@ public class MenuPanel extends AbstractPanel {
             this.window.alert("Geben Sie einen Dokumentnamen ein!", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        ClientRuntime runtime = this.window.getClientRuntime();
-        Lobby lobby = runtime.getLobby();
         try {
-            Document document = lobby.getDocumentById(documentName);
-            runtime.setLocalDocument(new LocalDocument());
-            runtime.generateSender(document);
+            Document document = this.lobby.getDocumentById(documentName);
+
+            LocalDocument localDocument = new LocalDocument();
+            this.sessionStorage.getCurrentUser().setDocument(localDocument);
+            this.sessionStorage.setCurrentSharedDocument(document);
+
             this.window.switchToView(ViewProperties.EDITOR);
-            lobby.joinDocument(runtime.getUser(), documentName);
+            this.lobby.joinDocument(this.sessionStorage.getCurrentUser(), documentName);
         } catch (InvalidDocumentIdException.DocumentDoesNotExistException e) {
             ExceptionHandler.getExceptionHandler().handle(e, Level.INFO, "Could not join document.", MenuPanel.class);
             this.window.alert("Document " + documentName + " does not exist!", JOptionPane.ERROR_MESSAGE);

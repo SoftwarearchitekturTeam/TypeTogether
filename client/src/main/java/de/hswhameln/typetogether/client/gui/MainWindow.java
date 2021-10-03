@@ -16,6 +16,7 @@ import javax.swing.UIManager;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import de.hswhameln.typetogether.client.runtime.ClientRuntime;
+import de.hswhameln.typetogether.client.runtime.SessionStorage;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 
 
@@ -30,10 +31,10 @@ public class MainWindow extends JFrame {
     private final JPanel mainContainer;
     private final Map<String, AbstractPanel> availableViews;
     private final CardLayout cardLayout;
-    private final ClientRuntime runtime;
+    private final SessionStorage sessionStorage;
 
-    public MainWindow(ClientRuntime runtime) {
-        this.runtime = runtime;
+    public MainWindow(SessionStorage sessionStorage) {
+        this.sessionStorage = sessionStorage;
         this.mainContainer = new JPanel();
         this.cardLayout = new CardLayout();
         this.availableViews = new HashMap<>();
@@ -57,14 +58,10 @@ public class MainWindow extends JFrame {
         this.cardLayout.show(mainContainer, ViewProperties.LOGIN); //TODO: Changed from LOGIN for debugging
     }
 
-    public ClientRuntime getClientRuntime() {
-        return this.runtime;
-    }
-
     private void registerViews() {
-        this.registerSingleView(new EditorPanel(this), ViewProperties.EDITOR);
-        this.registerSingleView(new LoginPanel(this), ViewProperties.LOGIN);
-        this.registerSingleView(new MenuPanel(this), ViewProperties.MENU);
+        this.registerSingleView(new EditorPanel(this, this.sessionStorage), ViewProperties.EDITOR);
+        this.registerSingleView(new LoginPanel(this, this.sessionStorage), ViewProperties.LOGIN);
+        this.registerSingleView(new MenuPanel(this, this.sessionStorage), ViewProperties.MENU);
     }
 
     private void registerSingleView(AbstractPanel panel, String viewId) {
