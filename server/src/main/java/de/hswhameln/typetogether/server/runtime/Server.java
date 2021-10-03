@@ -18,6 +18,10 @@ public class Server {
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     public Server(int port, Function<Socket, Runnable> onConnect) {
+        System.out.println("_______   _____ ___ _____ __   __ ___ _____ _  _ ___ ___");  
+        System.out.println("|_  _\\ `v' / _,\\ __|_   _/__\\ / _] __|_   _| || | __| _ \\");
+        System.out.println(" | |  `. .'| v_/ _|  | || \\/ | [/\\ _|  | | | >< | _|| v /"); 
+        System.out.println(" |_|   !_! |_| |___| |_| \\__/ \\__/___| |_| |_||_|___|_|_\\");
         System.out.println("Starting server...");
         this.onConnect = onConnect;
         try {
