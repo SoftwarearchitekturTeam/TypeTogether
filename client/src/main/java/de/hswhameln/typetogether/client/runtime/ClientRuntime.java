@@ -1,6 +1,7 @@
 package de.hswhameln.typetogether.client.runtime;
 
 import de.hswhameln.typetogether.client.proxy.LobbyClientProxy;
+import de.hswhameln.typetogether.client.runtime.commands.base.CommandInvoker;
 import de.hswhameln.typetogether.networking.api.Lobby;
 
 import java.io.IOException;

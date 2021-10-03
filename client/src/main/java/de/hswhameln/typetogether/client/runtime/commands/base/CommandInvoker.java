@@ -18,14 +18,10 @@ public class CommandInvoker {
     
 
 	public CommandInvoker() {
-		
 		this.undoStack = new Stack<>();
 		this.redoStack = new Stack<>();
 	//	this.view.addEventHandler(EventId.UNDO, (params) -> this.undo());
 	//	this.view.addEventHandler(EventId.REDO, (params) -> this.redo());
-
-		
-
 	}
 
 	public void execute(Command command) {
