@@ -37,10 +37,16 @@ public class EditorPanel extends AbstractPanel {
         editorPane.setBorder(BorderFactory.createEmptyBorder(50, 0, 50, 0));
         JButton leave = createRightButton("Verlassen", this::leaveEditor);
         JButton export = createLeftButton("Exportieren", this::exportText);
+        leave.setVisible(true);
+        export.setVisible(true);
+        JPanel btnPanel = new JPanel();
+        btnPanel.setLayout(new FlowLayout());
+        btnPanel.setMaximumSize(ViewProperties.BTN_SIZE);
 
         this.editor.setText("");
-        Component rigArea = Box.createRigidArea(new Dimension(20, 0));
-        this.addComponents(editorPane, leave, rigArea, export);
+        btnPanel.add(leave);
+        btnPanel.add(export);
+        this.addComponents(editorPane, btnPanel);
     }
 
     private void leaveEditor() {
