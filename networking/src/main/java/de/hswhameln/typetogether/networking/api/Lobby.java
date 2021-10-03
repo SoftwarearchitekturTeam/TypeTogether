@@ -12,4 +12,6 @@ public interface Lobby {
     Document getDocumentById(String documentId) throws InvalidDocumentIdException.DocumentDoesNotExistException;
 
     void createDocument(String documentId) throws InvalidDocumentIdException.DocumentAlreadyExistsException;
+
+    void deleteDocument(User user, String documentId) throws InvalidDocumentIdException.DocumentDoesNotExistException;
 }

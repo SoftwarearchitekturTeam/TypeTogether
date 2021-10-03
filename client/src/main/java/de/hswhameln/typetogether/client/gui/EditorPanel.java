@@ -8,7 +8,6 @@ import de.hswhameln.typetogether.networking.LocalDocument;
 import de.hswhameln.typetogether.networking.api.User;
 import de.hswhameln.typetogether.networking.api.exceptions.InvalidDocumentIdException;
 import de.hswhameln.typetogether.networking.api.exceptions.UnknownUserException;
-import de.hswhameln.typetogether.networking.shared.AbstractClientProxy;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 
 import javax.swing.*;
@@ -20,8 +19,7 @@ import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static de.hswhameln.typetogether.client.gui.util.ButtonFactory.createLeftButton;
-import static de.hswhameln.typetogether.client.gui.util.ButtonFactory.createRightButton;
+import static de.hswhameln.typetogether.client.gui.util.ButtonFactory.createButton;
 
 public class EditorPanel extends AbstractPanel {
 
@@ -44,23 +42,37 @@ public class EditorPanel extends AbstractPanel {
         JScrollPane editorPane = new JScrollPane(this.editor);
         editorPane.setMaximumSize(ViewProperties.EDITOR_SIZE);
         editorPane.setBorder(BorderFactory.createEmptyBorder(50, 0, 50, 0));
-        JButton leave = createRightButton("Verlassen", this::leaveEditor);
-        JButton export = createLeftButton("Exportieren", this::exportText);
+        JButton leave = createButton("Verlassen", this::leaveEditor);
+        JButton export = createButton("Exportieren", this::exportText);
+        JButton delete = createButton("Delete", this::deleteDocument);
+
         leave.setVisible(true);
         export.setVisible(true);
         JPanel btnPanel = new JPanel();
-        btnPanel.setLayout(new FlowLayout());
+        btnPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         btnPanel.setMaximumSize(ViewProperties.BTN_SIZE);
 
         this.editor.setText("");
         btnPanel.add(leave);
         btnPanel.add(export);
+        btnPanel.add(delete);
         this.addComponents(editorPane, btnPanel);
         this.swingDocument.addDocumentListener(new EditorListener(sessionStorage));
 
         this.setUser(sessionStorage.getCurrentUser());
         this.propertyChangeManager.onPropertyChange(SessionStorage.CURRENT_USER, this::userChanged);
         this.propertyChangeManager.onPropertyChange(ClientUser.LOCAL_DOCUMENT, this::localDocumentChanged);
+    }
+
+    private void deleteDocument() {
+        String funcId = this.sessionStorage.getCurrentSharedDocument().getFuncId();
+        try {
+            this.sessionStorage.getLobby().deleteDocument(this.user, funcId);
+        } catch (InvalidDocumentIdException.DocumentDoesNotExistException e) {
+            ExceptionHandler.getExceptionHandler().handle(e, Level.WARNING, "Looks like the document was deleted simultaneously.", this.getClass());
+        }
+        this.user.setDocument(null);
+        this.window.switchToView(ViewProperties.MENU);
     }
 
 
@@ -100,7 +112,8 @@ public class EditorPanel extends AbstractPanel {
 
     private void documentDeleted(User user) {
         this.window.alert("Document was closed by " + user.getName() + ".", JOptionPane.INFORMATION_MESSAGE);
-        this.leaveEditor();
+        this.user.setDocument(null);
+        this.window.switchToView(ViewProperties.MENU);
     }
 
     private void leaveEditor() {

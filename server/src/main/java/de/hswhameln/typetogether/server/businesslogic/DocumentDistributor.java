@@ -57,7 +57,7 @@ public class DocumentDistributor implements Document {
 
     @Override
     public void close(User source) {
-        propagate(source, document -> document.close(source));
+        propagate(source, document -> document.close(source), true);
     }
 
     @Override
@@ -81,11 +81,17 @@ public class DocumentDistributor implements Document {
     }
 
     private void propagate(User author, Consumer<Document> clientDocumentConsumer) {
+        propagate(author, clientDocumentConsumer, false);
+    }
+
+    private void propagate(User author, Consumer<Document> clientDocumentConsumer, boolean copy) {
         int authorId = author.getId();
-        this.activeUsers.stream()
+        Collection<User> usersToStream = copy ? new HashSet<>(this.activeUsers) : this.activeUsers;
+        usersToStream.stream()
                 .filter(user -> user.getId() != authorId)
                 .map(User::getDocument)
                 .forEach(clientDocumentConsumer);
     }
+
 
 }

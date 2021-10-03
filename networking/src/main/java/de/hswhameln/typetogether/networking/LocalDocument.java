@@ -48,7 +48,9 @@ public class LocalDocument implements Document {
 
     @Override
     public void close(User source) {
-        this.observers.stream().map(DocumentObserver::getCloseDocument).forEach(c -> c.accept(source));
+        // create a copy to allow observer modification in the closeDocument listener
+        Set<DocumentObserver> observers = new HashSet<>(this.observers);
+        observers.stream().map(DocumentObserver::getCloseDocument).forEach(c -> c.accept(source));
     }
 
     @Override

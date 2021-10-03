@@ -87,4 +87,17 @@ public class LobbyClientProxy extends AbstractClientProxy implements Lobby {
                     .andHandleError(InvalidDocumentIdException.DocumentAlreadyExistsException.class);
         });
     }
+
+    @Override
+    public void deleteDocument(User user, String documentId) throws InvalidDocumentIdException.DocumentDoesNotExistException {
+        this.safelyExecute(() -> {
+            this.chooseOption("5");
+            this.userMarshallHandler.marshall(user);
+            // "Provide documentId"
+            logger.fine(this.in.readLine());
+            this.out.println(documentId);
+            expectSuccess(this.in)
+                    .andHandleError(InvalidDocumentIdException.DocumentDoesNotExistException.class);
+        });
+    }
 }

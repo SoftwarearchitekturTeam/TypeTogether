@@ -56,4 +56,15 @@ public class LobbyImpl implements Lobby {
         DocumentDistributor documentDistributor = new DocumentDistributor(documentId);
         this.documentsById.put(documentId, documentDistributor);
     }
+
+    @Override
+    public void deleteDocument(User user, String documentId) throws InvalidDocumentIdException.DocumentDoesNotExistException {
+        logger.info("Functional method deleteDocument called with documentId" + documentId);
+        if (!this.documentsById.containsKey(documentId)) {
+            throw InvalidDocumentIdException.DocumentDoesNotExistException.create(documentId);
+        }
+        DocumentDistributor documentDistributorToClose = this.documentsById.get(documentId);
+        new Thread(() -> documentDistributorToClose.close(user)).start();
+        this.documentsById.remove(documentId);
+    }
 }

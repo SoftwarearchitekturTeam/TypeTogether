@@ -42,7 +42,8 @@ public class LobbyServerProxy extends AbstractServerProxy {
                 Map.entry("1", ServerProxyAction.of("joinDocument", this::doJoinDocument)),
                 Map.entry("2", ServerProxyAction.of("leaveDocument", this::doLeaveDocument)),
                 Map.entry("3", ServerProxyAction.of("getDocumentById", this::doGetDocumentById)),
-                Map.entry("4", ServerProxyAction.of("createDocument", this::doCreateDocument)));
+                Map.entry("4", ServerProxyAction.of("createDocument", this::doCreateDocument)),
+                Map.entry("5", ServerProxyAction.of("deleteDocument", this::doDeleteDocument)));
     }
 
 
@@ -72,4 +73,11 @@ public class LobbyServerProxy extends AbstractServerProxy {
         String documentId = IOUtils.getStringArgument("documentId", this.in, this.out);
         this.safelyExecute("createDocument", () -> this.lobby.createDocument(documentId));
     }
+
+    private void doDeleteDocument() throws IOException {
+        User user = this.resolveUser();
+        String documentId = IOUtils.getStringArgument("documentId", this.in, this.out);
+        this.safelyExecute("deleteDocument", () -> this.lobby.deleteDocument(user, documentId));
+    }
+
 }

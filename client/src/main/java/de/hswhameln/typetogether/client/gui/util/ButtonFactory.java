@@ -31,7 +31,7 @@ public class ButtonFactory {
         return button;
     }
 
-    private static JButton createButton(String label, Runnable run) {
+    public static JButton createButton(String label, Runnable run) {
         JButton button = new JButton(label);
         button.addActionListener(a -> run.run());
         button.setBackground(ViewProperties.CONTRAST_COLOR);
