@@ -25,6 +25,7 @@ public class EditorListener implements DocumentListener {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
+    private EditorPanel panel;
     private Document sharedDocument;
     private ClientUser user;
     private LocalDocument localDocument;
@@ -32,7 +33,8 @@ public class EditorListener implements DocumentListener {
 
     private final PropertyChangeManager propertyChangeManager;
 
-    public EditorListener(SessionStorage sessionStorage) {
+    public EditorListener(EditorPanel panel, SessionStorage sessionStorage) {
+        this.panel = panel;
         this.sharedDocument = sessionStorage.getCurrentSharedDocument();
         this.invoker = sessionStorage.getCommandInvoker();
         this.setUser(sessionStorage.getCurrentUser());

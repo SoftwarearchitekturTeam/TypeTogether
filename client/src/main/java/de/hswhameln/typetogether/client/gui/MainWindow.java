@@ -59,9 +59,11 @@ public class MainWindow extends JFrame {
     }
 
     private void registerViews() {
-        this.registerSingleView(new CommandPanel(this, this.sessionStorage), ViewProperties.EDITOR);
+        CommandPanel commandPanal = new CommandPanel(this, this.sessionStorage);
+        this.registerSingleView(commandPanal, ViewProperties.EDITOR);
         this.registerSingleView(new LoginPanel(this, this.sessionStorage), ViewProperties.LOGIN);
         this.registerSingleView(new MenuPanel(this, this.sessionStorage), ViewProperties.MENU);
+        this.sessionStorage.getCommandInvoker().setCommandPanel(commandPanal);
     }
 
     private void registerSingleView(AbstractPanel panel, String viewId) {

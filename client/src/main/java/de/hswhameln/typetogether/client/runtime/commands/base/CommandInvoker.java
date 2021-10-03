@@ -1,5 +1,7 @@
 package de.hswhameln.typetogether.client.runtime.commands.base;
 
+import de.hswhameln.typetogether.client.gui.CommandPanel;
+
 import java.util.Stack;
 
 
@@ -15,6 +17,7 @@ public class CommandInvoker {
 
 	private final Stack<Command> undoStack;
 	private final Stack<Command> redoStack;
+	private CommandPanel panel;
     
 
 	public CommandInvoker() {
@@ -24,12 +27,16 @@ public class CommandInvoker {
 	//	this.view.addEventHandler(EventId.REDO, (params) -> this.redo());
 	}
 
+	public void setCommandPanel(CommandPanel panel) {
+		this.panel = panel;
+	}
+
 	public void execute(Command command) {
 		
 		command.execute();
 		this.undoStack.push(command);
 		this.redoStack.clear();
-	
+		updateView();
 	//	updateViewValueChanged();
 	}
 
@@ -57,7 +64,7 @@ public class CommandInvoker {
 //	}
 	
 	private void updateView() {
-	//	this.view.setUndoable(!this.undoStack.isEmpty());
-	//	this.view.setRedoable(!this.redoStack.isEmpty());
+		this.panel.changeClickableUndo(!this.undoStack.isEmpty());
+		this.panel.changeClickableRedo(!this.redoStack.isEmpty());
 	}
 }

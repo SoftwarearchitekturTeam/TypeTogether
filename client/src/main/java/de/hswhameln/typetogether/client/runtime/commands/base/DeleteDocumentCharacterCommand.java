@@ -1,5 +1,8 @@
 package de.hswhameln.typetogether.client.runtime.commands.base;
 
+import de.hswhameln.typetogether.client.gui.AbstractPanel;
+import de.hswhameln.typetogether.client.gui.CommandPanel;
+import de.hswhameln.typetogether.client.gui.EditorPanel;
 import de.hswhameln.typetogether.networking.LocalDocument;
 import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.User;
@@ -9,10 +12,10 @@ import java.util.logging.Logger;
 
 
 /**
- * {@link Command} that deletes a (second) {@link Reviewer}
+ * {@link Command} that deletes a (second)
  * 
  */
-public class DeleteDocumentCharacterCommand extends DefaultCommand {
+public class DeleteDocumentCharacterCommand implements Command {
 
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
 	private LocalDocument localDocument;

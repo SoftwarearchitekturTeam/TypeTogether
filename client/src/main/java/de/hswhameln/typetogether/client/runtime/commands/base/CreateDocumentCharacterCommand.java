@@ -1,6 +1,9 @@
 package de.hswhameln.typetogether.client.runtime.commands.base;
 
 
+import de.hswhameln.typetogether.client.gui.AbstractPanel;
+import de.hswhameln.typetogether.client.gui.CommandPanel;
+import de.hswhameln.typetogether.client.gui.EditorPanel;
 import de.hswhameln.typetogether.networking.LocalDocument;
 import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.User;
@@ -10,10 +13,10 @@ import java.util.logging.Logger;
 
 
 /**
- * {@link Command} that creates a (second) {@link Reviewer} 
+ * {@link Command} that creates a (second)
  * 
  */
-public class CreateDocumentCharacterCommand extends DefaultCommand{
+public class CreateDocumentCharacterCommand implements Command {
 
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
 	private LocalDocument localDocument;
@@ -37,7 +40,7 @@ public class CreateDocumentCharacterCommand extends DefaultCommand{
 
 	@Override
 	public void revert() {
-		this.localDocument.removeLocalChar(this.character);
+		this.localDocument.removeChar(this.user, this.character);
 		this.sharedDocument.removeChar(this.user, this.character);
 		this.logger.info(String.format("Reverted adding character '%s' within comand", this.character.getStringRepresentation()));
 	}
