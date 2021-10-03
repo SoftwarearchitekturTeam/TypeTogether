@@ -7,6 +7,7 @@ import de.hswhameln.typetogether.networking.types.DocumentCharacter;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Objects;
 
 import static de.hswhameln.typetogether.networking.FluentExceptionHandler.expectSuccess;
 
@@ -21,6 +22,9 @@ public class DocumentClientProxy extends AbstractClientProxy implements Document
 
     @Override
     public void addChar(User author, DocumentCharacter character) {
+        Objects.requireNonNull(author);
+        Objects.requireNonNull(character);
+
         this.safelyExecute(() -> {
             this.chooseOption("1");
             this.userMarshallHandler.marshall(author);

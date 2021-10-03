@@ -25,4 +25,5 @@ public interface ViewProperties {
 
     Dimension EDITOR_SIZE = new Dimension(1000, 550);
     Font EDITOR_FONT = new Font("Calibri", Font.PLAIN, 20);
+    Dimension BTN_SIZE = new Dimension(550, 50);
 }

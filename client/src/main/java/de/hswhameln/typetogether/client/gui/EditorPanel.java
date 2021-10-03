@@ -1,13 +1,18 @@
 package de.hswhameln.typetogether.client.gui;
 
+import de.hswhameln.typetogether.client.businesslogic.ClientUser;
 import de.hswhameln.typetogether.client.gui.util.FileHelper;
-import de.hswhameln.typetogether.client.runtime.ClientRuntime;
+import de.hswhameln.typetogether.client.runtime.SessionStorage;
 import de.hswhameln.typetogether.networking.DocumentObserver;
+import de.hswhameln.typetogether.networking.LocalDocument;
+import de.hswhameln.typetogether.networking.api.exceptions.InvalidDocumentIdException;
+import de.hswhameln.typetogether.networking.api.exceptions.UnknownUserException;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -22,11 +27,13 @@ public class EditorPanel extends AbstractPanel {
     private final DocumentObserver observer;
 
     private final JTextArea editor;
-
     private final CustomSwingDocument swingDocument;
 
-    public EditorPanel(MainWindow window/*LocalDocument localDocument, LocalDocumentSender localDocumentSender*/) {
-        super(window);
+    private ClientUser user;
+    private LocalDocument localDocument;
+
+    public EditorPanel(MainWindow window, SessionStorage sessionStorage) {
+        super(window, sessionStorage);
         this.observer = new DocumentObserver(this::addChar, this::removeChar);
         this.swingDocument = new CustomSwingDocument();
         this.editor = new JTextArea(this.swingDocument, "", 5, 20);
@@ -37,13 +44,65 @@ public class EditorPanel extends AbstractPanel {
         editorPane.setBorder(BorderFactory.createEmptyBorder(50, 0, 50, 0));
         JButton leave = createRightButton("Verlassen", this::leaveEditor);
         JButton export = createLeftButton("Exportieren", this::exportText);
+        leave.setVisible(true);
+        export.setVisible(true);
+        JPanel btnPanel = new JPanel();
+        btnPanel.setLayout(new FlowLayout());
+        btnPanel.setMaximumSize(ViewProperties.BTN_SIZE);
 
         this.editor.setText("");
-        Component rigArea = Box.createRigidArea(new Dimension(20, 0));
-        this.addComponents(editorPane, leave, rigArea, export);
+        btnPanel.add(leave);
+        btnPanel.add(export);
+        this.addComponents(editorPane, btnPanel);
+        this.swingDocument.addDocumentListener(new EditorListener(sessionStorage));
+        
+        this.setUser(sessionStorage.getCurrentUser());
+        this.propertyChangeManager.onPropertyChange(SessionStorage.CURRENT_USER, this::userChanged);
+        this.propertyChangeManager.onPropertyChange(ClientUser.LOCAL_DOCUMENT, this::localDocumentChanged);
+    }
+
+    private void userChanged(PropertyChangeEvent propertyChangeEvent) {
+        setUser((ClientUser) propertyChangeEvent.getNewValue());
+    }
+
+    private void setUser(ClientUser newUser) {
+        if (this.user != null) {
+            this.user.removePropertyChangeListener(this.propertyChangeManager);
+        }
+        this.user = newUser;
+        if (this.user != null) {
+            this.user.addPropertyChangeListener(this.propertyChangeManager);
+            this.setLocalDocument((LocalDocument) this.user.getDocument());
+        }
+    }
+
+    private void localDocumentChanged(PropertyChangeEvent propertyChangeEvent) {
+        this.setLocalDocument((LocalDocument) propertyChangeEvent.getNewValue());
+    }
+
+    private void setLocalDocument(LocalDocument newLocalDocument) {
+        if (this.localDocument != null) {
+            this.localDocument.removeObserver(this.observer);
+        }
+        this.localDocument = newLocalDocument;
+        if (newLocalDocument != null) {
+            this.localDocument.addObserver(this.observer);
+        }
+        try {
+            this.swingDocument.removeProgrammatically(0, this.swingDocument.getLength());
+        } catch (BadLocationException e) {
+            ExceptionHandler.getExceptionHandler().handle(e, Level.WARNING, "Could not clear document. Continuing without properly clearing", this.getClass());
+        }
     }
 
     private void leaveEditor() {
+        String documentId = this.sessionStorage.getCurrentSharedDocument().getFuncId();
+        try {
+            this.sessionStorage.getLobby().leaveDocument(this.user, documentId);
+        } catch (InvalidDocumentIdException.DocumentDoesNotExistException | UnknownUserException e) {
+            throw new RuntimeException("Could not leave document. Continuing as usual.", e);
+        }
+        this.user.setDocument(null);
         this.window.switchToView(ViewProperties.MENU);
     }
 
@@ -56,14 +115,6 @@ public class EditorPanel extends AbstractPanel {
                 ExceptionHandler.getExceptionHandler().handle(e, "Failed to write Text into file", EditorPanel.class);
             }
         }
-    }
-
-    @Override
-    public void initialize() {
-        ClientRuntime runtime = this.window.getClientRuntime();
-        this.swingDocument.addDocumentListener(new EditorListener(runtime.getLocalDocument(), runtime.getSender(), runtime.getUser()));
-
-        runtime.getLocalDocument().addObserver(this.observer);
     }
 
     private void addChar(char value, int offset) {

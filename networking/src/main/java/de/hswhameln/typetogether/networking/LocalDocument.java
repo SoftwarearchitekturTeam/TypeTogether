@@ -35,7 +35,7 @@ public class LocalDocument implements Document {
         System.out.println("[LocalDocument] AddingChar: " + character.getValue());
         this.addLocalChar(character);
         int offset = this.content.indexOf(character);
-        System.out.println("Index of character " + character.getStringRepresentation() + " is " + offset);
+        System.out.println("Index of character " + character.getStringRepresentation() + " is " + offset + ", notifying " + this.observers);
         this.observers.stream().map(DocumentObserver::getAddCharConsumer).forEach(c -> c.accept(character.getValue(), offset));
     }
 
@@ -80,6 +80,10 @@ public class LocalDocument implements Document {
 
     public List<DocumentCharacter> getContent() {
         return Decimal.rest(content);
+    }
+
+    public void removeObserver(DocumentObserver observer) {
+        this.observers.remove(observer);
     }
 
     // get adjacent DocumentCharacters (x2) (maybe)

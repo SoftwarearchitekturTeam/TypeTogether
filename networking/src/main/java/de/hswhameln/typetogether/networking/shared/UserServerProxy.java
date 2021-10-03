@@ -15,6 +15,9 @@ public class UserServerProxy extends AbstractServerProxy {
 
     public UserServerProxy(Socket socket, User user) throws IOException {
         super(socket);
+        if (user == null) {
+            throw new IllegalArgumentException("UnderlyingUser must not be null.");
+        }
         this.user = user;
         this.documentMarshallHandler = new MarshallHandler<>(DocumentServerProxy::new, this.in, this.out);
     }
