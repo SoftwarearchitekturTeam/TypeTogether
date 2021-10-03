@@ -5,8 +5,10 @@ import de.hswhameln.typetogether.client.gui.util.FileHelper;
 import de.hswhameln.typetogether.client.runtime.SessionStorage;
 import de.hswhameln.typetogether.networking.DocumentObserver;
 import de.hswhameln.typetogether.networking.LocalDocument;
+import de.hswhameln.typetogether.networking.api.User;
 import de.hswhameln.typetogether.networking.api.exceptions.InvalidDocumentIdException;
 import de.hswhameln.typetogether.networking.api.exceptions.UnknownUserException;
+import de.hswhameln.typetogether.networking.shared.AbstractClientProxy;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 
 import javax.swing.*;
@@ -34,7 +36,7 @@ public class EditorPanel extends AbstractPanel {
 
     public EditorPanel(MainWindow window, SessionStorage sessionStorage) {
         super(window, sessionStorage);
-        this.observer = new DocumentObserver(this::addChar, this::removeChar);
+        this.observer = new DocumentObserver(this::addChar, this::removeChar, this::documentDeleted);
         this.swingDocument = new CustomSwingDocument();
         this.editor = new JTextArea(this.swingDocument, "", 5, 20);
         this.editor.setFont(ViewProperties.EDITOR_FONT);
@@ -55,11 +57,12 @@ public class EditorPanel extends AbstractPanel {
         btnPanel.add(export);
         this.addComponents(editorPane, btnPanel);
         this.swingDocument.addDocumentListener(new EditorListener(sessionStorage));
-        
+
         this.setUser(sessionStorage.getCurrentUser());
         this.propertyChangeManager.onPropertyChange(SessionStorage.CURRENT_USER, this::userChanged);
         this.propertyChangeManager.onPropertyChange(ClientUser.LOCAL_DOCUMENT, this::localDocumentChanged);
     }
+
 
     private void userChanged(PropertyChangeEvent propertyChangeEvent) {
         setUser((ClientUser) propertyChangeEvent.getNewValue());
@@ -93,6 +96,11 @@ public class EditorPanel extends AbstractPanel {
         } catch (BadLocationException e) {
             ExceptionHandler.getExceptionHandler().handle(e, Level.WARNING, "Could not clear document. Continuing without properly clearing", this.getClass());
         }
+    }
+
+    private void documentDeleted(User user) {
+        this.window.alert("Document was closed by " + user.getName() + ".", JOptionPane.INFORMATION_MESSAGE);
+        this.leaveEditor();
     }
 
     private void leaveEditor() {

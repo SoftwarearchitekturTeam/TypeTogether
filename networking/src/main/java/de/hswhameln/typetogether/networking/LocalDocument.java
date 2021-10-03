@@ -47,6 +47,11 @@ public class LocalDocument implements Document {
     }
 
     @Override
+    public void close(User source) {
+        this.observers.stream().map(DocumentObserver::getCloseDocument).forEach(c -> c.accept(source));
+    }
+
+    @Override
     public String getFuncId() {
         return this.funcId;
     }

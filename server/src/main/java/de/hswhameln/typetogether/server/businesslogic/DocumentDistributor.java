@@ -5,8 +5,10 @@ import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.User;
 import de.hswhameln.typetogether.networking.types.DocumentCharacter;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 public class DocumentDistributor implements Document {
@@ -43,22 +45,19 @@ public class DocumentDistributor implements Document {
 
     @Override
     public void addChar(User author, DocumentCharacter character) {
-        int authorId = author.getId();
         this.serverBackup.addChar(author, character);
-        this.activeUsers.stream()
-                .filter(user -> user.getId() != authorId)
-                .map(User::getDocument)
-                .forEach(document -> document.addChar(author, character));
+        propagate(author, document -> document.addChar(author, character));
     }
 
     @Override
     public void removeChar(User author, DocumentCharacter character) {
-        int authorId = author.getId();
         this.serverBackup.removeChar(author, character);
-        this.activeUsers.stream()
-                .filter(user -> user.getId() != authorId)
-                .map(User::getDocument)
-                .forEach(document -> document.removeChar(author, character));
+        propagate(author, document -> document.removeChar(author, character));
+    }
+
+    @Override
+    public void close(User source) {
+        propagate(source, document -> document.close(source));
     }
 
     @Override
@@ -80,4 +79,13 @@ public class DocumentDistributor implements Document {
     public boolean isUserParticipant(User user) {
         return activeUsers.contains(user);
     }
+
+    private void propagate(User author, Consumer<Document> clientDocumentConsumer) {
+        int authorId = author.getId();
+        this.activeUsers.stream()
+                .filter(user -> user.getId() != authorId)
+                .map(User::getDocument)
+                .forEach(clientDocumentConsumer);
+    }
+
 }

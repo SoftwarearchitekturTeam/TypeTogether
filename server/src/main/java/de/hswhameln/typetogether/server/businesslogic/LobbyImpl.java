@@ -56,5 +56,4 @@ public class LobbyImpl implements Lobby {
         DocumentDistributor documentDistributor = new DocumentDistributor(documentId);
         this.documentsById.put(documentId, documentDistributor);
     }
-
 }

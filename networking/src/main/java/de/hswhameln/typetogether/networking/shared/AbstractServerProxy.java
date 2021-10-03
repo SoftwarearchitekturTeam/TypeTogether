@@ -79,6 +79,7 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
 
     private void closeConnection() throws IOException {
         this.socket.close();
+        this.logger.info("Connection to " + this.getClass().getSimpleName() + " was closed successfully.");
     }
 
     /**
@@ -95,13 +96,6 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
         } catch (Exception e) {
             exceptionHandler.handle(e, Level.SEVERE, "Unexpected exception when executing a command. Stopping connection.", this.getClass());
         }
-
-        try {
-            this.closeConnection();
-        } catch (IOException e) {
-            this.exceptionHandler.handle(e, Level.WARNING, "Could not close the connection. It's probably already closed.", this.getClass());
-        }
-
     }
 
     /**

@@ -30,9 +30,12 @@ public class DocumentServerProxy extends AbstractServerProxy {
                 Map.entry("0", this.closeConnectionAction),
                 Map.entry("1", ServerProxyAction.of("addChar", this::doAddChar)),
                 Map.entry("2", ServerProxyAction.of("removeChar", this::doRemoveChar)),
-                Map.entry("3", ServerProxyAction.of("getFuncId", this::doGetFuncId))
+                Map.entry("3", ServerProxyAction.of("getFuncId", this::doGetFuncId)),
+                Map.entry("4", ServerProxyAction.of("close", this::doClose))
         );
     }
+
+
 
     private void doAddChar() throws IOException {
         this.safelyExecute("addChar", () -> {
@@ -52,6 +55,13 @@ public class DocumentServerProxy extends AbstractServerProxy {
 
     private void doGetFuncId() throws IOException {
         this.safelySendResult("getFuncId", this.underlyingDocument::getFuncId);
+    }
+
+    private void doClose() throws IOException {
+        this.safelyExecute("close", () -> {
+            User source = this.objectResolver.resolveObject();
+            this.underlyingDocument.close(source);
+        });
     }
 
 

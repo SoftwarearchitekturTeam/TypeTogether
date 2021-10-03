@@ -59,4 +59,13 @@ public class DocumentClientProxy extends AbstractClientProxy implements Document
             return funcId;
         });
     }
+
+    @Override
+    public void close(User source) {
+        this.safelyExecute(() -> {
+            this.chooseOption("4");
+            this.userMarshallHandler.marshall(source);
+            expectSuccess(this.in);
+        });
+    }
 }

@@ -23,7 +23,7 @@ public class InvalidDocumentIdException extends FunctionalException {
             super(message);
         }
         public static DocumentAlreadyExistsException create(String documentId) {
-            return new DocumentAlreadyExistsException("Document with id " + documentId + " does not exist.");
+            return new DocumentAlreadyExistsException("Document with id " + documentId + " already exist.");
         }
     }
 
