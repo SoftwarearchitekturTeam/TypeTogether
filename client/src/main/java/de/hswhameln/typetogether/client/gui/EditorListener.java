@@ -3,9 +3,9 @@ package de.hswhameln.typetogether.client.gui;
 import de.hswhameln.typetogether.client.businesslogic.ClientUser;
 import de.hswhameln.typetogether.client.runtime.PropertyChangeManager;
 import de.hswhameln.typetogether.client.runtime.SessionStorage;
-import de.hswhameln.typetogether.client.runtime.commands.base.CommandInvoker;
-import de.hswhameln.typetogether.client.runtime.commands.base.CreateDocumentCharacterCommand;
-import de.hswhameln.typetogether.client.runtime.commands.base.DeleteDocumentCharacterCommand;
+import de.hswhameln.typetogether.client.runtime.commands.CommandInvoker;
+import de.hswhameln.typetogether.client.runtime.commands.CreateDocumentCharacterCommand;
+import de.hswhameln.typetogether.client.runtime.commands.DeleteDocumentCharacterCommand;
 import de.hswhameln.typetogether.networking.LocalDocument;
 import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.types.DocumentCharacter;
@@ -25,7 +25,6 @@ public class EditorListener implements DocumentListener {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
-    private EditorPanel panel;
     private Document sharedDocument;
     private ClientUser user;
     private LocalDocument localDocument;
@@ -33,8 +32,7 @@ public class EditorListener implements DocumentListener {
 
     private final PropertyChangeManager propertyChangeManager;
 
-    public EditorListener(EditorPanel panel, SessionStorage sessionStorage) {
-        this.panel = panel;
+    public EditorListener(SessionStorage sessionStorage) {
         this.sharedDocument = sessionStorage.getCurrentSharedDocument();
         this.invoker = sessionStorage.getCommandInvoker();
         this.setUser(sessionStorage.getCurrentUser());

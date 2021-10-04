@@ -1,4 +1,4 @@
-package de.hswhameln.typetogether.client.runtime.commands.base;
+package de.hswhameln.typetogether.client.runtime.commands;
 
 public interface Command {
     /**

@@ -1,4 +1,4 @@
-package de.hswhameln.typetogether.client.runtime.commands.base;
+package de.hswhameln.typetogether.client.runtime.commands;
 
 import de.hswhameln.typetogether.client.gui.CommandPanel;
 

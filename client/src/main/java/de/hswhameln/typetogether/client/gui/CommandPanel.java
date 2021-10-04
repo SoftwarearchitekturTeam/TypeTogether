@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import de.hswhameln.typetogether.client.runtime.SessionStorage;
-import de.hswhameln.typetogether.client.runtime.commands.base.CommandInvoker;
+import de.hswhameln.typetogether.client.runtime.commands.CommandInvoker;
 
 
 public class CommandPanel extends AbstractPanel {

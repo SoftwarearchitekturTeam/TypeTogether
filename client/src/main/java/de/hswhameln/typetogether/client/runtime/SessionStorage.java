@@ -2,7 +2,7 @@ package de.hswhameln.typetogether.client.runtime;
 
 import de.hswhameln.typetogether.client.businesslogic.ClientUser;
 import de.hswhameln.typetogether.client.gui.CommandPanel;
-import de.hswhameln.typetogether.client.runtime.commands.base.CommandInvoker;
+import de.hswhameln.typetogether.client.runtime.commands.CommandInvoker;
 import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.Lobby;
 import de.hswhameln.typetogether.networking.api.User;

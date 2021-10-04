@@ -57,7 +57,7 @@ public class EditorPanel extends AbstractPanel {
         btnPanel.add(export);
         btnPanel.add(delete);
         this.addComponents(editorPane, btnPanel);
-        this.swingDocument.addDocumentListener(new EditorListener(this, sessionStorage));
+        this.swingDocument.addDocumentListener(new EditorListener(sessionStorage));
         this.setUser(sessionStorage.getCurrentUser());
         this.propertyChangeManager.onPropertyChange(SessionStorage.CURRENT_USER, this::userChanged);
         this.propertyChangeManager.onPropertyChange(ClientUser.LOCAL_DOCUMENT, this::localDocumentChanged);

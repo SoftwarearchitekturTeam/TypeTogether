@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class ClientRuntime {
 
-    private static final String DEFAULT_URL = "localhost";
+    private static final String DEFAULT_URL = "172.30.33.133";
     private static final int DEFAULT_PORT = 12557;
 
     private final String url;
