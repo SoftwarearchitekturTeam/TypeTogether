@@ -72,6 +72,7 @@ public class CommandPanel extends AbstractPanel {
         this.menubar.add(documentname);
         this.menubar.add(Box.createHorizontalStrut(20));
         this.menubar.add(username);
+        this.menubar.add(Box.createHorizontalStrut(20));
         this.add(this.menubar, BorderLayout.NORTH);
         this.add(editorPanel, BorderLayout.CENTER);
 
