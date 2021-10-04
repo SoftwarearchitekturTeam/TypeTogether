@@ -8,7 +8,7 @@ public interface ViewProperties {
     Color BACKGROUND_COLOR = new Color(255, 255, 255);
     Color FONT_COLOR = new Color(52, 73, 94);
     Color CONTRAST_COLOR = new Color(105, 145, 172);
-    Font SUBHEADLINE_FONT = new Font("Arial", Font.PLAIN, 18);
+    Font SUBHEADLINE_FONT = new Font("Arial", Font.PLAIN, 20);
     Font HEADLINE_FONT = new Font("Bauhaus 93", Font.BOLD, 60);
     float BUTTON_FONT_SIZE = 16f;
     float MENU_BUTTON_FONT_SIZE = 12f;

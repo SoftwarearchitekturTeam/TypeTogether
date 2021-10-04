@@ -142,23 +142,18 @@ private JLabel username;
     private void createLeftSide() {
         BoxLayout layout = new BoxLayout(this.leftSide, BoxLayout.Y_AXIS);
         this.leftSide.setLayout(layout);
-        this.leftSide.add(Box.createVerticalStrut(50));
-        this.username = new JLabel();
-        this.username.setAlignmentX(50);
-        this.username.setFont(ViewProperties.SUBHEADLINE_FONT);
-        this.leftSide.add(username);
+        this.leftSide.add(Box.createVerticalStrut(150));
        
         this.leftSide.add(Box.createVerticalStrut(100));
         JLabel documentTitle = new JLabel("Name des Dokuments");
-        Dimension sizeTitle = new Dimension(200, 70);
+        Dimension sizeTitle = new Dimension(500, 70);
+        documentTitle.setOpaque(true);
         documentTitle.setMaximumSize(sizeTitle);
-        documentTitle.setMinimumSize(sizeTitle);
-        documentTitle.setVisible(true);
-        documentTitle.setAlignmentX(100);
         documentTitle.setHorizontalTextPosition(SwingConstants.LEFT);
         documentTitle.setFont(ViewProperties.SUBHEADLINE_FONT);
         documentTitle.setForeground(ViewProperties.FONT_COLOR);
-        documentTitle.setBackground(Color.CYAN);
+        documentTitle.setBackground(ViewProperties.BACKGROUND_COLOR);
+        documentTitle.setAlignmentX(CENTER_ALIGNMENT);
         this.leftSide.add(documentTitle);
 
         this.documentNameField = new JTextField(2);
@@ -170,8 +165,18 @@ private JLabel username;
         this.leftSide.add(this.documentNameField);
 
         this.leftSide.add(Box.createRigidArea(new Dimension(500, 15)));
-
         this.leftSide.add(this.createButtons(new Dimension(500, 50)));
+        this.leftSide.add(Box.createRigidArea(new Dimension(500, 70)));
+
+        this.username = new JLabel();
+        this.username.setOpaque(true);
+        this.username.setMaximumSize(new Dimension(500, 40));
+        this.username.setBackground(ViewProperties.BACKGROUND_COLOR);
+        this.username.setForeground(ViewProperties.FONT_COLOR);
+        this.username.setFont(ViewProperties.SUBHEADLINE_FONT);
+        this.username.setHorizontalTextPosition(SwingConstants.LEFT);
+        this.username.setAlignmentX(CENTER_ALIGNMENT);
+        this.leftSide.add(username);
     }
 
     private JPanel createButtons(Dimension panelSize) {
@@ -227,7 +232,7 @@ private JLabel username;
         this.user = newUser;
         if (this.user != null) {
             this.user.addPropertyChangeListener(this.propertyChangeManager);
-            this.username.setText("Benutzername: "+ this.user.getName());
+            this.username.setText(" Benutzername: "+ this.user.getName());
         }
     }
 
