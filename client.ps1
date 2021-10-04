@@ -1,1 +1,1 @@
-& java -jar .\client\target\client-0.0.1-SNAPSHOT.jar
+& java -jar .\client\target\client-0.0.1-SNAPSHOT.jar --url=192.168.0.227 --port=13377
