@@ -64,7 +64,7 @@ public class CommandPanel extends AbstractPanel {
 
         username = new JLabel();
      
-     documentname = new JLabel(sessionStorage.getCurrentSharedDocument().getFuncId());
+     documentname = new JLabel();
 
         this.menubar.add(undo);
         this.menubar.add(redo);
