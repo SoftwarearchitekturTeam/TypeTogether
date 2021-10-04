@@ -8,6 +8,8 @@ import de.hswhameln.typetogether.networking.util.IOUtils;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Map;
 
 public class DocumentServerProxy extends AbstractServerProxy {
@@ -31,11 +33,11 @@ public class DocumentServerProxy extends AbstractServerProxy {
                 Map.entry("1", ServerProxyAction.of("addChar", this::doAddChar)),
                 Map.entry("2", ServerProxyAction.of("removeChar", this::doRemoveChar)),
                 Map.entry("3", ServerProxyAction.of("getFuncId", this::doGetFuncId)),
-                Map.entry("4", ServerProxyAction.of("close", this::doClose))
+                Map.entry("4", ServerProxyAction.of("close", this::doClose)),
+                Map.entry("5", ServerProxyAction.of("addChars", this::doAddChars)),
+                Map.entry("6", ServerProxyAction.of("removeChars", this::doRemoveChars))
         );
     }
-
-
 
     private void doAddChar() throws IOException {
         this.safelyExecute("addChar", () -> {
@@ -64,5 +66,27 @@ public class DocumentServerProxy extends AbstractServerProxy {
         });
     }
 
+    private void doAddChars() throws IOException {
+        this.safelyExecute("addChars", () -> {
+            User author = this.objectResolver.resolveObject();
+            int size = IOUtils.getIntArgument("character count", this.in, this.out);
+            Collection<DocumentCharacter> characters = new LinkedList<>();
+            for (int i = 0; i < size; i++) {
+                characters.add(DocumentCharacter.parse(this.in.readLine()));
+            }
+            this.underlyingDocument.addChars(author, characters);
+        });
+    }
 
+    private void doRemoveChars() throws IOException {
+        this.safelyExecute("removeChars", () -> {
+            User author = this.objectResolver.resolveObject();
+            int size = IOUtils.getIntArgument("character count", this.in, this.out);
+            Collection<DocumentCharacter> characters = new LinkedList<>();
+            for (int i = 0; i < size; i++) {
+                characters.add(DocumentCharacter.parse(this.in.readLine()));
+            }
+            this.underlyingDocument.removeChars(author, characters);
+        });
+    }
 }
