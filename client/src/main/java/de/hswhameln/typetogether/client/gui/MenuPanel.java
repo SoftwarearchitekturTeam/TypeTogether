@@ -62,7 +62,7 @@ private JLabel username;
 
     @Override
     public void initialize() {
-        this.tableData = this.sessionStorage.getLobby().getDocuments().stream().map(Document::getFuncId).collect(Collectors.toList()).toArray(new String[0]);
+        this.tableData = this.sessionStorage.getLobby().getDocuments().stream().map(Document::getFuncId).sorted().collect(Collectors.toList()).toArray(new String[0]);
         this.documentTable.setListData(this.tableData);
     }
 
