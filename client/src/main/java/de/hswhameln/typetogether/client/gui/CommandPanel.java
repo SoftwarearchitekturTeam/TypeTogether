@@ -70,6 +70,7 @@ public class CommandPanel extends AbstractPanel {
         this.menubar.add(redo);
         this.menubar.add(Box.createHorizontalGlue());
         this.menubar.add(documentname);
+        this.menubar.add(Box.createHorizontalStrut(20));
         this.menubar.add(username);
         this.add(this.menubar, BorderLayout.NORTH);
         this.add(editorPanel, BorderLayout.CENTER);
@@ -88,7 +89,7 @@ public class CommandPanel extends AbstractPanel {
  }
  private void setDocumentname(Document newValue) {
       this.sharedDocument = newValue;
-      this.documentname.setText(this.sharedDocument.getFuncId());
+      this.documentname.setText("Dokumentname: " +this.sharedDocument.getFuncId());
 }
 
 private void currentUserChanged(PropertyChangeEvent propertyChangeEvent) {
@@ -102,7 +103,7 @@ private void currentUserChanged(PropertyChangeEvent propertyChangeEvent) {
      this.user = newUser;
      if (this.user != null) {
          this.user.addPropertyChangeListener(this.propertyChangeManager);
-         this.username.setText(this.user.getName());
+         this.username.setText("Benutzername: "+ this.user.getName());
      }
  }
 }
