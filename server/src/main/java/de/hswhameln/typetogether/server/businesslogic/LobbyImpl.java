@@ -6,7 +6,9 @@ import de.hswhameln.typetogether.networking.api.User;
 import de.hswhameln.typetogether.networking.api.exceptions.InvalidDocumentIdException;
 import de.hswhameln.typetogether.networking.api.exceptions.UnknownUserException;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -66,5 +68,10 @@ public class LobbyImpl implements Lobby {
         DocumentDistributor documentDistributorToClose = this.documentsById.get(documentId);
         new Thread(() -> documentDistributorToClose.close(user)).start();
         this.documentsById.remove(documentId);
+    }
+
+    @Override
+    public Collection<Document> getDocuments() {
+        return new HashSet<>(this.documentsById.values());
     }
 }

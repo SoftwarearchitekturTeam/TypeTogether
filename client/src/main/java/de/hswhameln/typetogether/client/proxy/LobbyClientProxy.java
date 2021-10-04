@@ -13,6 +13,8 @@ import de.hswhameln.typetogether.networking.shared.UserServerProxy;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.logging.Logger;
 
 import static de.hswhameln.typetogether.networking.FluentExceptionHandler.expectSuccess;
@@ -98,6 +100,23 @@ public class LobbyClientProxy extends AbstractClientProxy implements Lobby {
             this.out.println(documentId);
             expectSuccess(this.in)
                     .andHandleError(InvalidDocumentIdException.DocumentDoesNotExistException.class);
+        });
+    }
+
+    @Override
+    public Collection<Document> getDocuments() {
+        return this.safelyExecute(() -> {
+            this.chooseOption("6");
+            // "Provide documentId"
+            logger.fine(this.in.readLine());
+            int size = Integer.parseInt(this.in.readLine());
+            logger.fine("Server responded with size " + size);
+            Collection<Document> documents = new HashSet<>();
+            for (int i = 0; i < size; i++) {
+                documents.add(this.documentObjectResolver.resolveObject());
+            }
+            expectSuccess(this.in);
+            return documents;
         });
     }
 }

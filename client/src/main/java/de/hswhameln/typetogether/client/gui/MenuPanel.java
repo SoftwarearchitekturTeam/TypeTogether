@@ -10,9 +10,10 @@ import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 import javax.swing.*;
 import java.awt.*;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MenuPanel extends AbstractPanel {
-
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
     private JPanel leftSide;
     private JTextField documentNameField;
     private final Lobby lobby;
@@ -133,9 +134,8 @@ public class MenuPanel extends AbstractPanel {
     }
 
     private void createDocument() {
-
-        System.out.println("Create");
         String documentName = this.documentNameField.getText();
+        this.logger.info(String.format("Trying to create Document %s from gui", documentName));
         if (documentName.isBlank()) {
             this.window.alert("Geben Sie einen Dokumentnamen ein!", JOptionPane.WARNING_MESSAGE);
             return;
@@ -152,8 +152,8 @@ public class MenuPanel extends AbstractPanel {
     }
 
     private void joinDocument() {
-        System.out.println("Join");
         String documentName = this.documentNameField.getText();
+        this.logger.info(String.format("Trying to join Document %s from gui", documentName));
         if (documentName.isBlank()) {
             this.window.alert("Geben Sie einen Dokumentnamen ein!", JOptionPane.WARNING_MESSAGE);
             return;
