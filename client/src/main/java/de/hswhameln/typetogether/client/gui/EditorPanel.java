@@ -13,6 +13,9 @@ import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -40,6 +43,40 @@ public class EditorPanel extends AbstractPanel {
         this.editor = new JTextArea(this.swingDocument, "", 5, 20);
         this.editor.setFont(ViewProperties.EDITOR_FONT);
         this.editor.setHighlighter(null);
+
+        Action undo = new AbstractAction(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Undo");
+            }
+        };
+        Action redo = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Redo");
+            }
+        };
+
+        InputMap im = this.editor.getInputMap(JComponent.WHEN_FOCUSED);
+        ActionMap am = this.editor.getActionMap();
+
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), "Undo");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), "Redo");
+
+        am.put("Undo", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                sessionStorage.getCommandInvoker().undo();
+            }
+        });
+        am.put("Redo", new AbstractAction() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                sessionStorage.getCommandInvoker().redo();
+            }
+        });
+
         JScrollPane editorPane = new JScrollPane(this.editor);
         editorPane.setMaximumSize(ViewProperties.EDITOR_SIZE);
         editorPane.setBorder(BorderFactory.createEmptyBorder(50, 0, 50, 0));
