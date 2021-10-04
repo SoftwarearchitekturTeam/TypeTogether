@@ -1,5 +1,28 @@
 package de.hswhameln.typetogether.client.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
 import de.hswhameln.typetogether.client.businesslogic.ClientUser;
 import de.hswhameln.typetogether.client.runtime.PropertyChangeManager;
 import de.hswhameln.typetogether.client.runtime.SessionStorage;
@@ -9,19 +32,14 @@ import de.hswhameln.typetogether.networking.api.Lobby;
 import de.hswhameln.typetogether.networking.api.exceptions.InvalidDocumentIdException;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 
-import javax.swing.*;
-
-
-
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public class MenuPanel extends AbstractPanel {
     private final Logger logger = Logger.getLogger(this.getClass().getName());
     private JPanel leftSide;
+    private JPanel rightSide;
     private JTextField documentNameField;
+    private JScrollPane tablePane;
+    private JList<String> documentTable;
+    private String[] tableData;
     private ClientUser user;
     private final Lobby lobby;
     private final PropertyChangeManager propertyChangeManager;
@@ -39,6 +57,40 @@ private JLabel username;
         this.setSize(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT);
         this.createGrid();
         this.createLeftSide();
+        this.createRightSide();
+    }
+
+    @Override
+    public void initialize() {
+        this.tableData = this.sessionStorage.getLobby().getDocuments().stream().map(Document::getFuncId).collect(Collectors.toList()).toArray(new String[0]);
+        this.documentTable.setListData(this.tableData);
+    }
+
+    private void createRightSide() {
+        BoxLayout layout = new BoxLayout(this.rightSide, BoxLayout.Y_AXIS);
+        this.rightSide.setLayout(layout);
+
+        JLabel headlineLabel = new JLabel("Verfügbare Dokumente");
+        Dimension sizeTitle = new Dimension(200, 70);
+        headlineLabel.setMaximumSize(sizeTitle);
+        this.rightSide.add(headlineLabel);
+        this.rightSide.add(Box.createVerticalStrut(5));
+
+        this.tableData = this.sessionStorage.getLobby().getDocuments().stream().map(Document::getFuncId).collect(Collectors.toList()).toArray(new String[0]);
+        this.documentTable = new JList<>(tableData);
+        this.documentTable.setVisible(true);
+        this.documentTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                JList list = (JList) evt.getSource();
+                if (evt.getClickCount() == 2) {
+                    MenuPanel.this.documentNameField.setText((String) list.getSelectedValue());
+                }
+            }
+        });
+        this.tablePane = new JScrollPane(this.documentTable);
+        this.tablePane.setVisible(true);
+        this.rightSide.add(this.tablePane);
     }
 
     private void createGrid() {
@@ -47,11 +99,8 @@ private JLabel username;
         headline.setVisible(true);
         headline.setBorder(BorderFactory.createEmptyBorder());
         JPanel body = new JPanel();
-        FlowLayout flowLayout = new FlowLayout();
-        flowLayout.setVgap(0);
-        flowLayout.setHgap(0);
-        flowLayout.setAlignment(FlowLayout.LEFT);
-        body.setLayout(flowLayout);
+        BorderLayout layout = new BorderLayout();
+        body.setLayout(layout);
         body.setVisible(true);
         body.setBorder(BorderFactory.createEmptyBorder());
         this.username = new JLabel();
@@ -68,14 +117,14 @@ private JLabel username;
         this.leftSide.setVisible(true);
         this.leftSide.setBorder(BorderFactory.createEmptyBorder());
         this.leftSide.setBackground(ViewProperties.BACKGROUND_COLOR);
-        body.add(this.leftSide);
-        JPanel rightSide = new JPanel();
-        rightSide.setSize(size);
-        rightSide.setPreferredSize(size);
-        rightSide.setVisible(true);
-        rightSide.setBorder(BorderFactory.createEmptyBorder());
-        rightSide.setBackground(ViewProperties.BACKGROUND_COLOR);
-        body.add(rightSide);
+        body.add(this.leftSide, BorderLayout.WEST);
+        this.rightSide = new JPanel();
+        this.rightSide.setSize(size);
+        this.rightSide.setPreferredSize(size);
+        this.rightSide.setVisible(true);
+        this.rightSide.setBorder(BorderFactory.createEmptyBorder());
+        this.rightSide.setBackground(ViewProperties.BACKGROUND_COLOR);
+        body.add(this.rightSide, BorderLayout.EAST);
     }
 
     private void createLeftSide() {
