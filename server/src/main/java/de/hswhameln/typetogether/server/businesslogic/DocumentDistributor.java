@@ -69,7 +69,7 @@ public class DocumentDistributor implements Document {
         this.logger.fine("User " + user.getName() + " joined document " + id + ". Sending content of length " + this.serverBackup.getContent().size() + ".");
         this.activeUsers.add(user);
         Document document = user.getDocument();
-        this.serverBackup.getContent().forEach(documentCharacter -> document.addChar(this.dummyUser, documentCharacter));
+        document.addChars(this.dummyUser, this.serverBackup.getContent());
     }
 
     public void removeUser(User user) {

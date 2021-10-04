@@ -1,1 +1,5 @@
-& java -jar .\client\target\client-0.0.1-SNAPSHOT.jar --url=192.168.0.227 --port=13377
+param(
+    [string]$url = 'localhost',
+    [string]$port = '12577'
+)
+& java "-Durl=$url" "-Dport=$port" -jar .\client\target\client-0.0.1-SNAPSHOT.jar
