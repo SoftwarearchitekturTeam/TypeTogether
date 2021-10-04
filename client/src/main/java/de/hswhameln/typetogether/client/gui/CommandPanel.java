@@ -16,6 +16,8 @@ public class CommandPanel extends AbstractPanel {
 
     private JButton undo;
     private JButton redo;
+    private JLabel username;
+    private JLabel documentname;
     private JMenuBar menubar;
     private JPanel editorPanel;
     private CommandInvoker invoker;
@@ -43,9 +45,14 @@ public class CommandPanel extends AbstractPanel {
 
         undo.addActionListener(a-> this.invoker.undo());
         redo.addActionListener(a-> this.invoker.redo());
+     username = new JLabel(sessionStorage.getCurrentUser().getName());
+     documentname = new JLabel(sessionStorage.getCurrentSharedDocument().getFuncId());
 
         this.menubar.add(undo);
         this.menubar.add(redo);
+        this.menubar.add(Box.createHorizontalGlue());
+        this.menubar.add(documentname);
+        this.menubar.add(username);
         this.add(this.menubar, BorderLayout.NORTH);
         this.add(editorPanel, BorderLayout.CENTER);
 
