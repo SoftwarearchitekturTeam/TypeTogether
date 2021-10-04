@@ -14,7 +14,7 @@ public class DocumentCharacter implements Comparable<DocumentCharacter> {
             DocumentCharacter.class,
             "<",
             ">",
-            "-",
+            "->",
             2
     );
     private static final String POSTION_DELIMITER = ",";

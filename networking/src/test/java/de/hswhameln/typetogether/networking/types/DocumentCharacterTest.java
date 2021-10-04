@@ -175,12 +175,12 @@ public class DocumentCharacterTest {
     @Test
     public void testGetStringRepresentation() {
         var documentCharacter = new DocumentCharacter('x', List.of(new Identifier(4711, 42), new Identifier(11, 22)));
-        assertEquals("<x-(4711|42),(11|22)>", documentCharacter.getStringRepresentation());
+        assertEquals("<x->(4711|42),(11|22)>", documentCharacter.getStringRepresentation());
     }
 
     @Test
     public void testParse() {
-        String representation = "<x-(4711|42),(11|22)>";
+        String representation = "<x->(4711|42),(11|22)>";
         var expected = new DocumentCharacter('x', List.of(new Identifier(4711, 42), new Identifier(11, 22)));
         assertEquals(0, expected.compareTo(DocumentCharacter.parse(representation)));
     }
