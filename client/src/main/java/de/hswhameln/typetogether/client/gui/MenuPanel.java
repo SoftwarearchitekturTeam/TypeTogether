@@ -1,5 +1,29 @@
 package de.hswhameln.typetogether.client.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+import de.hswhameln.typetogether.client.businesslogic.ClientUser;
 import de.hswhameln.typetogether.client.runtime.PropertyChangeManager;
 import de.hswhameln.typetogether.client.runtime.SessionStorage;
 import de.hswhameln.typetogether.networking.LocalDocument;
@@ -8,28 +32,27 @@ import de.hswhameln.typetogether.networking.api.Lobby;
 import de.hswhameln.typetogether.networking.api.exceptions.InvalidDocumentIdException;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 
-import javax.swing.*;
-
-import java.awt.*;
-import java.awt.event.*;
-import java.util.logging.Level;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-
 public class MenuPanel extends AbstractPanel {
-
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
     private JPanel leftSide;
     private JPanel rightSide;
     private JTextField documentNameField;
     private JScrollPane tablePane;
     private JList<String> documentTable;
     private String[] tableData;
+    private ClientUser user;
     private final Lobby lobby;
-
+    private final PropertyChangeManager propertyChangeManager;
+private JLabel username;
     public MenuPanel(MainWindow window, SessionStorage sessionStorage) {
         super(window, sessionStorage);
         this.lobby = sessionStorage.getLobby();
+        this.setUser(sessionStorage.getCurrentUser());
+        this.propertyChangeManager = new PropertyChangeManager();
+        sessionStorage.addPropertyChangeListener(this.propertyChangeManager);
 
+        this.propertyChangeManager.onPropertyChange(SessionStorage.CURRENT_USER, this::currentUserChanged);
+       
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.setSize(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT);
         this.createGrid();
@@ -103,7 +126,14 @@ public class MenuPanel extends AbstractPanel {
         BoxLayout layout = new BoxLayout(this.leftSide, BoxLayout.Y_AXIS);
         this.leftSide.setLayout(layout);
         this.leftSide.add(Box.createVerticalStrut(150));
-
+      
+        this.username = new JLabel();
+       
+       this.username.setAlignmentX(100);
+       this.username.setFont(ViewProperties.SUBHEADLINE_FONT);
+       this.leftSide.add(username);
+       //this.leftSide.add(Box.createVerticalGlue());
+        this.leftSide.add(Box.createVerticalStrut(100));
         JLabel documentTitle = new JLabel("Name des Dokuments");
         Dimension sizeTitle = new Dimension(200, 70);
         documentTitle.setMaximumSize(sizeTitle);
@@ -171,11 +201,24 @@ public class MenuPanel extends AbstractPanel {
         buttons.add(joinDocumentButton);
         return buttons;
     }
+    private void currentUserChanged(PropertyChangeEvent propertyChangeEvent) {
+        setUser((ClientUser) propertyChangeEvent.getNewValue());
+    }
+   
+    private void setUser(ClientUser newUser) {
+        if (this.user != null) {
+            this.user.removePropertyChangeListener(this.propertyChangeManager);
+        }
+        this.user = newUser;
+        if (this.user != null) {
+            this.user.addPropertyChangeListener(this.propertyChangeManager);
+            this.username.setText("Benutzername: "+ this.user.getName());
+        }
+    }
 
     private void createDocument() {
-
-        System.out.println("Create");
         String documentName = this.documentNameField.getText();
+        this.logger.info(String.format("Trying to create Document %s from gui", documentName));
         if (documentName.isBlank()) {
             this.window.alert("Geben Sie einen Dokumentnamen ein!", JOptionPane.WARNING_MESSAGE);
             return;
@@ -192,8 +235,8 @@ public class MenuPanel extends AbstractPanel {
     }
 
     private void joinDocument() {
-        System.out.println("Join");
         String documentName = this.documentNameField.getText();
+        this.logger.info(String.format("Trying to join Document %s from gui", documentName));
         if (documentName.isBlank()) {
             this.window.alert("Geben Sie einen Dokumentnamen ein!", JOptionPane.WARNING_MESSAGE);
             return;

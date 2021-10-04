@@ -7,6 +7,7 @@ import de.hswhameln.typetogether.networking.types.DocumentCharacter;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Collection;
 import java.util.Objects;
 
 import static de.hswhameln.typetogether.networking.FluentExceptionHandler.expectSuccess;
@@ -44,7 +45,6 @@ public class DocumentClientProxy extends AbstractClientProxy implements Document
             // "provide a char to remove"
             this.logger.fine("[Server] " + this.in.readLine());
             this.out.println(character.getStringRepresentation());
-
             expectSuccess(this.in);
         });
     }
@@ -65,6 +65,42 @@ public class DocumentClientProxy extends AbstractClientProxy implements Document
         this.safelyExecute(() -> {
             this.chooseOption("4");
             this.userMarshallHandler.marshall(source);
+            expectSuccess(this.in);
+        });
+    }
+
+    @Override
+    public void addChars(User author, Collection<DocumentCharacter> characters) {
+        this.safelyExecute(() -> {
+            this.chooseOption("5");
+            this.userMarshallHandler.marshall(author);
+
+            // "provide the character collection size N, followed by N lines of DocumentCharacters"
+            this.logger.fine("[Server] " + this.in.readLine());
+            this.out.println(characters.size());
+
+            for (DocumentCharacter c: characters) {
+                this.out.println(c.getStringRepresentation());
+            }
+
+            expectSuccess(this.in);
+        });
+    }
+
+    @Override
+    public void removeChars(User author, Collection<DocumentCharacter> characters) {
+        this.safelyExecute(() -> {
+            this.chooseOption("6");
+            this.userMarshallHandler.marshall(author);
+
+            // "provide the character collection size N, followed by N lines of DocumentCharacters"
+            this.logger.fine("[Server] " + this.in.readLine());
+            this.out.println(characters.size());
+
+            for (DocumentCharacter c: characters) {
+                this.out.println(c.getStringRepresentation());
+            }
+
             expectSuccess(this.in);
         });
     }

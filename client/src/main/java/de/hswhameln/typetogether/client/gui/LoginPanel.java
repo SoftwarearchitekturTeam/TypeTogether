@@ -2,20 +2,16 @@ package de.hswhameln.typetogether.client.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.logging.Logger;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+import javax.swing.*;
+
 import de.hswhameln.typetogether.client.businesslogic.ClientUser;
 import de.hswhameln.typetogether.client.runtime.SessionStorage;
 
 public class LoginPanel extends AbstractPanel {
 
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
     private JTextField text;
 
     public LoginPanel(MainWindow window, SessionStorage sessionStorage) {
@@ -66,7 +62,6 @@ public class LoginPanel extends AbstractPanel {
         text.setBackground(ViewProperties.BACKGROUND_COLOR);
         text.setHorizontalAlignment(SwingConstants.CENTER);
         text.addActionListener(a-> this.login());
-        getText(text.getText());
         this.add(text);
 
         this.add(Box.createVerticalStrut(50));
@@ -82,12 +77,13 @@ public class LoginPanel extends AbstractPanel {
     }
 
     private void login() {
-        System.out.println("Login");
-        this.sessionStorage.setCurrentUser(new ClientUser(this.text.getText()));
-        this.window.switchToView(ViewProperties.MENU);
-    }
-
-    private void getText(String username) {
-        System.out.println(username);
+        String username = this.text.getText();
+        if(username != null && !username.isBlank()) {
+            this.sessionStorage.setCurrentUser(new ClientUser(this.text.getText()));
+            this.logger.info(String.format("User %s successfully logged in", this.text.getText()));
+            this.window.switchToView(ViewProperties.MENU);
+        } else {
+            this.window.alert("Bitte geben Sie einen gültigen Nutzernamen ein", JOptionPane.WARNING_MESSAGE);
+        }
     }
 }

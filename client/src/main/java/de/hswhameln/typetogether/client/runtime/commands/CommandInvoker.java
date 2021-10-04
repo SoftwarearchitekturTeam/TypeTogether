@@ -38,22 +38,23 @@ public class CommandInvoker {
 	}
 
 	public void undo() {
-		
-		Command command = this.undoStack.pop();
-	
-		this.redoStack.push(command);
-		command.revert();
-		updateView();
+		if(!this.undoStack.isEmpty()) {
+			Command command = this.undoStack.pop();
+
+			this.redoStack.push(command);
+			command.revert();
+			updateView();
+		}
 	}
 
 	public void redo() {
-		
-		Command command = this.redoStack.pop();
-		
-		this.undoStack.push(command);
-		command.redo();
-		updateView();
-		//updateViewValueChanged();
+		if(!this.redoStack.isEmpty()) {
+			Command command = this.redoStack.pop();
+
+			this.undoStack.push(command);
+			command.redo();
+			updateView();
+		}
 	}
 	
 	private void updateView() {
