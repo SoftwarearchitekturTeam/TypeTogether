@@ -1,7 +1,6 @@
 package de.hswhameln.typetogether.server.runtime;
 
 import de.hswhameln.typetogether.networking.api.Lobby;
-import de.hswhameln.typetogether.networking.util.ArgumentParser;
 import de.hswhameln.typetogether.networking.util.LoggerUtils;
 import de.hswhameln.typetogether.server.businesslogic.LobbyImpl;
 import de.hswhameln.typetogether.server.proxy.LobbyServerProxy;
@@ -16,9 +15,8 @@ public class ServerStarter {
     private static final int DEFAULT_PORT = 12557;
 
     public static void main(String[] args) {
-        Map<String, String> arguments = ArgumentParser.parse(args);
-        LoggerUtils.setLogLevel(Level.FINEST);
-        String portArgument = arguments.get("port");
+        LoggerUtils.setLogLevel(Level.parse(System.getProperty("loglevel")));
+        String portArgument = System.getProperty("port");
         int port = portArgument == null ? DEFAULT_PORT : Integer.parseInt(portArgument);
         System.out.println("Server starting on port " + port);
 
