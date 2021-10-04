@@ -70,10 +70,23 @@ private JLabel username;
         BoxLayout layout = new BoxLayout(this.rightSide, BoxLayout.Y_AXIS);
         this.rightSide.setLayout(layout);
 
+        JPanel gridPanel = new JPanel(new FlowLayout());
+        gridPanel.setBackground(ViewProperties.BACKGROUND_COLOR);
+        JButton refresh = new JButton("Aktualisieren");
+        refresh.setBackground(ViewProperties.CONTRAST_COLOR);
+        refresh.setForeground(ViewProperties.BACKGROUND_COLOR);
+        refresh.setFont(ViewProperties.SUBHEADLINE_FONT);
+        refresh.addActionListener(e -> this.onRefresh());
+        this.rightSide.add(refresh);
+
         JLabel headlineLabel = new JLabel("Verfügbare Dokumente");
         Dimension sizeTitle = new Dimension(200, 70);
+        headlineLabel.setFont(ViewProperties.SUBHEADLINE_FONT);
         headlineLabel.setMaximumSize(sizeTitle);
-        this.rightSide.add(headlineLabel);
+        gridPanel.add(headlineLabel);
+        gridPanel.add(refresh);
+        gridPanel.setMaximumSize(new Dimension(ViewProperties.DEFAULT_WIDTH / 2 - 6, 50));
+        this.rightSide.add(gridPanel);
         this.rightSide.add(Box.createVerticalStrut(5));
 
         this.tableData = this.sessionStorage.getLobby().getDocuments().stream().map(Document::getFuncId).collect(Collectors.toList()).toArray(new String[0]);
@@ -85,9 +98,11 @@ private JLabel username;
                 JList list = (JList) evt.getSource();
                 if (evt.getClickCount() == 2) {
                     MenuPanel.this.documentNameField.setText((String) list.getSelectedValue());
+                    MenuPanel.this.joinDocument();
                 }
             }
         });
+        this.documentTable.setFont(ViewProperties.EDITOR_FONT);
         this.tablePane = new JScrollPane(this.documentTable);
         this.tablePane.setVisible(true);
         this.rightSide.add(this.tablePane);
@@ -254,5 +269,9 @@ private JLabel username;
             ExceptionHandler.getExceptionHandler().handle(e, Level.INFO, "Could not join document.", MenuPanel.class);
             this.window.alert("Document " + documentName + " does not exist!", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private void onRefresh() {
+        this.initialize();
     }
 }
