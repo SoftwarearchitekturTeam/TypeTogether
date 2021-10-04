@@ -16,7 +16,7 @@ public class ClientRuntime {
     private final String url;
     private final int port;
 
-    public ClientRuntime(Map<String, String> args) {
+    public ClientRuntime() {
         String url = System.getProperty("url");
         String port = System.getProperty("port");
         this.port = port == null ? DEFAULT_PORT : Integer.parseInt(port);
