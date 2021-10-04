@@ -90,10 +90,10 @@ public class EditorPanel extends AbstractPanel {
         btnPanel.setMaximumSize(ViewProperties.BTN_SIZE);
 
         this.editor.setText("");
-        btnPanel.add(leave,BorderLayout.CENTER);
+        btnPanel.add(leave,BorderLayout.WEST);
         btnPanel.add(export,BorderLayout.CENTER);
-        btnPanel.add(delete,BorderLayout.CENTER);
-        
+        btnPanel.add(delete,BorderLayout.EAST);
+
         this.addComponents(editorPane, btnPanel);
         this.swingDocument.addDocumentListener(new EditorListener(sessionStorage));
         this.setUser(sessionStorage.getCurrentUser());
