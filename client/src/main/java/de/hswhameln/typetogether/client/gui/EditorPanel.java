@@ -14,6 +14,7 @@ import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -128,6 +129,7 @@ public class EditorPanel extends AbstractPanel {
 
     private void exportText() {
         JFileChooser fileChooser = new JFileChooser(System.getProperty("user.home") + "/Desktop");
+        fileChooser.setSelectedFile(new File(System.getProperty("user.home") + "/Desktop/" +this.sessionStorage.getCurrentSharedDocument().getFuncId() + ".txt"));
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             try (PrintWriter output = new PrintWriter(FileHelper.parseFile(fileChooser.getSelectedFile()))) {
                 output.println(this.editor.getText());
