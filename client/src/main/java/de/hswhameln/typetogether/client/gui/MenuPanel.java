@@ -80,11 +80,12 @@ private JLabel username;
       
         this.username = new JLabel();
        
-       this.username.setHorizontalAlignment(JLabel.LEFT);
+       this.username.setAlignmentX(100);
+       this.username.setFont(ViewProperties.SUBHEADLINE_FONT);
        this.leftSide.add(username);
-       this.leftSide.add(Box.createVerticalGlue());
-      //  this.leftSide.add(Box.createVerticalStrut(100));
-       JLabel documentTitle = new JLabel("Name des Dokuments");
+       //this.leftSide.add(Box.createVerticalGlue());
+        this.leftSide.add(Box.createVerticalStrut(100));
+        JLabel documentTitle = new JLabel("Name des Dokuments");
         Dimension sizeTitle = new Dimension(200, 70);
         documentTitle.setMaximumSize(sizeTitle);
         documentTitle.setMinimumSize(sizeTitle);
