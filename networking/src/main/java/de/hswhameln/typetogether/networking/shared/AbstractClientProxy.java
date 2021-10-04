@@ -50,7 +50,7 @@ public abstract class AbstractClientProxy extends AbstractProxy implements Clien
      * Note: I hope you know what you are doing when you use this method!
      * </p>
      */
-    protected <T> T safelyExecute(ProxiedSupplier<T> supplierWithIOExceptions) {
+    protected synchronized <T> T safelyExecute(ProxiedSupplier<T> supplierWithIOExceptions) {
         try {
             return supplierWithIOExceptions.supply();
         } catch (IOException e) {
@@ -66,7 +66,7 @@ public abstract class AbstractClientProxy extends AbstractProxy implements Clien
      * Note: I hope you know what you are doing when you use this method!
      * </p>
      */
-    protected void safelyExecute(ProxiedTask runnableWithIOException) {
+    protected synchronized void safelyExecute(ProxiedTask runnableWithIOException) {
         try {
             runnableWithIOException.run();
         } catch (IOException e) {

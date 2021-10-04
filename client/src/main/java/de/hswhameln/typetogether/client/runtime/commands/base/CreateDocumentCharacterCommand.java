@@ -34,7 +34,7 @@ public class CreateDocumentCharacterCommand implements Command {
 	@Override
 	public void execute() {
 		this.localDocument.addLocalChar(this.character);
-		this.sharedDocument.addChar(this.user, this.character);
+		new Thread(() -> this.sharedDocument.addChar(this.user, this.character)).start();
 		this.logger.info(String.format("Added character '%s' within command", this.character.getStringRepresentation()));
 	}
 

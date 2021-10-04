@@ -20,6 +20,7 @@ public class ServerStarter {
         LoggerUtils.setLogLevel(Level.FINEST);
         String portArgument = arguments.get("port");
         int port = portArgument == null ? DEFAULT_PORT : Integer.parseInt(portArgument);
+        System.out.println("Server starting on port " + port);
 
         Lobby lobby = new LobbyImpl();
         Server server = new Server(port, socket -> {

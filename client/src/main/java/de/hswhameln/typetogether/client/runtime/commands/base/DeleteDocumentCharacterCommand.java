@@ -32,7 +32,7 @@ public class DeleteDocumentCharacterCommand implements Command {
 	@Override
 	public void execute() {
 		this.localDocument.removeLocalChar(this.character);
-		this.sharedDocument.removeChar(this.user, this.character);
+		new Thread(() -> this.sharedDocument.removeChar(this.user, this.character)).start();
 		this.logger.info(String.format("Removed character '%s' within comand", this.character.getStringRepresentation()));
 	}
 
