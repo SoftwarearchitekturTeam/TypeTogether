@@ -43,7 +43,8 @@ public class MenuPanel extends AbstractPanel {
     private ClientUser user;
     private final Lobby lobby;
     private final PropertyChangeManager propertyChangeManager;
-private JLabel username;
+    private JLabel username;
+
     public MenuPanel(MainWindow window, SessionStorage sessionStorage) {
         super(window, sessionStorage);
         this.lobby = sessionStorage.getLobby();
@@ -76,6 +77,7 @@ private JLabel username;
         refresh.setBackground(ViewProperties.CONTRAST_COLOR);
         refresh.setForeground(ViewProperties.BACKGROUND_COLOR);
         refresh.setFont(ViewProperties.SUBHEADLINE_FONT);
+        refresh.setBorder(BorderFactory.createEmptyBorder());
         refresh.addActionListener(e -> this.onRefresh());
         this.rightSide.add(refresh);
 

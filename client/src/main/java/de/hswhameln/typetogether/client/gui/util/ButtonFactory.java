@@ -35,6 +35,7 @@ public class ButtonFactory {
         JButton button = new JButton(label);
         button.addActionListener(a -> run.run());
         button.setBackground(ViewProperties.CONTRAST_COLOR);
+        button.setForeground(ViewProperties.BACKGROUND_COLOR);
         button.setMaximumSize(new Dimension(200, 50));
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         button.setHorizontalAlignment(JButton.CENTER);
