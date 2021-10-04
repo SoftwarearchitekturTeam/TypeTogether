@@ -118,10 +118,7 @@ private JLabel username;
         body.setLayout(layout);
         body.setVisible(true);
         body.setBorder(BorderFactory.createEmptyBorder());
-        this.username = new JLabel();
-        this.username.setAlignmentX(FlowLayout.LEFT);
-        this.username.setFont(ViewProperties.SUBHEADLINE_FONT);
-        body.add(username);
+        
        
         this.add(body);
         this.leftSide = new JPanel();
@@ -145,10 +142,13 @@ private JLabel username;
     private void createLeftSide() {
         BoxLayout layout = new BoxLayout(this.leftSide, BoxLayout.Y_AXIS);
         this.leftSide.setLayout(layout);
-        this.leftSide.add(Box.createVerticalStrut(150));
-      
+        this.leftSide.add(Box.createVerticalStrut(50));
+        this.username = new JLabel();
+        this.username.setAlignmentX(50);
+        this.username.setFont(ViewProperties.SUBHEADLINE_FONT);
+        this.leftSide.add(username);
        
-        
+        this.leftSide.add(Box.createVerticalStrut(100));
         JLabel documentTitle = new JLabel("Name des Dokuments");
         Dimension sizeTitle = new Dimension(200, 70);
         documentTitle.setMaximumSize(sizeTitle);
