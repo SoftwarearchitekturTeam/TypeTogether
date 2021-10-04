@@ -14,7 +14,6 @@ import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.io.File;
@@ -87,13 +86,14 @@ public class EditorPanel extends AbstractPanel {
         leave.setVisible(true);
         export.setVisible(true);
         JPanel btnPanel = new JPanel();
-        btnPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        btnPanel.setLayout(new BorderLayout());
         btnPanel.setMaximumSize(ViewProperties.BTN_SIZE);
 
         this.editor.setText("");
-        btnPanel.add(leave);
-        btnPanel.add(export);
-        btnPanel.add(delete);
+        btnPanel.add(leave,BorderLayout.CENTER);
+        btnPanel.add(export,BorderLayout.CENTER);
+        btnPanel.add(delete,BorderLayout.CENTER);
+        
         this.addComponents(editorPane, btnPanel);
         this.swingDocument.addDocumentListener(new EditorListener(sessionStorage));
         this.setUser(sessionStorage.getCurrentUser());
