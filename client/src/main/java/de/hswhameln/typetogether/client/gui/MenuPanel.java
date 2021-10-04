@@ -1,5 +1,7 @@
 package de.hswhameln.typetogether.client.gui;
 
+import de.hswhameln.typetogether.client.businesslogic.ClientUser;
+import de.hswhameln.typetogether.client.runtime.PropertyChangeManager;
 import de.hswhameln.typetogether.client.runtime.SessionStorage;
 import de.hswhameln.typetogether.networking.LocalDocument;
 import de.hswhameln.typetogether.networking.api.Document;
@@ -8,7 +10,11 @@ import de.hswhameln.typetogether.networking.api.exceptions.InvalidDocumentIdExce
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 
 import javax.swing.*;
+
+
+
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,12 +22,19 @@ public class MenuPanel extends AbstractPanel {
     private final Logger logger = Logger.getLogger(this.getClass().getName());
     private JPanel leftSide;
     private JTextField documentNameField;
+    private ClientUser user;
     private final Lobby lobby;
-
+    private final PropertyChangeManager propertyChangeManager;
+private JLabel username;
     public MenuPanel(MainWindow window, SessionStorage sessionStorage) {
         super(window, sessionStorage);
         this.lobby = sessionStorage.getLobby();
+        this.setUser(sessionStorage.getCurrentUser());
+        this.propertyChangeManager = new PropertyChangeManager();
+        sessionStorage.addPropertyChangeListener(this.propertyChangeManager);
 
+        this.propertyChangeManager.onPropertyChange(SessionStorage.CURRENT_USER, this::currentUserChanged);
+       
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.setSize(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT);
         this.createGrid();
@@ -64,8 +77,14 @@ public class MenuPanel extends AbstractPanel {
         BoxLayout layout = new BoxLayout(this.leftSide, BoxLayout.Y_AXIS);
         this.leftSide.setLayout(layout);
         this.leftSide.add(Box.createVerticalStrut(150));
-
-        JLabel documentTitle = new JLabel("Name des Dokuments");
+      
+        this.username = new JLabel();
+       
+       this.username.setHorizontalAlignment(JLabel.LEFT);
+       this.leftSide.add(username);
+       this.leftSide.add(Box.createVerticalGlue());
+      //  this.leftSide.add(Box.createVerticalStrut(100));
+       JLabel documentTitle = new JLabel("Name des Dokuments");
         Dimension sizeTitle = new Dimension(200, 70);
         documentTitle.setMaximumSize(sizeTitle);
         documentTitle.setMinimumSize(sizeTitle);
@@ -131,6 +150,20 @@ public class MenuPanel extends AbstractPanel {
         joinDocumentButton.addActionListener(a -> this.joinDocument());
         buttons.add(joinDocumentButton);
         return buttons;
+    }
+    private void currentUserChanged(PropertyChangeEvent propertyChangeEvent) {
+        setUser((ClientUser) propertyChangeEvent.getNewValue());
+    }
+   
+    private void setUser(ClientUser newUser) {
+        if (this.user != null) {
+            this.user.removePropertyChangeListener(this.propertyChangeManager);
+        }
+        this.user = newUser;
+        if (this.user != null) {
+            this.user.addPropertyChangeListener(this.propertyChangeManager);
+            this.username.setText("Benutzername: "+ this.user.getName());
+        }
     }
 
     private void createDocument() {

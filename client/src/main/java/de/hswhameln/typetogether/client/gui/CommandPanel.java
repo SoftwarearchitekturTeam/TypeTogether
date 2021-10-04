@@ -62,9 +62,9 @@ public class CommandPanel extends AbstractPanel {
         this.propertyChangeManager.onPropertyChange(SessionStorage.CURRENT_SHARED_DOCUMENT, this::currentSharedDocumentChanged);
 
 
-        username = new JLabel();
+          this. username = new JLabel();
      
-     documentname = new JLabel();
+          this.documentname = new JLabel();
 
         this.menubar.add(undo);
         this.menubar.add(redo);
