@@ -19,5 +19,7 @@ public interface Command {
 	 */
 	public void revert();
 
+	public void redo();
+
 
 }

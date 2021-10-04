@@ -39,7 +39,14 @@ public class DeleteDocumentCharacterCommand implements Command {
 	@Override
 	public void revert() {
 		this.localDocument.addLocalChar(this.character);
-		this.sharedDocument.addChar(this.user, this.character);
+		new Thread(() -> this.sharedDocument.addChar(this.user, this.character)).start();
 		this.logger.info(String.format("Reverted removing character '%s' within command", this.character.getStringRepresentation()));
+	}
+
+	@Override
+	public void redo() {
+		this.localDocument.removeChar(this.user, this.character);
+		new Thread(() -> this.sharedDocument.removeChar(this.user, this.character)).start();
+		this.logger.info(String.format("Redid removing character '%s' within comand", this.character.getStringRepresentation()));
 	}
 }

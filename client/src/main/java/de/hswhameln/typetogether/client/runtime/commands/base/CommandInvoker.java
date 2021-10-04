@@ -23,8 +23,6 @@ public class CommandInvoker {
 	public CommandInvoker() {
 		this.undoStack = new Stack<>();
 		this.redoStack = new Stack<>();
-	//	this.view.addEventHandler(EventId.UNDO, (params) -> this.undo());
-	//	this.view.addEventHandler(EventId.REDO, (params) -> this.redo());
 	}
 
 	public void setCommandPanel(CommandPanel panel) {
@@ -37,7 +35,6 @@ public class CommandInvoker {
 		this.undoStack.push(command);
 		this.redoStack.clear();
 		updateView();
-	//	updateViewValueChanged();
 	}
 
 	public void undo() {
@@ -54,14 +51,10 @@ public class CommandInvoker {
 		Command command = this.redoStack.pop();
 		
 		this.undoStack.push(command);
-		command.execute();
+		command.redo();
+		updateView();
 		//updateViewValueChanged();
 	}
-//TODO noch ergänzen
-//	private void updateViewValueChanged() {
-//		updateView();
-//		this.view.notifyValuesChanged();
-//	}
 	
 	private void updateView() {
 		this.panel.changeClickableUndo(!this.undoStack.isEmpty());
