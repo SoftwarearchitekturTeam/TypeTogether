@@ -3,9 +3,11 @@ package de.hswhameln.typetogether.client.gui;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -17,6 +19,8 @@ import com.formdev.flatlaf.FlatLightLaf;
 
 import de.hswhameln.typetogether.client.runtime.ClientRuntime;
 import de.hswhameln.typetogether.client.runtime.SessionStorage;
+import de.hswhameln.typetogether.networking.api.exceptions.UnknownUserException;
+import de.hswhameln.typetogether.networking.api.exceptions.InvalidDocumentIdException.DocumentDoesNotExistException;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 
 
@@ -55,6 +59,20 @@ public class MainWindow extends JFrame {
         // center
         this.setLocationRelativeTo(null);
         this.setIconImage(new ImageIcon("./resources/favicon.jpg").getImage());
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                String documentId = MainWindow.this.sessionStorage.getCurrentSharedDocument().getFuncId();
+                try {
+                    MainWindow.this.sessionStorage.getLobby().leaveDocument(MainWindow.this.sessionStorage.getCurrentUser(), documentId);
+                } catch (DocumentDoesNotExistException | UnknownUserException e1) {
+                    ExceptionHandler.getExceptionHandler().handle(e1, "Could not leave document", MainWindow.class);
+                }
+                System.exit(0);
+            }
+        });
+
         this.cardLayout.show(mainContainer, ViewProperties.LOGIN); //TODO: Changed from LOGIN for debugging
     }
 
