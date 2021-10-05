@@ -92,9 +92,16 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
                 handleCommand();
             }
         } catch (IOException e) {
-            exceptionHandler.handle(e, Level.SEVERE, "Communication with ClientProxy was interrupted. Stopping connection.", this.getClass());
+            this.exceptionHandler.handle(e, Level.SEVERE, "Communication with ClientProxy was interrupted. Stopping connection.", this.getClass());
         } catch (Exception e) {
-            exceptionHandler.handle(e, Level.SEVERE, "Unexpected exception when executing a command. Stopping connection.", this.getClass());
+            this.exceptionHandler.handle(e, Level.SEVERE, "Unexpected exception when executing a command. Stopping connection.", this.getClass());
+        }
+        if (this.socket != null && !this.socket.isClosed()) {
+            try {
+                this.closeConnection();
+            } catch (IOException e) {
+                this.exceptionHandler.handle(e, Level.SEVERE, "Could not close connection. It is assumed that it is already closed.", this.getClass());
+            }
         }
     }
 
