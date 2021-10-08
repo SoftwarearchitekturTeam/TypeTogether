@@ -5,19 +5,23 @@ import de.hswhameln.typetogether.networking.proxy.ResponseCodes;
 import de.hswhameln.typetogether.networking.shared.helperinterfaces.FunctionalFunction;
 import de.hswhameln.typetogether.networking.shared.helperinterfaces.FunctionalTask;
 import de.hswhameln.typetogether.networking.shared.helperinterfaces.UnsafeConsumer;
+import de.hswhameln.typetogether.networking.util.Decimal;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Level;
 
 public abstract class AbstractServerProxy extends AbstractProxy implements Runnable {
 
-    private Map<String, ServerProxyAction> availableActions;
     protected final ServerProxyAction closeConnectionAction = ServerProxyAction.of("closeConnection", this::closeConnection);
+    private Map<String, ServerProxyAction> availableActions;
+    private final Collection<Runnable> shutDownHooks = new ArrayList<>();
 
-    protected AbstractServerProxy(Socket socket) throws IOException{
+    protected AbstractServerProxy(Socket socket) throws IOException {
         super(socket);
     }
 
@@ -78,8 +82,11 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
     }
 
     private void closeConnection() throws IOException {
-        this.socket.close();
+        if (this.socket != null && !this.socket.isClosed()) {
+            this.socket.close();
+        }
         this.logger.info("Connection to " + this.getClass().getSimpleName() + " was closed successfully.");
+        this.shutDownHooks.forEach(Runnable::run);
     }
 
     /**
@@ -96,13 +103,12 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
         } catch (Exception e) {
             this.exceptionHandler.handle(e, Level.SEVERE, "Unexpected exception when executing a command. Stopping connection.", this.getClass());
         }
-        if (this.socket != null && !this.socket.isClosed()) {
-            try {
-                this.closeConnection();
-            } catch (IOException e) {
-                this.exceptionHandler.handle(e, Level.SEVERE, "Could not close connection. It is assumed that it is already closed.", this.getClass());
-            }
+        try {
+            this.closeConnection();
+        } catch (IOException e) {
+            this.exceptionHandler.handle(e, Level.SEVERE, "Could not close connection. It is assumed that it is already closed.", this.getClass());
         }
+
     }
 
     /**
@@ -142,6 +148,11 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
             this.availableActions = availableActions != null ? availableActions : Collections.emptyMap();
         }
         return this.availableActions;
+    }
+
+    public Runnable withShutDownHook(Runnable r) {
+        this.shutDownHooks.add(r);
+        return this;
     }
 
 }

@@ -63,6 +63,4 @@ public class ObjectResolver<T> {
         logger.info("Correctly resolved Object of type " + clientProxy.getClass().getName());
         return clientProxy;
     }
-
-
 }

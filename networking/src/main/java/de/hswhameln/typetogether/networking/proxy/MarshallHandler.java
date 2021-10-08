@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static de.hswhameln.typetogether.networking.FluentExceptionHandler.expectSuccess;
+import static de.hswhameln.typetogether.networking.util.ExceptionUtil.sneakyThrow;
 
 public class MarshallHandler<T> {
     private final Map<T, Integer> communicationIdsByObjects = new HashMap<>();
@@ -66,7 +67,12 @@ public class MarshallHandler<T> {
         this.out.println(serverSocket.getLocalPort());
         Socket clientSocket = serverSocket.accept();
         logger.info("New Client connected who wants to access " + t);
-        new Thread(this.serverProxySupplier.create(clientSocket, t)).start();
+
+        new Thread(
+                this.serverProxySupplier
+                        .create(clientSocket, t)
+                        .withShutDownHook(() -> closeServerSocket(serverSocket))
+        ).start();
 
         expectSuccess(this.in);
 
@@ -84,6 +90,14 @@ public class MarshallHandler<T> {
             }
         } while (serverSocket == null);
         return serverSocket;
+    }
+
+    private void closeServerSocket(ServerSocket serverSocket) {
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            ExceptionHandler.getExceptionHandler().handle(e, Level.WARNING, "Could not close Server socket. It's probably already closed. Continuing as usual.", MarshallHandler.class);
+        }
     }
 
     private int createCommunicationId() {
