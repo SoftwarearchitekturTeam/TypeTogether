@@ -63,7 +63,12 @@ public class MenuPanel extends AbstractPanel {
 
     @Override
     public void initialize() {
-        this.tableData = this.sessionStorage.getLobby().getDocuments().stream().map(Document::getFuncId).sorted().collect(Collectors.toList()).toArray(new String[0]);
+        this.tableData = this.sessionStorage
+                .getLobby()
+                .getDocumentIds()
+                .stream()
+                .sorted()
+                .toArray(String[]::new);
         this.documentTable.setListData(this.tableData);
     }
 
@@ -91,13 +96,13 @@ public class MenuPanel extends AbstractPanel {
         this.rightSide.add(gridPanel);
         this.rightSide.add(Box.createVerticalStrut(5));
 
-        this.tableData = this.sessionStorage.getLobby().getDocuments().stream().map(Document::getFuncId).collect(Collectors.toList()).toArray(new String[0]);
+        this.tableData = this.sessionStorage.getLobby().getDocumentIds().stream().sorted().toArray(String[]::new);
         this.documentTable = new JList<>(tableData);
         this.documentTable.setVisible(true);
         this.documentTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
-                JList list = (JList) evt.getSource();
+                JList<?> list = (JList<?>) evt.getSource();
                 if (evt.getClickCount() == 2) {
                     MenuPanel.this.documentNameField.setText((String) list.getSelectedValue());
                     MenuPanel.this.joinDocument();

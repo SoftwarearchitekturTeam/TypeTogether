@@ -45,7 +45,7 @@ public class LobbyServerProxy extends AbstractServerProxy {
                 Map.entry("3", ServerProxyAction.of("getDocumentById", this::doGetDocumentById)),
                 Map.entry("4", ServerProxyAction.of("createDocument", this::doCreateDocument)),
                 Map.entry("5", ServerProxyAction.of("deleteDocument", this::doDeleteDocument)),
-                Map.entry("6", ServerProxyAction.of("getDocuments", this::doGetDocuments)));
+                Map.entry("6", ServerProxyAction.of("getDocuments", this::doGetDocumentIds)));
     }
 
 
@@ -82,13 +82,13 @@ public class LobbyServerProxy extends AbstractServerProxy {
         this.safelyExecute("deleteDocument", () -> this.lobby.deleteDocument(user, documentId));
     }
 
-    private void doGetDocuments() throws IOException {
+    private void doGetDocumentIds() throws IOException {
         this.safelyExecute("getDocuments", () -> {
-            Collection<Document> documents = lobby.getDocuments();
-            this.out.println("Sending N followed by N documents...");
-            this.out.println(documents.size());
-            for (Document d: documents) {
-                this.documentMarshallHandler.marshall(d);
+            Collection<String> documentIds = lobby.getDocumentIds();
+            this.out.println("Sending N followed by N documentIds...");
+            this.out.println(documentIds.size());
+            for (String s: documentIds) {
+                this.out.println(s);
             }
         });
     }

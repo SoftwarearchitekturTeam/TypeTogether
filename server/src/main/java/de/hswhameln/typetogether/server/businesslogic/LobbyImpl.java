@@ -71,7 +71,7 @@ public class LobbyImpl implements Lobby {
     }
 
     @Override
-    public Collection<Document> getDocuments() {
-        return new HashSet<>(this.documentsById.values());
+    public Collection<String> getDocumentIds() {
+        return new HashSet<>(this.documentsById.keySet());
     }
 }

@@ -104,19 +104,19 @@ public class LobbyClientProxy extends AbstractClientProxy implements Lobby {
     }
 
     @Override
-    public Collection<Document> getDocuments() {
+    public Collection<String> getDocumentIds() {
         return this.safelyExecute(() -> {
             this.chooseOption("6");
-            // "Provide documentId"
+            // "Provide size"
             logger.fine(this.in.readLine());
             int size = Integer.parseInt(this.in.readLine());
             logger.fine("Server responded with size " + size);
-            Collection<Document> documents = new HashSet<>();
+            Collection<String> documentIds = new HashSet<>();
             for (int i = 0; i < size; i++) {
-                documents.add(this.documentObjectResolver.resolveObject());
+                documentIds.add(this.in.readLine());
             }
             expectSuccess(this.in);
-            return documents;
+            return documentIds;
         });
     }
 }

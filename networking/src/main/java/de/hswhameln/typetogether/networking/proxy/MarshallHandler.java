@@ -15,7 +15,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static de.hswhameln.typetogether.networking.FluentExceptionHandler.expectSuccess;
-import static de.hswhameln.typetogether.networking.util.ExceptionUtil.sneakyThrow;
 
 public class MarshallHandler<T> {
     private final Map<T, Integer> communicationIdsByObjects = new HashMap<>();
@@ -37,7 +36,7 @@ public class MarshallHandler<T> {
     }
 
     /**
-     * Marshall an object by sending its communication id to the server, creating a new ServerProxy for that object if the opposing system asks for it.
+     * Marshall an object by sending its communication id to the opposing system, creating a new ServerProxy for that object if the opposing system asks for it.
      *
      * @param t The Object to be marshalled
      * @throws IOException If the connection is closed or otherwise obstructed

@@ -17,6 +17,6 @@ public interface Lobby {
 
     void deleteDocument(User user, String documentId) throws InvalidDocumentIdException.DocumentDoesNotExistException;
 
-    Collection<Document> getDocuments();
+    Collection<String> getDocumentIds();
 
 }
