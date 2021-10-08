@@ -41,4 +41,7 @@ public class AbstractPanel extends JPanel {
     public void initialize() {
 
     }
+
+    public void windowClosed() {
+    }
 }

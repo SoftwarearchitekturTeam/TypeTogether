@@ -22,6 +22,7 @@ import de.hswhameln.typetogether.client.runtime.SessionStorage;
 import de.hswhameln.typetogether.networking.api.exceptions.UnknownUserException;
 import de.hswhameln.typetogether.networking.api.exceptions.InvalidDocumentIdException.DocumentDoesNotExistException;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
+import de.hswhameln.typetogether.networking.util.ObjectDestructor;
 
 
 /**
@@ -65,17 +66,11 @@ public class MainWindow extends JFrame {
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                if (MainWindow.this.activeView.equals(ViewProperties.EDITOR)) { 
-                    String documentId = MainWindow.this.sessionStorage.getCurrentSharedDocument().getFuncId();
-                    try {
-                        MainWindow.this.sessionStorage.getLobby().leaveDocument(MainWindow.this.sessionStorage.getCurrentUser(), documentId);
-                    } catch (DocumentDoesNotExistException | UnknownUserException e1) {
-                        ExceptionHandler.getExceptionHandler().handle(e1, "Could not leave document", MainWindow.class);
-                    }
-                }
-                System.exit(0);
+                MainWindow.this.availableViews.get(activeView).windowClosed();
+                ObjectDestructor.destroy(MainWindow.this.sessionStorage.getLobby());
             }
         });
+
         this.activeView = ViewProperties.LOGIN;
         this.cardLayout.show(mainContainer, ViewProperties.LOGIN); //TODO: Changed from LOGIN for debugging
     }

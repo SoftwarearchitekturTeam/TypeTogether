@@ -102,6 +102,22 @@ public class EditorPanel extends AbstractPanel {
         this.propertyChangeManager.onPropertyChange(ClientUser.LOCAL_DOCUMENT, this::localDocumentChanged);
     }
 
+    @Override
+    public void windowClosed() {
+        if (this.sessionStorage.getCurrentSharedDocument() == null) {
+            return;
+        }
+
+        String documentId = this.sessionStorage.getCurrentSharedDocument().getFuncId();
+        try {
+            this.sessionStorage.getLobby().leaveDocument(this.user, documentId);
+        } catch (InvalidDocumentIdException.DocumentDoesNotExistException | UnknownUserException e1) {
+            ExceptionHandler.getExceptionHandler().handle(e1, "Could not leave document", EditorPanel.class);
+        }
+        this.sessionStorage.setCurrentSharedDocument(null);
+
+    }
+
     private void deleteDocument() {
         String funcId = this.sessionStorage.getCurrentSharedDocument().getFuncId();
         try {
