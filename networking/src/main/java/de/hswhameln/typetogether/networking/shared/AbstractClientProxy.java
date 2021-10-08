@@ -10,7 +10,9 @@ import java.net.Socket;
 import static de.hswhameln.typetogether.networking.FluentExceptionHandler.expectSuccess;
 import static de.hswhameln.typetogether.networking.util.ExceptionUtil.sneakyThrow;
 
-public abstract class AbstractClientProxy extends AbstractProxy implements ClientProxy{
+public abstract class AbstractClientProxy extends AbstractProxy implements ClientProxy {
+
+    private boolean closed = false;
 
     public AbstractClientProxy(Socket socket) throws IOException {
         super(socket);
@@ -28,6 +30,14 @@ public abstract class AbstractClientProxy extends AbstractProxy implements Clien
         for (int i = 0; i < commandCount; i++) {
             logger.fine(this.in.readLine());
         }
+    }
+
+    public void closeConnection() {
+        this.safelyExecute(() -> {
+            this.logger.info("Requesting to close connection for " + this.getClass().getSimpleName() + " object.");
+            this.out.println("0");
+            this.closed = true;
+        });
     }
 
     /**
@@ -67,12 +77,13 @@ public abstract class AbstractClientProxy extends AbstractProxy implements Clien
      * </p>
      */
     protected synchronized void safelyExecute(ProxiedTask runnableWithIOException) {
-        try {
+        this.safelyExecute(() -> {
             runnableWithIOException.run();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (FunctionalException e) {
-            throw sneakyThrow(e);
-        }
+            return null;
+        });
+    }
+
+    public boolean isClosed() {
+        return closed;
     }
 }

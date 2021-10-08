@@ -44,7 +44,7 @@ public class EditorPanel extends AbstractPanel {
         this.editor.setFont(ViewProperties.EDITOR_FONT);
         this.editor.setHighlighter(null);
 
-        Action undo = new AbstractAction(){
+        Action undo = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Undo");
@@ -91,9 +91,9 @@ public class EditorPanel extends AbstractPanel {
         btnPanel.setMaximumSize(ViewProperties.BTN_SIZE);
 
         this.editor.setText("");
-        btnPanel.add(leave,BorderLayout.WEST);
-        btnPanel.add(export,BorderLayout.CENTER);
-        btnPanel.add(delete,BorderLayout.EAST);
+        btnPanel.add(leave, BorderLayout.WEST);
+        btnPanel.add(export, BorderLayout.CENTER);
+        btnPanel.add(delete, BorderLayout.EAST);
 
         this.addComponents(editorPane, btnPanel);
         this.swingDocument.addDocumentListener(new EditorListener(sessionStorage));
@@ -161,13 +161,14 @@ public class EditorPanel extends AbstractPanel {
         } catch (InvalidDocumentIdException.DocumentDoesNotExistException | UnknownUserException e) {
             throw new RuntimeException("Could not leave document. Continuing as usual.", e);
         }
+        this.sessionStorage.setCurrentSharedDocument(null);
         this.user.setDocument(null);
         this.window.switchToView(ViewProperties.MENU);
     }
 
     private void exportText() {
         JFileChooser fileChooser = new JFileChooser(System.getProperty("user.home") + "/Desktop");
-        fileChooser.setSelectedFile(new File(System.getProperty("user.home") + "/Desktop/" +this.sessionStorage.getCurrentSharedDocument().getFuncId() + ".txt"));
+        fileChooser.setSelectedFile(new File(System.getProperty("user.home") + "/Desktop/" + this.sessionStorage.getCurrentSharedDocument().getFuncId() + ".txt"));
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             try (PrintWriter output = new PrintWriter(FileHelper.parseFile(fileChooser.getSelectedFile()))) {
                 output.println(this.editor.getText());

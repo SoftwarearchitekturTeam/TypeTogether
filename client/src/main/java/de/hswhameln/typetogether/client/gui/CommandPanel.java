@@ -22,7 +22,7 @@ public class CommandPanel extends AbstractPanel {
     private JButton redo;
     private JLabel username;
     private ClientUser user;
-    
+
     private JLabel documentname;
     private Document sharedDocument;
     private JMenuBar menubar;
@@ -30,11 +30,11 @@ public class CommandPanel extends AbstractPanel {
     private CommandInvoker invoker;
     private final PropertyChangeManager propertyChangeManager;
 
-   public CommandPanel (MainWindow window, SessionStorage sessionStorage) {
+    public CommandPanel(MainWindow window, SessionStorage sessionStorage) {
         super(window, sessionStorage);
         this.invoker = sessionStorage.getCommandInvoker();
-      
-       
+
+
         this.setLayout(new BorderLayout());
         this.setSize(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT);
         this.setPreferredSize(new Dimension(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT));
@@ -52,8 +52,8 @@ public class CommandPanel extends AbstractPanel {
         redo.setEnabled(false);
         editorPanel = new EditorPanel(window, sessionStorage);
 
-        undo.addActionListener(a-> this.invoker.undo());
-        redo.addActionListener(a-> this.invoker.redo());
+        undo.addActionListener(a -> this.invoker.undo());
+        redo.addActionListener(a -> this.invoker.redo());
         this.setUser(sessionStorage.getCurrentUser());
         this.propertyChangeManager = new PropertyChangeManager();
         sessionStorage.addPropertyChangeListener(this.propertyChangeManager);
@@ -62,9 +62,9 @@ public class CommandPanel extends AbstractPanel {
         this.propertyChangeManager.onPropertyChange(SessionStorage.CURRENT_SHARED_DOCUMENT, this::currentSharedDocumentChanged);
 
 
-          this. username = new JLabel();
-     
-          this.documentname = new JLabel();
+        this.username = new JLabel();
+
+        this.documentname = new JLabel();
 
         this.menubar.add(undo);
         this.menubar.add(redo);
@@ -76,35 +76,39 @@ public class CommandPanel extends AbstractPanel {
         this.add(this.menubar, BorderLayout.NORTH);
         this.add(editorPanel, BorderLayout.CENTER);
 
-   }
+    }
 
-   public void changeClickableUndo(boolean enabled) {
-       this.undo.setEnabled(enabled);
-   }
+    public void changeClickableUndo(boolean enabled) {
+        this.undo.setEnabled(enabled);
+    }
 
     public void changeClickableRedo(boolean enabled) {
         this.redo.setEnabled(enabled);
     }
+
     private void currentSharedDocumentChanged(PropertyChangeEvent propertyChangeEvent) {
-     this.setDocumentname ( (Document) propertyChangeEvent.getNewValue());
- }
- private void setDocumentname(Document newValue) {
-      this.sharedDocument = newValue;
-      this.documentname.setText("Dokumentname: " +this.sharedDocument.getFuncId());
-}
+        this.setDocumentname((Document) propertyChangeEvent.getNewValue());
+    }
 
-private void currentUserChanged(PropertyChangeEvent propertyChangeEvent) {
-     setUser((ClientUser) propertyChangeEvent.getNewValue());
- }
+    private void setDocumentname(Document newValue) {
+        this.sharedDocument = newValue;
+        if (newValue != null) {
+            this.documentname.setText("Dokumentname: " + this.sharedDocument.getFuncId());
+        }
+    }
 
- private void setUser(ClientUser newUser) {
-     if (this.user != null) {
-         this.user.removePropertyChangeListener(this.propertyChangeManager);
-     }
-     this.user = newUser;
-     if (this.user != null) {
-         this.user.addPropertyChangeListener(this.propertyChangeManager);
-         this.username.setText("Benutzername: "+ this.user.getName());
-     }
- }
+    private void currentUserChanged(PropertyChangeEvent propertyChangeEvent) {
+        setUser((ClientUser) propertyChangeEvent.getNewValue());
+    }
+
+    private void setUser(ClientUser newUser) {
+        if (this.user != null) {
+            this.user.removePropertyChangeListener(this.propertyChangeManager);
+        }
+        this.user = newUser;
+        if (this.user != null) {
+            this.user.addPropertyChangeListener(this.propertyChangeManager);
+            this.username.setText("Benutzername: " + this.user.getName());
+        }
+    }
 }

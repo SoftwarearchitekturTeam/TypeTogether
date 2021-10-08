@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import de.hswhameln.typetogether.client.gui.MainWindow;
 import de.hswhameln.typetogether.client.runtime.ClientRuntime;
 import de.hswhameln.typetogether.client.runtime.SessionStorage;
+import de.hswhameln.typetogether.client.runtime.SessionStorageCleaner;
 import de.hswhameln.typetogether.networking.util.LoggerFactory;
 
 public class ClientStarter {
@@ -17,6 +18,8 @@ public class ClientStarter {
 
         ClientRuntime clientRuntime = new ClientRuntime();
         SessionStorage sessionStorage = new SessionStorage(clientRuntime.createLobby());
+        new SessionStorageCleaner(sessionStorage).start();
+
         MainWindow window = new MainWindow(sessionStorage);
         window.setVisible(true);
     }

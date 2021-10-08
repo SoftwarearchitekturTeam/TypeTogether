@@ -6,6 +6,7 @@ import de.hswhameln.typetogether.client.runtime.commands.CommandInvoker;
 import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.Lobby;
 import de.hswhameln.typetogether.networking.api.User;
+import de.hswhameln.typetogether.networking.util.ObjectDestructor;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -14,14 +15,13 @@ public class SessionStorage {
     private final Lobby lobby;
     private ClientUser currentUser;
     private Document currentSharedDocument;
-    private CommandInvoker invoker;
 
     // Descriptors
     public static final String CURRENT_USER = "currentUser";
     public static final String CURRENT_SHARED_DOCUMENT = "currentSharedDocument";
-    public static final String CURRENT_LOCAL_DOCUMENT = "currentLocalDocument";
 
     private final PropertyChangeSupport propertyChangeSupport;
+    private final CommandInvoker invoker;
 
     public SessionStorage(Lobby lobby) {
         this.lobby = lobby;

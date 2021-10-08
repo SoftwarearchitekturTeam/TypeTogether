@@ -45,7 +45,8 @@ public class ObjectResolver<T> {
         int communicationId = IOUtils.getIntArgument("communicationId", this.in, this.out);
         this.logger.info("Resolving object for communicationId " + communicationId);
 
-        if (this.objectsByCommunicationIds.containsKey(communicationId)) {
+        if (this.objectsByCommunicationIds.containsKey(communicationId)
+                && !((AbstractClientProxy) this.objectsByCommunicationIds.get(communicationId)).isClosed()) {
             this.logger.info("Already knew object with communicationId " + communicationId + ". Continuing.");
             IOUtils.success(this.out);
             return this.objectsByCommunicationIds.get(communicationId);
