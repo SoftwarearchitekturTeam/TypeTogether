@@ -9,6 +9,7 @@ import de.hswhameln.typetogether.networking.api.User;
 import de.hswhameln.typetogether.networking.api.exceptions.InvalidDocumentIdException;
 import de.hswhameln.typetogether.networking.api.exceptions.UnknownUserException;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
+import de.hswhameln.typetogether.networking.util.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -26,7 +27,7 @@ import static de.hswhameln.typetogether.client.gui.util.ButtonFactory.createButt
 
 public class EditorPanel extends AbstractPanel {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this);
     private final DocumentObserver observer;
 
     private final JTextArea editor;

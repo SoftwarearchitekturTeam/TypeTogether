@@ -9,7 +9,7 @@ import java.io.PrintWriter;
 import java.util.logging.Logger;
 
 public final class IOUtils {
-    private static final Logger logger = Logger.getLogger(IOUtils.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(IOUtils.class);
 
     public static String getStringArgument(String argumentName, BufferedReader in, PrintWriter out) throws IOException {
         return getUntypedArgument(argumentName, String.class, in, out);

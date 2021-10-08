@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 public class ExceptionHandler {
     private static ExceptionHandler instance;
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this);
 
     public static ExceptionHandler getExceptionHandler() {
         if (instance == null) {

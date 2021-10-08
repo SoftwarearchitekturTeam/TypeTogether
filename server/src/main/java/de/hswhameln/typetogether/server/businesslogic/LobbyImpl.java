@@ -5,6 +5,7 @@ import de.hswhameln.typetogether.networking.api.Lobby;
 import de.hswhameln.typetogether.networking.api.User;
 import de.hswhameln.typetogether.networking.api.exceptions.InvalidDocumentIdException;
 import de.hswhameln.typetogether.networking.api.exceptions.UnknownUserException;
+import de.hswhameln.typetogether.networking.util.LoggerFactory;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,7 +15,7 @@ import java.util.logging.Logger;
 
 public class LobbyImpl implements Lobby {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this);
     private final Map<String, DocumentDistributor> documentsById = new HashMap<>();
 
     @Override

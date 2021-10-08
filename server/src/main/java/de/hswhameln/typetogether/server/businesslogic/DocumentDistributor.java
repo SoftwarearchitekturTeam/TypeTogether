@@ -4,6 +4,7 @@ import de.hswhameln.typetogether.networking.LocalDocument;
 import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.User;
 import de.hswhameln.typetogether.networking.types.DocumentCharacter;
+import de.hswhameln.typetogether.networking.util.LoggerFactory;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -13,7 +14,7 @@ import java.util.logging.Logger;
 
 public class DocumentDistributor implements Document {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this);
     private final String id;
 
     private final Set<User> activeUsers = new HashSet<>();

@@ -1,6 +1,7 @@
 package de.hswhameln.typetogether.server.runtime;
 
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
+import de.hswhameln.typetogether.networking.util.LoggerFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -15,7 +16,7 @@ public class Server {
     private ServerSocket serverSocket;
     private boolean running;
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this);
 
     public Server(int port, Function<Socket, Runnable> onConnect) {
         System.out.println("_______   _____ ___ _____ __   __ ___ _____ _  _ ___ ___");  

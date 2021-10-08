@@ -10,6 +10,7 @@ import de.hswhameln.typetogether.networking.proxy.ObjectResolver;
 import de.hswhameln.typetogether.networking.shared.AbstractClientProxy;
 import de.hswhameln.typetogether.networking.shared.DocumentClientProxy;
 import de.hswhameln.typetogether.networking.shared.UserServerProxy;
+import de.hswhameln.typetogether.networking.util.LoggerFactory;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -24,7 +25,7 @@ public class LobbyClientProxy extends AbstractClientProxy implements Lobby {
 
     private final MarshallHandler<User> userMarshallHandler;
     private final ObjectResolver<Document> documentObjectResolver;
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this);
 
     public LobbyClientProxy(Socket socket) throws IOException {
         super(socket);

@@ -8,10 +8,11 @@ import javax.swing.*;
 
 import de.hswhameln.typetogether.client.businesslogic.ClientUser;
 import de.hswhameln.typetogether.client.runtime.SessionStorage;
+import de.hswhameln.typetogether.networking.util.LoggerFactory;
 
 public class LoginPanel extends AbstractPanel {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this);
     private JTextField text;
 
     public LoginPanel(MainWindow window, SessionStorage sessionStorage) {

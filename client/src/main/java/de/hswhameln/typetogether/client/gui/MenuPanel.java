@@ -31,9 +31,10 @@ import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.Lobby;
 import de.hswhameln.typetogether.networking.api.exceptions.InvalidDocumentIdException;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
+import de.hswhameln.typetogether.networking.util.LoggerFactory;
 
 public class MenuPanel extends AbstractPanel {
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this);
     private JPanel leftSide;
     private JPanel rightSide;
     private JTextField documentNameField;

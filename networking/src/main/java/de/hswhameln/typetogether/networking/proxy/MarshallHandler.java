@@ -2,6 +2,7 @@ package de.hswhameln.typetogether.networking.proxy;
 
 import de.hswhameln.typetogether.networking.shared.helperinterfaces.ServerProxyCreator;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
+import de.hswhameln.typetogether.networking.util.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class MarshallHandler<T> {
     private int knownObjectCount = 0;
     private final Random random = new Random();
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this);
 
     public MarshallHandler(ServerProxyCreator<T> serverProxySupplier, BufferedReader in, PrintWriter out) {
         this.serverProxySupplier = serverProxySupplier;

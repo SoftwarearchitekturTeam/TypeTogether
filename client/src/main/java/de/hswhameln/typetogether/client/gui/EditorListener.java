@@ -12,6 +12,7 @@ import de.hswhameln.typetogether.networking.types.DocumentCharacter;
 import de.hswhameln.typetogether.networking.types.Identifier;
 import de.hswhameln.typetogether.networking.util.DocumentCharacterFactory;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
+import de.hswhameln.typetogether.networking.util.LoggerFactory;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -23,7 +24,7 @@ import java.util.logging.Logger;
 
 public class EditorListener implements DocumentListener {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this);
 
     private Document sharedDocument;
     private ClientUser user;

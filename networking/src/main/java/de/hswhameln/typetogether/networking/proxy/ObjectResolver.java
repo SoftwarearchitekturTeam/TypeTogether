@@ -1,7 +1,9 @@
 package de.hswhameln.typetogether.networking.proxy;
 
+import de.hswhameln.typetogether.networking.shared.AbstractClientProxy;
 import de.hswhameln.typetogether.networking.shared.helperinterfaces.ClientProxyCreator;
 import de.hswhameln.typetogether.networking.util.IOUtils;
+import de.hswhameln.typetogether.networking.util.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,7 +24,7 @@ public class ObjectResolver<T> {
     private final PrintWriter out;
     private final InetAddress targetInetAddress;
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this);
     private final Map<Integer, T> objectsByCommunicationIds = new HashMap<>();
 
 
