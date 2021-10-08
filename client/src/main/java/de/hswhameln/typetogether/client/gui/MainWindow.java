@@ -55,7 +55,7 @@ public class MainWindow extends JFrame {
         this.setResizable(false);
         this.setSize(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT);
         this.setMinimumSize(new Dimension(ViewProperties.DEFAULT_WIDTH, ViewProperties.DEFAULT_HEIGHT));
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setTitle("TypeTogether");
         this.setBackground(Color.PINK);
         this.registerViews();
@@ -65,9 +65,16 @@ public class MainWindow extends JFrame {
 
         this.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(WindowEvent e) {
+            public void windowClosed(WindowEvent e) {
                 MainWindow.this.availableViews.get(activeView).windowClosed();
                 ObjectDestructor.destroy(MainWindow.this.sessionStorage.getLobby());
+                // give the other Threads some time to finish their work, but forcefully interrupt them after said time has passed.
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                System.exit(0);
             }
         });
 
