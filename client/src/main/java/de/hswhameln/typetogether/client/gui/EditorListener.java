@@ -4,8 +4,8 @@ import de.hswhameln.typetogether.client.businesslogic.ClientUser;
 import de.hswhameln.typetogether.client.runtime.PropertyChangeManager;
 import de.hswhameln.typetogether.client.runtime.SessionStorage;
 import de.hswhameln.typetogether.client.runtime.commands.CommandInvoker;
-import de.hswhameln.typetogether.client.runtime.commands.CreateDocumentCharacterCommand;
-import de.hswhameln.typetogether.client.runtime.commands.DeleteDocumentCharacterCommand;
+import de.hswhameln.typetogether.client.runtime.commands.CreateDocumentCharactersCommand;
+import de.hswhameln.typetogether.client.runtime.commands.DeleteDocumentCharactersCommand;
 import de.hswhameln.typetogether.networking.LocalDocument;
 import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.types.DocumentCharacter;
@@ -14,10 +14,12 @@ import de.hswhameln.typetogether.networking.util.DocumentCharacterFactory;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 import de.hswhameln.typetogether.networking.util.LoggerFactory;
 
+import javax.print.Doc;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,20 +69,27 @@ public class EditorListener implements DocumentListener {
             return;
         }
 
-        String update = new StringBuilder(getStringFromDocumentEvent(e)).reverse().toString();
+        String update = getStringFromDocumentEvent(e);
         System.out.println("Update Length: " + update.length());
 
+        List<DocumentCharacter> documentCharacters = new ArrayList<>(e.getLength());
+
+        // the char that was the last one to be created and to which the next character from this batch must be appended.
+        DocumentCharacter lastCreatedCharacter = null;
         for (char c : update.toCharArray()) {
             //Get Position of Changed Character(s)
             int index = e.getOffset() + 1;
-            System.out.println("EditorListener#insertUpdate: generating character at index " + index + ", between " + (index - 1) + " and " + (index));
+            System.out.println("EditorListener#insertUpdate: generating character " + c + " at index " + index + ", between " + (index - 1) + " and " + (index));
             // Between old indices index - 1 and index <=> between new indices index - 1 and index + 1
             //Get DocumentCharacter for position
             //Get before and after
-            DocumentCharacter characterToAdd = this.generateDocumentCharacter(this.localDocument.getDocumentCharacterOfIndex(index - 1),
-                    this.localDocument.getDocumentCharacterOfIndex(index), c);
-            this.invoker.execute(new CreateDocumentCharacterCommand(characterToAdd, this.user, this.localDocument, this.sharedDocument));
+            DocumentCharacter previousCharacter = lastCreatedCharacter != null ? lastCreatedCharacter : this.localDocument.getDocumentCharacterOfIndex(e.getOffset());
+            DocumentCharacter nextCharacter = this.localDocument.getDocumentCharacterOfIndex(e.getOffset() + 1);
+            DocumentCharacter characterToAdd = this.generateDocumentCharacter(previousCharacter, nextCharacter, c);
+            lastCreatedCharacter = characterToAdd;
+            documentCharacters.add(characterToAdd);
         }
+        this.invoker.execute(new CreateDocumentCharactersCommand(documentCharacters, this.user, this.localDocument, this.sharedDocument));
     }
 
     @Override
@@ -103,13 +112,14 @@ public class EditorListener implements DocumentListener {
             return;
         }
 
+        List<DocumentCharacter> documentCharacters = new ArrayList<>(e.getLength());
         for (int i = 0; i < e.getLength(); i++) {
             //Get Position of Changed Character(s)
-            int index = e.getOffset() + 1;
+            int index = e.getOffset() + i + 1;
             // Get DocumentCharacter for position
-            DocumentCharacter characterToRemove = this.localDocument.getDocumentCharacterOfIndex(index);
-            this.invoker.execute(new DeleteDocumentCharacterCommand(characterToRemove, this.user, this.localDocument, this.sharedDocument));
+            documentCharacters.add(this.localDocument.getDocumentCharacterOfIndex(index));
         }
+        this.invoker.execute(new DeleteDocumentCharactersCommand(documentCharacters, this.user, this.localDocument, this.sharedDocument));
     }
 
     @Override
