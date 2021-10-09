@@ -57,6 +57,18 @@ public class DocumentDistributor implements Document {
     }
 
     @Override
+    public void addChars(User author, Collection<DocumentCharacter> characters) {
+        this.serverBackup.addChars(author, characters);
+        propagate(author, document -> document.addChars(author, characters));
+    }
+
+    @Override
+    public void removeChars(User author, Collection<DocumentCharacter> characters) {
+        this.serverBackup.removeChars(author, characters);
+        propagate(author, document -> document.removeChars(author, characters));
+    }
+
+    @Override
     public void close(User source) {
         propagate(source, document -> document.close(source), true);
     }
