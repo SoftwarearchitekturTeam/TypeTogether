@@ -42,7 +42,6 @@ public class EditorPanel extends AbstractPanel {
         this.swingDocument = new CustomSwingDocument();
         this.editor = new JTextArea(this.swingDocument, "", 5, 20);
         this.editor.setFont(ViewProperties.EDITOR_FONT);
-        this.editor.setHighlighter(null);
 
         Action undo = new AbstractAction() {
             @Override
