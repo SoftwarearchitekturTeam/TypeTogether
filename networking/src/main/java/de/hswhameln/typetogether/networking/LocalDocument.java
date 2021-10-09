@@ -8,6 +8,7 @@ import de.hswhameln.typetogether.networking.util.Decimal;
 import de.hswhameln.typetogether.networking.util.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -38,6 +39,16 @@ public class LocalDocument implements Document {
         this.addLocalChar(character);
         int offset = this.content.indexOf(character);
         this.observers.stream().map(DocumentObserver::getAddCharConsumer).forEach(c -> c.accept(character.getValue(), offset));
+    }
+
+    @Override
+    public void addChars(User author, Collection<DocumentCharacter> characters) {
+        logger.log(Level.INFO, "Received " + characters.size() + " characters from server, the first of which being " + characters.stream().findFirst().map(DocumentCharacter::toString).orElse("<none>"));
+        this.addLocalChars(characters);
+        characters.forEach((character) -> {
+            int offset = this.content.indexOf(character);
+            this.observers.stream().map(DocumentObserver::getAddCharConsumer).forEach(c -> c.accept(character.getValue(), offset));
+        });
     }
 
     @Override
@@ -75,6 +86,12 @@ public class LocalDocument implements Document {
     public void removeLocalChar(DocumentCharacter character) {
         this.content.remove(character);
         logger.log(Level.FINE, "Removed character " + character + " from the local document. The full document looks like this now:\n" + this.content.stream().map(DocumentCharacter::getStringRepresentation).collect(Collectors.joining("   ")));
+    }
+
+    public void addLocalChars(Collection<DocumentCharacter> characters) {
+        this.content.addAll(characters);
+        Collections.sort(this.content);
+        logger.log(Level.FINE, "Adding characters " + characters + " to the local document. The full document looks like this now:\n" + this.content.stream().map(DocumentCharacter::getStringRepresentation).collect(Collectors.joining("   ")));
     }
 
     public void addObserver(DocumentObserver observer) {

@@ -33,7 +33,7 @@ public class CreateDocumentCharactersCommand implements Command {
         if (this.characters.isEmpty()) {
             return;
         }
-        this.characters.forEach(this.localDocument::addLocalChar);
+        this.localDocument.addLocalChars(this.characters);
         new Thread(() -> this.sharedDocument.addChars(this.user, this.characters)).start();
 
         this.logger.info(String.format("Added %d characters within command the first of which being %s",
