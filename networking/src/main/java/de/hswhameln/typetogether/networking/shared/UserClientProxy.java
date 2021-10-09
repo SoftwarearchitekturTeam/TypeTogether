@@ -47,6 +47,4 @@ public class UserClientProxy extends AbstractClientProxy implements User {
             return this.localDocumentResolver.resolveObject();
         });
     }
-
-    // TODO Close Connection, but how?
 }

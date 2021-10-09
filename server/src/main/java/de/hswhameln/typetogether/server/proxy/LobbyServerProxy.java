@@ -84,7 +84,7 @@ public class LobbyServerProxy extends AbstractServerProxy {
     }
 
     private void doGetDocumentIds() throws IOException {
-        this.safelyExecute("getDocuments", () -> {
+        this.safelyExecute("getDocumentIds", () -> {
             Collection<String> documentIds = lobby.getDocumentIds();
             this.out.println("Sending N followed by N documentIds...");
             this.out.println(documentIds.size());

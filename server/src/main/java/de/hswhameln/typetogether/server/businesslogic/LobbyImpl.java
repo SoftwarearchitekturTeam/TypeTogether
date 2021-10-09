@@ -6,6 +6,7 @@ import de.hswhameln.typetogether.networking.api.User;
 import de.hswhameln.typetogether.networking.api.exceptions.InvalidDocumentIdException;
 import de.hswhameln.typetogether.networking.api.exceptions.UnknownUserException;
 import de.hswhameln.typetogether.networking.util.LoggerFactory;
+import de.hswhameln.typetogether.networking.util.ObjectDestructor;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -48,6 +49,9 @@ public class LobbyImpl implements Lobby {
             throw new UnknownUserException();
         }
         documentToLeave.removeUser(user);
+
+        ObjectDestructor.destroy(user.getDocument());
+        ObjectDestructor.destroy(user);
     }
 
     @Override
