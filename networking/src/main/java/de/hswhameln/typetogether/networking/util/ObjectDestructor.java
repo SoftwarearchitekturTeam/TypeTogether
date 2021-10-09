@@ -4,6 +4,7 @@ import de.hswhameln.typetogether.networking.shared.AbstractClientProxy;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static java.util.function.Predicate.not;
@@ -26,6 +27,7 @@ public class ObjectDestructor {
     }
 
     public static void destroyAll() {
+        logger.log(Level.INFO,"Cleaning up by closing all client connections");
         allClientProxies.stream()
                 .filter(not(AbstractClientProxy::isClosed))
                 .forEach(AbstractClientProxy::closeConnection);

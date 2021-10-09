@@ -7,6 +7,7 @@ import de.hswhameln.typetogether.client.runtime.ClientRuntime;
 import de.hswhameln.typetogether.client.runtime.SessionStorage;
 import de.hswhameln.typetogether.client.runtime.SessionStorageCleaner;
 import de.hswhameln.typetogether.networking.util.LoggerFactory;
+import de.hswhameln.typetogether.networking.util.ShutdownHelper;
 
 public class ClientStarter {
 
@@ -16,6 +17,7 @@ public class ClientStarter {
         System.out.println(" | |  `. .'| v_/ _|  | || \\/ | [/\\ _|  | | | >< | _|| v /"); 
         System.out.println(" |_|   !_! |_| |___| |_| \\__/ \\__/___| |_| |_||_|___|_|_\\");
 
+        ShutdownHelper.initialize();
         ClientRuntime clientRuntime = new ClientRuntime();
         SessionStorage sessionStorage = new SessionStorage(clientRuntime.createLobby());
         new SessionStorageCleaner(sessionStorage).start();

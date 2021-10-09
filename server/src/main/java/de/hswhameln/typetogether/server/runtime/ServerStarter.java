@@ -2,6 +2,7 @@ package de.hswhameln.typetogether.server.runtime;
 
 import de.hswhameln.typetogether.networking.api.Lobby;
 import de.hswhameln.typetogether.networking.util.LoggerFactory;
+import de.hswhameln.typetogether.networking.util.ShutdownHelper;
 import de.hswhameln.typetogether.server.businesslogic.LobbyImpl;
 import de.hswhameln.typetogether.server.proxy.LobbyServerProxy;
 
@@ -25,6 +26,7 @@ public class ServerStarter {
         int port = portArgument == null ? DEFAULT_PORT : Integer.parseInt(portArgument);
         logger.log(Level.INFO, "Server starting on port " + port);
 
+        ShutdownHelper.initialize();
         Lobby lobby = new LobbyImpl();
         Server server = new Server(port, socket -> {
             try {

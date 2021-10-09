@@ -6,10 +6,15 @@ import de.hswhameln.typetogether.client.runtime.commands.CommandInvoker;
 import de.hswhameln.typetogether.networking.api.Document;
 import de.hswhameln.typetogether.networking.api.Lobby;
 import de.hswhameln.typetogether.networking.api.User;
+import de.hswhameln.typetogether.networking.api.exceptions.InvalidDocumentIdException;
+import de.hswhameln.typetogether.networking.api.exceptions.UnknownUserException;
+import de.hswhameln.typetogether.networking.util.ExceptionHandler;
 import de.hswhameln.typetogether.networking.util.ObjectDestructor;
+import de.hswhameln.typetogether.networking.util.ShutdownHelper;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.logging.Level;
 
 public class SessionStorage {
     private final Lobby lobby;
@@ -27,6 +32,16 @@ public class SessionStorage {
         this.lobby = lobby;
         this.propertyChangeSupport = new PropertyChangeSupport(this);
         this.invoker = new CommandInvoker();
+
+        ShutdownHelper.addShutdownHook(() -> {
+            if (currentUser != null && currentSharedDocument != null) {
+                try {
+                    this.lobby.leaveDocument(currentUser, currentSharedDocument.getFuncId());
+                } catch (InvalidDocumentIdException.DocumentDoesNotExistException | UnknownUserException e) {
+                    ExceptionHandler.getExceptionHandler().handle(e, Level.SEVERE, "Could not leave document on shutdown", SessionStorage.class);
+                }
+            }
+        });
     }
 
     public void setCurrentUser(ClientUser currentUser) {
