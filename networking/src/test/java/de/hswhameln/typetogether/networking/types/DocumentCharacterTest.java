@@ -12,11 +12,6 @@ import org.junit.jupiter.api.Test;
 import de.hswhameln.typetogether.networking.util.DocumentCharacterFactory;
 
 public class DocumentCharacterTest {
-   
-    @Test
-    public void doTest() {
-        System.out.println("Test");
-    }
 
     @Test
     public void doCharectertestfUseCase1() {

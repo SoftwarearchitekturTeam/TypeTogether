@@ -1,21 +1,25 @@
 package de.hswhameln.typetogether.networking;
 
+import de.hswhameln.typetogether.networking.api.Document;
+import de.hswhameln.typetogether.networking.api.User;
+import de.hswhameln.typetogether.networking.types.DocumentCharacter;
+import de.hswhameln.typetogether.networking.types.Identifier;
+import de.hswhameln.typetogether.networking.util.Decimal;
+import de.hswhameln.typetogether.networking.util.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
-
-import de.hswhameln.typetogether.networking.api.Document;
-import de.hswhameln.typetogether.networking.api.User;
-import de.hswhameln.typetogether.networking.types.DocumentCharacter;
-import de.hswhameln.typetogether.networking.types.Identifier;
-import de.hswhameln.typetogether.networking.util.Decimal;
 
 public class LocalDocument implements Document {
 
+    private static final Logger logger = LoggerFactory.getLogger(LocalDocument.class);
     private final String funcId;
 
     private final List<DocumentCharacter> content;
@@ -24,18 +28,15 @@ public class LocalDocument implements Document {
     public LocalDocument() {
         this.content = new ArrayList<>();
         this.content.add(new DocumentCharacter('#', List.of(new Identifier(0, 0))));
-        System.out.println("STARTING LocalDocument: " + this.content.stream().map(DocumentCharacter::getStringRepresentation).collect(Collectors.joining("/")));
-
         this.observers = new HashSet<>();
         this.funcId = UUID.randomUUID().toString();
     }
 
     @Override
     public void addChar(User author, DocumentCharacter character) {
-        System.out.println("[LocalDocument] AddingChar: " + character.getValue());
+        logger.log(Level.INFO, "Received character '" + character.getValue() + "' from server.");
         this.addLocalChar(character);
         int offset = this.content.indexOf(character);
-        System.out.println("Index of character " + character.getStringRepresentation() + " is " + offset + ", notifying " + this.observers);
         this.observers.stream().map(DocumentObserver::getAddCharConsumer).forEach(c -> c.accept(character.getValue(), offset));
     }
 
@@ -59,7 +60,6 @@ public class LocalDocument implements Document {
     }
 
     public DocumentCharacter getDocumentCharacterOfIndex(int index) {
-        System.out.println("LocalDocument#getDocumentCharacterOfIndex for index " + index + " at length " +  this.content.size() );
         if (index < 0 || index >= content.size()) {
             return null;
         }
@@ -67,18 +67,14 @@ public class LocalDocument implements Document {
     }
 
     public void addLocalChar(DocumentCharacter character) {
-        System.out.println("[LocalDocument#addLocalChar] Adding LocalChar: " + character.getValue());
-
         this.content.add(character);
         Collections.sort(this.content);
-        System.out.println("ADDED LocalDocument: " + this.content.stream().map(DocumentCharacter::getStringRepresentation).collect(Collectors.joining("/")));
+        logger.log(Level.FINE, "Adding character " + character + " to the local document. The full document looks like this now:\n" + this.content.stream().map(DocumentCharacter::getStringRepresentation).collect(Collectors.joining("   ")));
     }
 
     public void removeLocalChar(DocumentCharacter character) {
-        System.out.println("[LocalDocument#removeLocalChar] Removing LocalChar: " + character.getValue());
-
         this.content.remove(character);
-        System.out.println("REMOVED LocalDocument: " + this.content.stream().map(DocumentCharacter::getStringRepresentation).collect(Collectors.joining("/")));
+        logger.log(Level.FINE, "Removed character " + character + " from the local document. The full document looks like this now:\n" + this.content.stream().map(DocumentCharacter::getStringRepresentation).collect(Collectors.joining("   ")));
     }
 
     public void addObserver(DocumentObserver observer) {

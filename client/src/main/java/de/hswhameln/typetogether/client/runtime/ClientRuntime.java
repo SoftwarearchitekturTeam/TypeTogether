@@ -21,7 +21,6 @@ public class ClientRuntime {
         String port = System.getProperty("port");
         this.port = port == null ? DEFAULT_PORT : Integer.parseInt(port);
         this.url = url == null ? DEFAULT_URL : url;
-        System.out.println("url: " + this.url + " port: " + this.port);
     }
 
     public Lobby createLobby() {

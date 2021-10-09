@@ -68,6 +68,11 @@ public class DocumentCharacter implements Comparable<DocumentCharacter> {
     }
 
     @Override
+    public String toString() {
+        return this.getStringRepresentation();
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(position, value);
     }

@@ -43,19 +43,6 @@ public class EditorPanel extends AbstractPanel {
         this.editor = new JTextArea(this.swingDocument, "", 5, 20);
         this.editor.setFont(ViewProperties.EDITOR_FONT);
 
-        Action undo = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Undo");
-            }
-        };
-        Action redo = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Redo");
-            }
-        };
-
         InputMap im = this.editor.getInputMap(JComponent.WHEN_FOCUSED);
         ActionMap am = this.editor.getActionMap();
 
@@ -194,11 +181,10 @@ public class EditorPanel extends AbstractPanel {
     }
 
     private void addChar(char value, int offset) {
-        this.logger.log(Level.INFO, String.format("Inserted Character %c at Position %d", value, offset));
         EventQueue.invokeLater(() -> {
             try {
                 this.swingDocument.insertStringProgrammatically(offset - 1, Character.toString(value), null);
-                System.out.println("Inserted character successfully");
+                this.logger.log(Level.INFO, String.format("Successfully inserted Character %c at Position %d.", value, offset));
             } catch (BadLocationException e) {
                 ExceptionHandler.getExceptionHandler().handle(e, Level.SEVERE, "Error trying to insert character into receiver localDocument. Skipping this character, but continuing as usual.", EditorPanel.class);
             }
@@ -206,11 +192,10 @@ public class EditorPanel extends AbstractPanel {
     }
 
     private void removeChar(char value, int offset) {
-        this.logger.log(Level.INFO, String.format("Removed Character %c at Position %d", value, offset - 1));
         EventQueue.invokeLater(() -> {
             try {
                 this.swingDocument.removeProgrammatically(offset - 1, 1);
-                System.out.println("Removed character successfully");
+                this.logger.log(Level.INFO, String.format("Successfully removed Character %c from Position %d.", value, offset - 1));
             } catch (BadLocationException e) {
                 ExceptionHandler.getExceptionHandler().handle(e, Level.SEVERE, "Error trying to remove character from receiver localDocument. Skipping this character, but continuing as usual.", EditorPanel.class);
             }

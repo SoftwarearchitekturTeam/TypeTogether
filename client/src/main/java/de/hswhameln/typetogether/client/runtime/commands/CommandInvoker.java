@@ -1,9 +1,11 @@
 package de.hswhameln.typetogether.client.runtime.commands;
 
 import de.hswhameln.typetogether.client.gui.CommandPanel;
+import de.hswhameln.typetogether.networking.util.LoggerFactory;
 
 import java.util.Stack;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -15,6 +17,7 @@ import java.util.Stack;
  */
 public class CommandInvoker {
 
+	private final Logger logger = LoggerFactory.getLogger(this);
 	private final Stack<Command> undoStack;
 	private final Stack<Command> redoStack;
 	private CommandPanel panel;
@@ -38,6 +41,7 @@ public class CommandInvoker {
 	}
 
 	public void undo() {
+		this.logger.log(Level.INFO, "Undo called. undoStack has a size of " + this.undoStack.size());
 		if(!this.undoStack.isEmpty()) {
 			Command command = this.undoStack.pop();
 
@@ -48,6 +52,7 @@ public class CommandInvoker {
 	}
 
 	public void redo() {
+		this.logger.log(Level.INFO, "Redo called. redoStack has a size of " + this.redoStack.size());
 		if(!this.redoStack.isEmpty()) {
 			Command command = this.redoStack.pop();
 

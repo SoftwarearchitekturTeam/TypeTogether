@@ -52,7 +52,6 @@ public class EditorListener implements DocumentListener {
     @Override
     public void insertUpdate(DocumentEvent e) {
         if (e instanceof CustomSwingDocument.MyDefaultDocumentEvent) {
-            System.out.println("Stopping event propagation from programmatic insert.");
             return;
         }
 
@@ -70,7 +69,7 @@ public class EditorListener implements DocumentListener {
         }
 
         String update = getStringFromDocumentEvent(e);
-        System.out.println("Update Length: " + update.length());
+        this.logger.log(Level.INFO, "insertUpdate called, trying to insert string " + update);
 
         List<DocumentCharacter> documentCharacters = new ArrayList<>(e.getLength());
 
@@ -79,7 +78,6 @@ public class EditorListener implements DocumentListener {
         for (char c : update.toCharArray()) {
             //Get Position of Changed Character(s)
             int index = e.getOffset() + 1;
-            System.out.println("EditorListener#insertUpdate: generating character " + c + " at index " + index + ", between " + (index - 1) + " and " + (index));
             // Between old indices index - 1 and index <=> between new indices index - 1 and index + 1
             //Get DocumentCharacter for position
             //Get before and after
@@ -87,6 +85,7 @@ public class EditorListener implements DocumentListener {
             DocumentCharacter nextCharacter = this.localDocument.getDocumentCharacterOfIndex(e.getOffset() + 1);
             DocumentCharacter characterToAdd = this.generateDocumentCharacter(previousCharacter, nextCharacter, c);
             lastCreatedCharacter = characterToAdd;
+            this.logger.log(Level.INFO, "Generated document character " + characterToAdd + " between " + previousCharacter + " and " + nextCharacter + ".");
             documentCharacters.add(characterToAdd);
         }
         this.invoker.execute(new CreateDocumentCharactersCommand(documentCharacters, this.user, this.localDocument, this.sharedDocument));
@@ -95,7 +94,6 @@ public class EditorListener implements DocumentListener {
     @Override
     public void removeUpdate(DocumentEvent e) {
         if (e instanceof CustomSwingDocument.MyDefaultDocumentEvent) {
-            System.out.println("Stopping event propagation from programmatic insert.");
             return;
         }
 
@@ -111,6 +109,8 @@ public class EditorListener implements DocumentListener {
             this.logger.warning("SharedDocument is null. Ignoring removeUpdate");
             return;
         }
+
+        this.logger.log(Level.INFO, "removeUpdate called, trying to remove string of length " + e.getLength() + ", starting at index " + e.getOffset() + ".");
 
         List<DocumentCharacter> documentCharacters = new ArrayList<>(e.getLength());
         for (int i = 0; i < e.getLength(); i++) {
@@ -141,7 +141,6 @@ public class EditorListener implements DocumentListener {
      * charBefore and charAfter may be null
      */
     private DocumentCharacter generateDocumentCharacter(DocumentCharacter charBefore, DocumentCharacter charAfter, char changedChar) {
-        System.out.println("EditorListener#generateDocumentCharacter: generating " + changedChar + "  between " + saveGetStringRepr(charBefore) + " and " + saveGetStringRepr(charAfter));
         DocumentCharacter characterToAdd;
         if (charBefore != null && charAfter != null) {
             characterToAdd = DocumentCharacterFactory.getDocumentCharacter(changedChar, charBefore.getPosition(), charAfter.getPosition(), user.getId());
@@ -153,10 +152,6 @@ public class EditorListener implements DocumentListener {
             characterToAdd = new DocumentCharacter(changedChar, List.of(new Identifier(1, user.getId())));
         }
         return characterToAdd;
-    }
-
-    private String saveGetStringRepr(DocumentCharacter charBefore) {
-        return charBefore == null ? "null" : charBefore.getStringRepresentation();
     }
 
     private void localDocumentChanged(PropertyChangeEvent propertyChangeEvent) {
