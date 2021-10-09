@@ -42,6 +42,8 @@ public class EditorPanel extends AbstractPanel {
         this.swingDocument = new CustomSwingDocument();
         this.editor = new JTextArea(this.swingDocument, "", 5, 20);
         this.editor.setFont(ViewProperties.EDITOR_FONT);
+        this.editor.setLineWrap(true);
+        this.editor.setWrapStyleWord(true);
 
         InputMap im = this.editor.getInputMap(JComponent.WHEN_FOCUSED);
         ActionMap am = this.editor.getActionMap();
