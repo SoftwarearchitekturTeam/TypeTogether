@@ -3,6 +3,7 @@ package de.hswhameln.typetogether.networking.shared;
 import de.hswhameln.typetogether.networking.api.exceptions.FunctionalException;
 import de.hswhameln.typetogether.networking.shared.helperinterfaces.ProxiedSupplier;
 import de.hswhameln.typetogether.networking.shared.helperinterfaces.ProxiedTask;
+import de.hswhameln.typetogether.networking.util.ObjectDestructor;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -17,6 +18,7 @@ public abstract class AbstractClientProxy extends AbstractProxy implements Clien
     public AbstractClientProxy(Socket socket) throws IOException {
         super(socket);
         this.readInitializationMessage();
+        ObjectDestructor.register(this);
     }
 
     /**

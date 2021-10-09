@@ -67,7 +67,7 @@ public class MainWindow extends JFrame {
             @Override
             public void windowClosed(WindowEvent e) {
                 MainWindow.this.availableViews.get(activeView).windowClosed();
-                ObjectDestructor.destroy(MainWindow.this.sessionStorage.getLobby());
+                ObjectDestructor.destroyAll();
                 // give the other Threads some time to finish their work, but forcefully interrupt them after said time has passed.
                 try {
                     Thread.sleep(3000);

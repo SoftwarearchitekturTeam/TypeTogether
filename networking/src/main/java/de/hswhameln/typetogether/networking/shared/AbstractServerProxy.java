@@ -126,8 +126,8 @@ public abstract class AbstractServerProxy extends AbstractProxy implements Runna
         }
 
         ServerProxyAction serverProxyAction = this.getAvailableActions().get(line);
-        this.success();
         this.logger.info("Executing commmand " + serverProxyAction.getName());
+        this.success();
         this.out.println("Executing commmand " + serverProxyAction.getName());
         serverProxyAction.getAction().perform();
     }
