@@ -7,7 +7,9 @@ import de.hswhameln.typetogether.networking.types.DocumentCharacter;
 import de.hswhameln.typetogether.networking.util.LoggerFactory;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
@@ -17,7 +19,7 @@ public class DocumentDistributor implements Document {
     private final Logger logger = LoggerFactory.getLogger(this);
     private final String id;
 
-    private final Set<User> activeUsers = new HashSet<>();
+    private final Map<Integer, User> activeUsersByIds = new HashMap<>();
 
     private final LocalDocument serverBackup;
 
@@ -80,17 +82,21 @@ public class DocumentDistributor implements Document {
 
     public void addUser(User user) {
         this.logger.fine("User " + user.getName() + " joined document " + id + ". Sending content of length " + this.serverBackup.getContent().size() + ".");
-        this.activeUsers.add(user);
+        this.activeUsersByIds.put(user.getId(), user);
         Document document = user.getDocument();
         document.addChars(this.dummyUser, this.serverBackup.getContent());
     }
 
     public void removeUser(User user) {
-        this.activeUsers.remove(user);
+        this.removeUserById(user.getId());
+    }
+
+    public void removeUserById(int id) {
+        this.activeUsersByIds.remove(id);
     }
 
     public boolean isUserParticipant(User user) {
-        return activeUsers.contains(user);
+        return activeUsersByIds.containsKey(user.getId());
     }
 
     private void propagate(User author, Consumer<Document> clientDocumentConsumer) {
@@ -99,9 +105,10 @@ public class DocumentDistributor implements Document {
 
     private void propagate(User author, Consumer<Document> clientDocumentConsumer, boolean copy) {
         int authorId = author.getId();
-        Collection<User> usersToStream = copy ? new HashSet<>(this.activeUsers) : this.activeUsers;
+        Collection<Map.Entry<Integer, User>> usersToStream = copy ? new HashSet<>(this.activeUsersByIds.entrySet()) : this.activeUsersByIds.entrySet();
         usersToStream.stream()
-                .filter(user -> user.getId() != authorId)
+                .filter(userEntry -> userEntry.getKey() != authorId)
+                .map(Map.Entry::getValue)
                 .map(User::getDocument)
                 .forEach(clientDocumentConsumer);
     }
