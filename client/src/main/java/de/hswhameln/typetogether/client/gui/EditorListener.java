@@ -4,7 +4,9 @@ import de.hswhameln.typetogether.client.businesslogic.ClientUser;
 import de.hswhameln.typetogether.client.runtime.PropertyChangeManager;
 import de.hswhameln.typetogether.client.runtime.SessionStorage;
 import de.hswhameln.typetogether.client.runtime.commands.CommandInvoker;
+import de.hswhameln.typetogether.client.runtime.commands.CreateDocumentCharacterCommand;
 import de.hswhameln.typetogether.client.runtime.commands.CreateDocumentCharactersCommand;
+import de.hswhameln.typetogether.client.runtime.commands.DeleteDocumentCharacterCommand;
 import de.hswhameln.typetogether.client.runtime.commands.DeleteDocumentCharactersCommand;
 import de.hswhameln.typetogether.networking.LocalDocument;
 import de.hswhameln.typetogether.networking.api.Document;
@@ -71,6 +73,7 @@ public class EditorListener implements DocumentListener {
         String update = getStringFromDocumentEvent(e);
         this.logger.log(Level.INFO, "insertUpdate called, trying to insert string " + update);
 
+
         List<DocumentCharacter> documentCharacters = new ArrayList<>(e.getLength());
 
         // the char that was the last one to be created and to which the next character from this batch must be appended.
@@ -79,14 +82,17 @@ public class EditorListener implements DocumentListener {
             //Get Position of Changed Character(s)
             int index = e.getOffset() + 1;
             // Between old indices index - 1 and index <=> between new indices index - 1 and index + 1
-            //Get DocumentCharacter for position
             //Get before and after
-            DocumentCharacter previousCharacter = lastCreatedCharacter != null ? lastCreatedCharacter : this.localDocument.getDocumentCharacterOfIndex(e.getOffset());
-            DocumentCharacter nextCharacter = this.localDocument.getDocumentCharacterOfIndex(e.getOffset() + 1);
+            DocumentCharacter previousCharacter = lastCreatedCharacter != null ? lastCreatedCharacter : this.localDocument.getDocumentCharacterOfIndex(index - 1);
+            DocumentCharacter nextCharacter = this.localDocument.getDocumentCharacterOfIndex(index);
             DocumentCharacter characterToAdd = this.generateDocumentCharacter(previousCharacter, nextCharacter, c);
             lastCreatedCharacter = characterToAdd;
             this.logger.log(Level.INFO, "Generated document character " + characterToAdd + " between " + previousCharacter + " and " + nextCharacter + ".");
             documentCharacters.add(characterToAdd);
+        }
+        if (documentCharacters.size() == 1) {
+            this.invoker.execute(new CreateDocumentCharacterCommand(documentCharacters.get(0), this.user, this.localDocument, this.sharedDocument));
+            return;
         }
         this.invoker.execute(new CreateDocumentCharactersCommand(documentCharacters, this.user, this.localDocument, this.sharedDocument));
     }
@@ -118,6 +124,10 @@ public class EditorListener implements DocumentListener {
             int index = e.getOffset() + i + 1;
             // Get DocumentCharacter for position
             documentCharacters.add(this.localDocument.getDocumentCharacterOfIndex(index));
+        }
+        if (documentCharacters.size() == 1) {
+            this.invoker.execute(new DeleteDocumentCharacterCommand(documentCharacters.get(0), this.user, this.localDocument, this.sharedDocument));
+            return;
         }
         this.invoker.execute(new DeleteDocumentCharactersCommand(documentCharacters, this.user, this.localDocument, this.sharedDocument));
     }
