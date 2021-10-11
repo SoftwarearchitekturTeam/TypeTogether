@@ -19,7 +19,7 @@
     </properties>
 
     <modules>
-        <module>networking</module>
+        <module>shared</module>
         <module>client</module>
         <module>server</module>
     </modules>
