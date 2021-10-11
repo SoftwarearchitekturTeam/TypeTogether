@@ -2,6 +2,7 @@ package de.hswhameln.typetogether.networking.proxy;
 
 import de.hswhameln.typetogether.networking.shared.helperinterfaces.ServerProxyCreator;
 import de.hswhameln.typetogether.networking.util.ExceptionHandler;
+import de.hswhameln.typetogether.networking.util.IOUtils;
 import de.hswhameln.typetogether.networking.util.LoggerFactory;
 
 import java.io.BufferedReader;
@@ -60,7 +61,7 @@ public class MarshallHandler<T> {
             throw new RuntimeException("Unexpected response code: " + responseCode);
         }
         ServerSocket serverSocket = createServerSocket();
-        logger.info("Started server socket at port " + serverSocket.getLocalPort() + ".");
+        logger.info("Started server socket on port " + serverSocket.getLocalPort() + ".");
 
         // "Provide a port"
         logger.info("[Server] " + this.in.readLine());
@@ -74,7 +75,7 @@ public class MarshallHandler<T> {
                         .withShutDownHook(() -> closeServerSocket(serverSocket))
         ).start();
 
-        expectSuccess(this.in);
+        IOUtils.success(this.out);
 
     }
 

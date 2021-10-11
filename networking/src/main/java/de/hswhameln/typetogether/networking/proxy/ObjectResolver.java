@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import static de.hswhameln.typetogether.networking.FluentExceptionHandler.expectSuccess;
+
 /**
  * Complementary class to the {@link MarshallHandler}. Used to create and cache ClientProxies representing a given type T.
  */
@@ -59,10 +61,10 @@ public class ObjectResolver<T> {
         logger.info("Starting new ClientSocket (" + this.targetInetAddress + ":" + port + ")");
         Socket socket = new Socket(this.targetInetAddress, port);
         logger.fine("Successfully connected to Socket.");
+        expectSuccess(this.in);
         T clientProxy = this.clientProxySupplier.create(socket);
         logger.fine("ClientProxy of type " + clientProxy.getClass().getSimpleName() + " was successfully created.");
         this.objectsByCommunicationIds.put(communicationId, clientProxy);
-        IOUtils.success(this.out);
         logger.info("Correctly resolved Object of type " + clientProxy.getClass().getName());
         return clientProxy;
     }
