@@ -4,24 +4,28 @@ _______   _____ ___ _____ __   __ ___ _____ _  _ ___ ___
   | |  `. .'| v_/ _|  | || \/ | [/\ _|  | | | >< | _|| v / 
   |_|   !_! |_| |___| |_| \__/ \__/___| |_| |_||_|___|_|_\ 
 ```
+![CI](https://github.com/SoftwarearchitekturTeam/TypeTogether/actions/workflows/ci.yml/badge.svg)
 
-Zum Starten in das Zielverzeichnis navigieren und einmalig 
+In order to start, navigate to the target directory and build the project using
 ```
 mvn clean install
 ```
-ausführen - danach kann der Server mit
+
+After the build was successfull, the server can be started by calling the PowerShell script
 ```
 .\server.ps1
 ```
-und der Client mit
+
+The client can be started by calling the PowerShell script
 ```
 .\client.ps1
 ```
-gestartet werden.
 
-Die Commands innerhalb dieser Skripte sind Plattformunabhängig und können auch außerhalb der Skripte ausgeführt werden. Hierfür sollte das Setzen der Umgebungsvariablen mithilfe der Skriptvariablen jedoch zuvor entfernt oder durch konkrete Werten ersetzt werden:
-
+The commands itself are platform independent and can be manually executed. The simplest way to start a server on the default port (12557) and to start a client that connects to said server on localhost:12557 can be done using the following commands:
 ```sh
 java -jar .\server\target\server-0.0.1-SNAPSHOT.jar
 java -jar .\client\target\client-0.0.1-SNAPSHOT.jar
 ```
+
+In the server, the `port` and the `loglevel` environment variables can be set.
+In the client, the `url` of the server, the server `port` and the `loglevel` environment variables can be set.
