@@ -11,7 +11,7 @@ In order to start, navigate to the target directory and build the project using
 mvn clean install
 ```
 
-After the build was successfull, the server can be started by calling the PowerShell script
+After the build was successful, the server can be started by calling the PowerShell script
 ```
 .\server.ps1
 ```
@@ -21,7 +21,7 @@ The client can be started by calling the PowerShell script
 .\client.ps1
 ```
 
-The commands itself are platform independent and can be manually executed. The simplest way to start a server on the default port (12557) and to start a client that connects to said server on localhost:12557 can be done using the following commands:
+The commands itself are platform independent and can be executed manually. The simplest way to start a server on the default port (12557) and to start a client that connects to said server on localhost:12557. This can be done using the following commands:
 ```sh
 java -jar .\server\target\server-0.0.1-SNAPSHOT.jar
 java -jar .\client\target\client-0.0.1-SNAPSHOT.jar
